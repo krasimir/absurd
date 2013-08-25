@@ -1,0 +1,24 @@
+{
+  "name": "absurd",
+  "version": "0.0.1",
+  "homepage": "https://github.com/krasimir/absurd",
+  "description": "CSS preprocessor",
+  "main": "index.js",
+  "author": "Krasimir Tsonev",
+  "license": "BSD",
+  "dependencies": { 
+    
+  },
+  "keywords": [
+    "css",
+    "preprocessor"
+  ],
+  "repository" : {
+    "type": "git",
+    "url": "https://github.com/krasimir/absurd.git"
+  },
+  "bin": {
+    "absurd": "./index.js"
+  },
+  "main": "index.js",
+}
