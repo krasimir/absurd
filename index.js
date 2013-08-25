@@ -1,19 +1,29 @@
 #!/usr/bin/env node
 
-var PathsFormatter = require("./lib/helpers/PathsFormatter.js");
+var PathFormatter = require("./lib/helpers/PathFormatter.js"),
+	Processor = require("./lib/Processor.js"),
+	API = {};
 
-module.exports = function(paths) {
+global.A = API = require("./lib/API.js")();
 
-	var _paths = PathsFormatter(paths),
-		_api = {};
+module.exports = function(path) {
 
-	var compile = _api.compile = function(callback) {
-		
+	var _path = PathFormatter(path),
+		_absurd = {};
+
+	// --------------------------------------------------- compile
+	var compile = _absurd.compile = function(callback) {
+		require(_path.source);
+		Processor(
+			API.getEntities(),
+			_path.callback || callback || function() {}
+		);
 	}
-	var getPaths = _api.getPaths = function() {
-		return _paths;
+	// --------------------------------------------------- getPaths
+	var getPath = _absurd.getPath = function() {
+		return _path;
 	}
 
-	return _api;
+	return _absurd;
 
 }
