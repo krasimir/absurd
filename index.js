@@ -2,7 +2,8 @@
 
 var PathFormatter = require("./lib/helpers/PathFormatter.js"),
 	Processor = require("./lib/Processor.js"),
-	API = {};
+	API = {},
+	fs = require("fs");
 
 global.A = API = require("./lib/API.js")();
 
@@ -24,6 +25,14 @@ module.exports = function(path) {
 			API.getRules(),
 			_path.callback || callback || function() {}
 		);
+	}
+	// --------------------------------------------------- compile to file
+	var compileFile = _absurd.compileFile = function(file, compileFileCallback) {
+		compile(function(err, css) {
+			fs.writeFile(file, css, function (err) {
+				compileFileCallback(err, css);
+			});
+		});
 	}
 	// --------------------------------------------------- getPaths
 	var getPath = _absurd.getPath = function() {
