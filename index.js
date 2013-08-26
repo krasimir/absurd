@@ -16,11 +16,15 @@ module.exports = function(path) {
 
 	// --------------------------------------------------- compile
 	var compile = _absurd.compile = function(callback) {
+		console.log("-------------------------------");
+		console.log(API.getRules());
 		if(typeof _path == "function") {
 			_path.apply(API);
 		} else {
+			console.log(_path.source);
 			require(_path.source);
 		}
+		console.log(API.getRules());
 		Processor(
 			API.getRules(),
 			_path.callback || callback || function() {}
@@ -29,9 +33,13 @@ module.exports = function(path) {
 	// --------------------------------------------------- compile to file
 	var compileFile = _absurd.compileFile = function(file, compileFileCallback) {
 		compile(function(err, css) {
-			fs.writeFile(file, css, function (err) {
-				compileFileCallback(err, css);
-			});
+			try {
+				fs.writeFile(file, css, function (err) {
+					compileFileCallback(err, css);
+				});
+			} catch(err) {
+				compileFileCallback(err);
+			}
 		});
 	}
 	// --------------------------------------------------- getPaths

@@ -15,7 +15,7 @@ describe("Nested selectors", function() {
 				expect(err).toBe(null);
 				expect(css).toBeDefined();
 				expect(fs.existsSync(file)).toBe(true);
-				console.log(css);
+				expect(fs.readFileSync(file, {encoding: 'utf-8'})).toContain('background: #BADA55');
 				done();
 			}
 		);
