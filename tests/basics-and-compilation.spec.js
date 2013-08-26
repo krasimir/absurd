@@ -35,6 +35,20 @@ describe("Absurd acting in code:", function() {
 		done();
 	});
 
+	it("should compile an inline function", function(done) {
+		Absurd(function() {
+			this.add('.absurd-title', {
+				'border-radius': '10px'
+			});
+		}).compile(function(err, css) {
+			expect(err).toBe(null);
+			expect(css).toBeDefined();
+			expect(css).toContain(".absurd-title");
+			expect(css).toContain("border-radius: 10px");
+			done();
+		});		
+	});
+
 	it("should compile a file", function(done) {
 		absurd = Absurd(__dirname + "/data/css/index.js");
 		absurd.compile(function(err, css) {
@@ -43,5 +57,6 @@ describe("Absurd acting in code:", function() {
 			done();
 		});		
 	});
+
 	
 });

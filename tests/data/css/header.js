@@ -1,0 +1,6 @@
+A.import(__dirname + '/config/colors.js');
+A.import(__dirname + '/config/sizes.js');
+A.import([
+	__dirname + '/config/colors.js',
+	__dirname + '/config/sizes.js'
+]);

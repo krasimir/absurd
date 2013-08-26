@@ -13,9 +13,13 @@ module.exports = function(path) {
 
 	// --------------------------------------------------- compile
 	var compile = _absurd.compile = function(callback) {
-		require(_path.source);
+		if(typeof _path == "function") {
+			_path.apply(API);
+		} else {
+			require(_path.source);
+		}
 		Processor(
-			API.getEntities(),
+			API.getRules(),
 			_path.callback || callback || function() {}
 		);
 	}
