@@ -8,6 +8,8 @@ global.A = API = require("./lib/API.js")();
 
 module.exports = function(path) {
 
+	API.flush();
+
 	var _path = PathFormatter(path),
 		_absurd = {};
 
