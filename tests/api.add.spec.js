@@ -4,8 +4,10 @@ describe("API(add)", function() {
 
 	it("should use add", function(done) {
 		Absurd(function() {
-			this.add('.absurd-title', {
-				'border-radius': '10px'
+			this.add({
+				'.absurd-title': {
+					'border-radius': '10px'
+				}
 			});
 		}).compile(function(err, css) {
 			expect(err).toBe(null);

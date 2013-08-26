@@ -37,8 +37,10 @@ describe("Absurd acting in code:", function() {
 
 	it("should compile an inline function", function(done) {
 		Absurd(function() {
-			this.add('.absurd-title', {
-				'border-radius': '10px'
+			this.add({
+				'.absurd-title': {
+					'border-radius': '10px'
+				}
 			});
 		}).compile(function(err, css) {
 			expect(err).toBe(null);

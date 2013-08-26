@@ -1,3 +1,7 @@
-A.add('body', {
-	background: '#BADA55'
-})
+A.add({
+
+	body: {
+		background: '#BADA55'
+	}
+	
+});
