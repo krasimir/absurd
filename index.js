@@ -2,29 +2,25 @@
 
 var PathFormatter = require("./lib/helpers/PathFormatter.js"),
 	Processor = require("./lib/Processor.js"),
-	API = {},
+	API = null,
 	fs = require("fs");
 
-global.A = API = require("./lib/API.js")();
+
 
 module.exports = function(path) {
 
-	API.flush();
+	API = require("./lib/API.js")();
 
 	var _path = PathFormatter(path),
 		_absurd = {};
 
 	// --------------------------------------------------- compile
 	var compile = _absurd.compile = function(callback) {
-		console.log("-------------------------------");
-		console.log(API.getRules());
 		if(typeof _path == "function") {
-			_path.apply(API);
+			_path(API);
 		} else {
-			console.log(_path.source);
-			require(_path.source);
+			require(_path.source)(API);
 		}
-		console.log(API.getRules());
 		Processor(
 			API.getRules(),
 			_path.callback || callback || function() {}

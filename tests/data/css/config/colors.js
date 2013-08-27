@@ -1,7 +1,9 @@
-A.add({
+module.exports = function(A) {
+	A.add({
 
-	body: {
-		background: '#BADA55'
-	}
-	
-});
+		body: {
+			background: '#BADA55'
+		}
+		
+	});
+}

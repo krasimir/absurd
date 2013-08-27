@@ -36,8 +36,8 @@ describe("Absurd acting in code:", function() {
 	});
 
 	it("should compile an inline function", function(done) {
-		Absurd(function() {
-			this.add({
+		Absurd(function(A) {
+			A.add({
 				'.absurd-title': {
 					'border-radius': '10px'
 				}

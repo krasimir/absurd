@@ -3,8 +3,8 @@ describe("API(add)", function() {
 	var Absurd = require('../index.js');
 
 	it("should use add", function(done) {
-		Absurd(function() {
-			this.add({
+		Absurd(function(A) {
+			A.add({
 				'.absurd-title': {
 					'border-radius': '10px'
 				}

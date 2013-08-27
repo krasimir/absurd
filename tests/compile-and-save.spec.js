@@ -1,11 +1,11 @@
 var fs = require("fs");
 
-describe("Nested selectors", function() {
+describe("Compile and save", function() {
 
 	var Absurd = require("../index.js"),
 		file = __dirname + '/data/result/styles.css';
 
-	it("should use nesting", function(done) {
+	it("save to file", function(done) {
 		if(fs.existsSync(file)) {
 			fs.unlinkSync(file);	
 		}
