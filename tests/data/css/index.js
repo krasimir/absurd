@@ -3,7 +3,10 @@ module.exports = function(A) {
 		body: {
 			'margin-top': '20px',
 			'padding': 0,
-			'font-weight': 'bold'
+			'font-weight': 'bold',
+			section: {
+				'padding-top': '20px'
+			}
 		}
 	});
 	A.add({
