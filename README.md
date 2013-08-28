@@ -3,9 +3,13 @@ absurd
 
 Writing your CSS in JavaScript. That's it!
 
+---
+
 ## Installation
 
 	npm install -g absurd
+
+---
 
 ## Usage
 
@@ -74,3 +78,7 @@ Absurd is really simple. It just gets instructions and base on them produces css
 
 	absurd -s [source file] <- outputs the css in the console
 	absurd -s [source file] -o [output file] <- outputs the css to a file
+
+---
+
+## Syntax
