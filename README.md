@@ -3,13 +3,9 @@ absurd
 
 Writing your CSS in JavaScript. That's it!
 
----
-
 ## Installation
 
 	npm install -g absurd
-
----
 
 ## Usage
 
@@ -79,6 +75,18 @@ Absurd is really simple. It just gets instructions and base on them produces css
 	absurd -s [source file] <- outputs the css in the console
 	absurd -s [source file] -o [output file] <- outputs the css to a file
 
----
-
 ## Syntax
+
+In the context of JavaScript the closest thing to pure CSS syntax is JSON format. So, every valid JSON is actually valid Absurd syntax. As you can see above there are two ways to send styles to the module. In both cases you have an access to the Absurd's API. For example:
+
+	Absurd(function(API) {
+		API.add({});
+	}).compile(function(err, css) {
+
+or in an external js file
+
+	module.exports = function(API) {
+		API.add({});
+	}
+
+The *add* method accepts valid JSON.
