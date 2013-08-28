@@ -3,11 +3,12 @@
 var PathFormatter = require("./lib/helpers/PathFormatter.js"),
 	Processor = require("./lib/Processor.js"),
 	API = null,
-	fs = require("fs");
+	absurd = null,
+	fs = require("fs"),
+	argv = require('optimist').argv,
+	cli = require('./lib/CLI.js');
 
-
-
-module.exports = function(path) {
+module.exports = absurd = function(path) {
 
 	API = require("./lib/API.js")();
 
@@ -19,7 +20,11 @@ module.exports = function(path) {
 		if(typeof _path == "function") {
 			_path(API);
 		} else {
-			require(_path.source)(API);
+			try {
+				require(_path.source)(API);
+			} catch(err) {
+				console.log("Error: I can't find '" + _path.source + "'.");
+			}
 		}
 		Processor(
 			API.getRules(),
@@ -46,3 +51,11 @@ module.exports = function(path) {
 	return _absurd;
 
 }
+
+// godlike
+process.on('uncaughtException', function (err) {
+    console.log("Error packing", err);
+});
+
+// cli
+cli(argv, absurd);
