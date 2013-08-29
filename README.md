@@ -77,7 +77,7 @@ Absurd is really simple. It just gets instructions and base on them produces css
 
 ## Syntax
 
-In the context of JavaScript the closest thing to pure CSS syntax is JSON format. So, every valid JSON is actually valid Absurd syntax. As you can see above there are two ways to send styles to the module. In both cases you have an access to the Absurd's API. For example:
+In the context of JavaScript the closest thing to pure CSS syntax is JSON format. So, every valid JSON is actually valid Absurd syntax. As you can see above, there are two ways to send styles to the module. In both cases you have an access to the Absurd's API. For example:
 
 	Absurd(function(API) {
 		API.add({});
@@ -89,4 +89,15 @@ or in an external js file
 		API.add({});
 	}
 
-The *add* method accepts valid JSON.
+The *add* method accepts valid JSON. This could be something like
+
+	body: {
+		'margin-top': '20px',
+		'padding': 0,
+		'font-weight': 'bold',
+		section: {
+			'padding-top': '20px'
+		}
+	}
+
+Every object defines a selector. Every property of that object could be a property and its value or another object.
