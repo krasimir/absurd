@@ -20,7 +20,7 @@ Absurd is really simple. It just gets instructions and base on them produces css
 		// do something with the css
 	});
 
-Or you may get only the API.
+Or you may get the API separately.
 
 	var absurd = Absurd();
 	var api = absurd.api;
