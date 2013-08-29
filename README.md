@@ -159,3 +159,9 @@ Of course you can't put everything in a single file. That's why there is *.impor
 			__dirname + '/forms/feedback-form.js'
 		]);
 	}
+
+## Testing
+
+The tests are placed in */tests* directory. Install [jasmine-node](https://github.com/mhevery/jasmine-node) and run
+
+	jasmine ./tests
