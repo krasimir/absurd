@@ -29,7 +29,7 @@ describe("Storage variables", function() {
 		});
 	});
 
-	it("should use function stored", function(done) {
+	it("should use function", function(done) {
 		var absurd = Absurd();
 		var api = absurd.api;
 		api
@@ -42,7 +42,6 @@ describe("Storage variables", function() {
 			}
 		});
 		absurd.compile(function(err, css) {
-			console.log(css);
 			expect(err).toBe(null);
 			expect(css).toBeDefined();
 			expect(css).toContain('border: solid 1px #0099AA');

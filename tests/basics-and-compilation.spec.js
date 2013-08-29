@@ -27,17 +27,23 @@ describe("Absurd acting in code:", function() {
 		expect(path.source).toBeDefined();
 		expect(path.source).toBe("./data/css/index.js");
 
-		absurd = Absurd();
-		path = absurd.getPath();
-		expect(path.source).not.toBeDefined();
-		expect(path.err).toBeDefined();
-
 		done();
 	});
 
+	it("should work with no path passed", function(done) {
+		absurd = Absurd();
+		absurd.api.add({a: {color: "#123"}});
+		absurd.compile(function(err, css) {
+			expect(err).toBe(null);
+			expect(css).toBeDefined();
+			expect(css).toContain("color: #123;");
+			done();
+		})
+	});
+
 	it("should compile an inline function", function(done) {
-		Absurd(function(A) {
-			A.add({
+		Absurd(function(api) {
+			api.add({
 				'.absurd-title': {
 					'border-radius': '10px'
 				}
@@ -58,6 +64,22 @@ describe("Absurd acting in code:", function() {
 			expect(css).toBeDefined();
 			done();
 		});		
+	});
+
+	it("should compile styles passed in array", function(done) {
+		Absurd(function(api) {
+			api.add({
+				'.header nav': [
+					{ 'font-size': '10px' },
+					{ 'font-size': '20px' }
+				]
+			})
+		}).compile(function(err, css) {
+			expect(err).toBe(null);
+			expect(css).toBeDefined();
+			expect(css).toContain(".header nav {\n  font-size: 20px;");
+			done();
+		})
 	});
 
 	
