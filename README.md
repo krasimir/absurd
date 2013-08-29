@@ -143,3 +143,19 @@ Is compiled to:
 	a:before {
 		content: "> ";
 	}
+
+### Importing
+
+Of course you can't put everything in a single file. That's why there is a *.import* method:
+
+	/css/index.js
+
+	module.exports = function(API) {
+		API.import(__dirname + '/config/colors.js');
+		API.import(__dirname + '/config/sizes.js');
+		API.import([
+			__dirname + '/layout/grid.js',
+			__dirname + '/forms/login-form.js',
+			__dirname + '/forms/feedback-form.js'
+		]);
+	}
