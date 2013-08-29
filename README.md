@@ -103,4 +103,43 @@ The *add* method accepts valid JSON. This could be something like
 		}
 	}
 
-Every object defines a selector. Every property of that object could be a property and its value or another object.
+Every object defines a selector. Every property of that object could be a property and its value or another object. For example the JSON above is compiled to:
+
+	body {
+		margin-top: 20px;
+		padding: 0;
+		font-weight: bold;
+	}
+	body section {
+		padding-top: 20px;
+	}
+
+### Pseudo classes
+
+It's similar like the example above:
+
+	a: {
+		'text-decoration': 'none',
+		'color': '#000',
+		':hover': {
+			'text-decoration': 'underline',
+			'color': '#999'
+		},
+		':before': {
+			content: '"> "'
+		}
+	}
+
+Is compiled to:
+
+	a {
+		text-decoration: none;
+		color: #000;
+	}
+	a:hover {
+		text-decoration: underline;
+		color: #999;
+	}
+	a:before {
+		content: "> ";
+	}
