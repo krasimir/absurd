@@ -146,7 +146,7 @@ Is compiled to:
 
 ### Importing
 
-Of course you can't put everything in a single file. That's why there is a *.import* method:
+Of course you can't put everything in a single file. That's why there is *.import* method:
 
 	/css/index.js
 
