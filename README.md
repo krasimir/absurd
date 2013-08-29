@@ -72,10 +72,10 @@ Absurd is really simple. It just gets instructions and base on them produces css
 
 ### Using through command line interface
 
-	outputs the css in the console
+	// outputs the css in the console
 	absurd -s [source file] 
 
-	outputs the css to a file
+	// outputs the css to a file
 	absurd -s [source file] -o [output file]
 
 ## Syntax
@@ -84,7 +84,7 @@ In the context of JavaScript the closest thing to pure CSS syntax is JSON format
 
 	Absurd(function(API) {
 		API.add({});
-	}).compile(function(err, css) {
+	});
 
 or in an external js file
 
