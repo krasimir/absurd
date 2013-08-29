@@ -13,17 +13,19 @@ module.exports = absurd = function(path) {
 	API = require("./lib/API.js")();
 
 	var _path = PathFormatter(path),
-		_absurd = {};
+		_absurd = {api: API};
 
 	// --------------------------------------------------- compile
 	var compile = _absurd.compile = function(callback) {
 		if(typeof _path == "function") {
 			_path(API);
-		} else {
-			try {
-				require(_path.source)(API);
-			} catch(err) {
-				console.log("Error: I can't find '" + _path.source + "'.");
+		} else {		
+			if(_path !== false) {
+				try {
+					require(_path.source)(API);
+				} catch(err) {
+					console.log("Error: I can't find '" + _path.source + "'.");
+				}
 			}
 		}
 		Processor(

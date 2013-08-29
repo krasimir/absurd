@@ -1,7 +1,7 @@
 module.exports = function(A) {
 	A.add({
-		.title {
-			
+		'.title': {
+			color: A.storage("brand-color")
 		}
 	})
 }

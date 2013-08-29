@@ -1,8 +1,8 @@
-describe("Nested selectors", function() {
+describe("Pseudo classes", function() {
 
 	var Absurd = require("../index.js");
 
-	it("should use nesting", function(done) {
+	it("should use pseudo classes", function(done) {
 		Absurd(function(A) {
 			A.add({
 				a: {
