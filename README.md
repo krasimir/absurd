@@ -72,8 +72,11 @@ Absurd is really simple. It just gets instructions and base on them produces css
 
 ### Using through command line interface
 
-	absurd -s [source file] <- outputs the css in the console
-	absurd -s [source file] -o [output file] <- outputs the css to a file
+	outputs the css in the console
+	absurd -s [source file] 
+
+	outputs the css to a file
+	absurd -s [source file] -o [output file]
 
 ## Syntax
 
