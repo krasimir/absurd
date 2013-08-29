@@ -1,4 +1,4 @@
-absurd
+absurd.js
 ======
 
 Writing your CSS in JavaScript. That's it!
