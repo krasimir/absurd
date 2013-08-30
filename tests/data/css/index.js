@@ -5,13 +5,17 @@ module.exports = function(A) {
 			'padding': 0,
 			'font-weight': 'bold',
 			section: {
-				'padding-top': '20px'
+				'padding-top': '42px'
+			},
+			p: {
+				'line-height': '30px'
 			}
 		}
 	});
 	A.add({
 		'header .logo': {
-			'font-size': '30px'
+			'font-size': '16px'
 		}
 	});
+	A.import(__dirname + "/config/others.js");
 }

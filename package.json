@@ -7,7 +7,9 @@
   "author": "Krasimir Tsonev",
   "license": "BSD",
   "dependencies": { 
-    "optimist": "0.6.0"
+    "optimist": "0.6.0",
+    "colors": "0.6.2",
+    "watch": "0.8.0"
   },
   "keywords": [
     "css",

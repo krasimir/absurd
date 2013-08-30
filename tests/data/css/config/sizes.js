@@ -6,7 +6,7 @@ module.exports = function(A) {
 			height: '97%'
 		},
 		'.header': {
-			margin: '10px 0 20px 0'
+			margin: '10px 0 20px 10px'
 		}
 		
 	});

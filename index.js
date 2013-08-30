@@ -6,7 +6,8 @@ var PathFormatter = require("./lib/helpers/PathFormatter.js"),
 	absurd = null,
 	fs = require("fs"),
 	argv = require('optimist').argv,
-	cli = require('./lib/CLI.js');
+	cli = require('./lib/CLI.js'),
+	requireUncached = require('./lib/helpers/RequireUncached.js');
 
 module.exports = absurd = function(path) {
 
@@ -21,8 +22,8 @@ module.exports = absurd = function(path) {
 			_path(API);
 		} else {		
 			if(_path !== false) {
-				try {
-					require(_path.source)(API);
+				try {					
+					requireUncached(_path.source)(API);
 				} catch(err) {
 					console.log("Error: I can't find '" + _path.source + "'.");
 				}
