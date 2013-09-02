@@ -1,0 +1,1 @@
+node .\index.js -s .\tests\data\css\index.js -o .\tests\data\result\res.css -w .\tests\data

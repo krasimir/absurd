@@ -8,14 +8,15 @@ module.exports = function(A) {
 				'padding-top': '42px'
 			},
 			p: {
-				'line-height': '30px'
+				'line-height': '32px'
 			}
 		}
 	});
 	A.add({
 		'header .logo': {
-			'font-size': '16px'
+			'font-size': '23px',
+			'padding-top': '13.22px'
 		}
 	});
-	A.import(__dirname + "/config/others.js");
+	// A.import(__dirname + "/config/jjj.js");
 }

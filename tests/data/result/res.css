@@ -7,8 +7,9 @@ body section {
   padding-top: 42px;
 }
 body p {
-  line-height: 30px;
+  line-height: 32px;
 }
 header .logo {
-  font-size: 16px;
+  font-size: 23px;
+  padding-top: 13.22px;
 }

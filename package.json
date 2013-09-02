@@ -1,6 +1,6 @@
 {
   "name": "absurd",
-  "version": "0.0.11",
+  "version": "0.0.12",
   "homepage": "https://github.com/krasimir/absurd",
   "description": "CSS preprocessor",
   "main": "index.js",
@@ -9,7 +9,8 @@
   "dependencies": { 
     "optimist": "0.6.0",
     "colors": "0.6.2",
-    "watch": "0.8.0"
+    "gaze": "0.4.1",
+    "glob": "3.2.6"
   },
   "keywords": [
     "css",
