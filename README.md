@@ -65,6 +65,14 @@ After that, in your nodejs application */app.js*
 
 ### Using with Grunt
 
+Dependencies for your *package.json*:
+
+	"dependencies": {
+		"grunt": "~0.4.1",
+		"grunt-contrib-watch": "*",
+		"grunt-absurd": "*"
+	}
+
 Simple *Gruntfile.js*:
 
 	module.exports = function(grunt) {
