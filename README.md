@@ -61,7 +61,7 @@ After that, in your nodejs application */app.js*
 
 	// Outputs the css to a file and watching specific directory.
 	// If some of the files there is changed a compilation is fired.
-	absurd -s [source file] -o [output file]
+	absurd -s [source file] -o [output file] -w [directory]
 
 ### Using with Grunt
 
