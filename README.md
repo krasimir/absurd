@@ -3,6 +3,16 @@ absurd.js
 
 Writing your CSS in JavaScript. That's it!
 
+======
+
+  - [Installation](#Installation)
+  - [Usage](#Usage)
+  - [Syntax](#Syntax)
+  - [API](#API)
+  - [Testing](#Testing)
+
+======
+
 ## Installation
 
 	npm install -g absurd
