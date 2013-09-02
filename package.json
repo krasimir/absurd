@@ -1,10 +1,14 @@
 {
   "name": "absurd",
-  "version": "0.0.12",
+  "version": "0.0.13",
   "homepage": "https://github.com/krasimir/absurd",
   "description": "CSS preprocessor",
   "main": "index.js",
-  "author": "Krasimir Tsonev",
+  "author": {
+    "name": "Krasimir Tsonev",
+    "email": "info@krasimirtsonev.com",
+    "url": "http://krasimirtsonev.com"
+  },
   "license": "BSD",
   "dependencies": { 
     "optimist": "0.6.0",

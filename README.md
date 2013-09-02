@@ -22,6 +22,7 @@ Absurd is really simple. It just gets instructions and base on them produces css
 
 Or you may get the API separately.
 
+	var Absurd = require("absurd");
 	var absurd = Absurd();
 	var api = absurd.api;
 	api.add({ ... }).import("...");
@@ -52,11 +53,44 @@ After that, in your nodejs application */app.js*
 
 ### Using through command line interface
 
-	// outputs the css in the console
+	// Outputs the css in the console.
 	absurd -s [source file] 
 
-	// outputs the css to a file
+	// Outputs the css to a file.
 	absurd -s [source file] -o [output file]
+
+	// Outputs the css to a file and watching specific directory.
+	// If some of the files there is changed a compilation is fired.
+	absurd -s [source file] -o [output file]
+
+### Using with Grunt
+
+Simple *Gruntfile.js*:
+
+	module.exports = function(grunt) {
+
+		grunt.initConfig({
+			absurd: {
+				task: {
+					src: __dirname + "/css/absurd/index.js",
+					dest: 'css/styles.css'
+				}
+			},
+			watch: {
+				css: {
+					files: ['css/absurd/**/*.js'],
+					tasks: ['absurd']
+				}
+			}
+		});
+
+		grunt.loadNpmTasks('grunt-contrib-watch');
+		grunt.loadNpmTasks('grunt-absurd');
+
+		// grunt.registerTask('default', ['concat', 'less']);
+		grunt.registerTask('default', ['absurd', 'watch']);
+
+	}
 
 ## Syntax
 
