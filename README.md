@@ -271,6 +271,50 @@ What you do is to send array of two objects to the selector '.header-button'. Th
 
 Notice that the second object overwrites few styles passed via the mixin.
 
+## API
+
+### .add([object])
+
+	module.exports = function(api) {
+	    api.add({
+	    	body: { 
+	    		padding: 0 
+	    	}
+		});
+	}
+
+### .import([string] | [[string, string, ...]])
+
+	module.exports = function(A) {
+		A.import(__dirname + '/config/sizes.js');
+		A.import([
+			__dirname + '/config/colors.js',
+			__dirname + '/config/sizes.js'
+		]);
+	}
+
+### .storage([key], [value])
+
+Setting value:
+
+	module.exports = function(api) {
+	    api.storage("mixin", function(px) { 
+	    	return {
+	    		'font-size': px + 'px'
+	    	}
+	    });
+	}
+
+Getting value:
+
+	module.exports = function(api) {
+		api.add({
+			body: [
+				api.storage("mixin")(18)
+			]
+		});
+	}	
+
 ## Testing
 
 The tests are placed in */tests* directory. Install [jasmine-node](https://github.com/mhevery/jasmine-node) and run
