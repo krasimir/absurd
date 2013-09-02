@@ -5,11 +5,11 @@ Writing your CSS in JavaScript. That's it!
 
 ======
 
-  - [Installation](#Installation)
-  - [Usage](#Usage)
-  - [Syntax](#Syntax)
-  - [API](#API)
-  - [Testing](#Testing)
+  - [Installation](#installation)
+  - [Usage](#usage)
+  - [Syntax](#syntax)
+  - [API](#api)
+  - [Testing](#testing)
 
 ======
 
