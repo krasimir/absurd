@@ -325,6 +325,26 @@ Getting value:
 		});
 	}	
 
+### .darken([color], [percents])
+
+	module.exports = function(api) {
+		api.add({
+			body: {
+				color: api.darken('#BADA55', 25) // darken 25%
+			}
+		});
+	}
+
+### .lighten([color], [percents])
+
+	module.exports = function(api) {
+		api.add({
+			body: {
+				color: api.lighten('#BADA55', 25) // lighten 25%
+			}
+		});
+	}
+
 ## Testing
 
 The tests are placed in */tests* directory. Install [jasmine-node](https://github.com/mhevery/jasmine-node) and run
