@@ -9,7 +9,10 @@ body section {
 body p {
   line-height: 32px;
 }
-header .logo {
+header .logo a {
   font-size: 23px;
   padding-top: 13.22px;
+}
+header .logo a span {
+  font-weight: bold;
 }

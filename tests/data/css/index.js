@@ -13,9 +13,12 @@ module.exports = function(A) {
 		}
 	});
 	A.add({
-		'header .logo': {
+		'header .logo a': {
 			'font-size': '23px',
-			'padding-top': '13.22px'
+			'padding-top': '13.22px',
+			span: {
+				'font-weight': 'bold'
+			}
 		}
 	});
 	// A.import(__dirname + "/config/jjj.js");

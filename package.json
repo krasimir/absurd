@@ -14,7 +14,8 @@
     "optimist": "0.6.0",
     "colors": "0.6.2",
     "gaze": "0.4.1",
-    "glob": "3.2.6"
+    "glob": "3.2.6",
+    "underscore": "1.5.1"
   },
   "keywords": [
     "css",
