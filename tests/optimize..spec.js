@@ -70,4 +70,24 @@ describe("Optimize CSS", function() {
 		});
 	});
 
+	it("should combine properties", function(done) {
+		Absurd(function(api){
+			api.add({
+				body: {
+					'font-size': '20px'
+				}
+			});
+			api.add({
+				body: {
+					'padding': '30px'
+				}
+			});
+		}).compile(function(err, css) {
+			expect(err).toBe(null);
+			expect(css).toBeDefined();
+			expect(css).toBe('body {\n  font-size: 20px;\n  padding: 30px;\n}\n');
+			done();
+		});
+	});
+
 });
