@@ -323,6 +323,8 @@ Are compiled to:
 		font-size: 32px;
 	}
 
+Have in mind that the plugin should always return an object.
+
 ## API
 
 ### .add([object])
@@ -366,6 +368,14 @@ Getting value:
 			]
 		});
 	}	
+
+### .plugin([name of property], [function])
+
+	api.plugin('my-custom-gradient', function(colors) {
+		return {
+			background: 'linear-gradient(to bottom, ' + colors.join(", ") + ')'
+		};
+	});
 
 ### .darken([color], [percents])
 

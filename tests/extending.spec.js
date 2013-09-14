@@ -2,7 +2,7 @@ describe("Extending", function() {
 
 	var Absurd = require('../index.js');
 
-	it("should extend Absurd", function(done) {
+	it("should create plugins", function(done) {
 		Absurd(function(api) {
 			api.plugin('my-custom-gradient', function(colors) {
 				return {
@@ -33,6 +33,41 @@ describe("Extending", function() {
 			expect(css).toBe('body {\n  margin: 20px;\n  font-size: 14px;\n  background: linear-gradient(to bottom, #F00, #00F);\n}\nbody p {\n  font-size: 32px;\n}\n');
 			done();
 		});		
+	});
+
+	it("should create plugin which depends on other plugin", function(done) {
+		Absurd(function(api) {
+			api.plugin('my-custom-gradient', function(colors) {
+				return {
+					background: 'linear-gradient(to bottom, ' + colors.join(", ") + ')',
+					'brand-font-size': 'small'
+				};
+			});
+			api.plugin('brand-font-size', function(type) {
+				switch(type) {
+					case "small": return { 'font-size': '12.5px', 'brand-color': ''}; break;
+					case "medium": return { 'font-size': '22px', 'brand-color': ''}; break;
+					case "big": return { 'font-size': '32px', 'brand-color': ''}; break;
+					default: return { 'font-size': '12px', 'brand-color': ''}; break;
+				}
+			});
+			api.plugin('brand-color', function() {
+				return { color: '#09f' };
+			})
+			api.add({
+				body: {
+					margin: '20px',
+					color: '#FAA',
+					'font-size': '14px',
+					'my-custom-gradient': ['#F00', '#00F']
+				}
+			});
+		}).compile(function(err, css) {
+			expect(err).toBe(null);
+			expect(css).toBeDefined();
+			expect(css).toBe('body {\n  margin: 20px;\n  color: #09f;\n  font-size: 12.5px;\n  background: linear-gradient(to bottom, #F00, #00F);\n}\n');
+			done();
+		});	
 	});
 
 });
