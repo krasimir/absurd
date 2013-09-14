@@ -281,6 +281,48 @@ What you do is to send array of two objects to the selector '.header-button'. Th
 
 Notice that the second object overwrites few styles passed via the mixin.
 
+### Plugins
+
+The plugins are similar like mixins, but act as property-value pair. There is an API method for registering plugins. For example:
+
+	api.plugin('my-custom-gradient', function(colors) {
+		return {
+			background: 'linear-gradient(to bottom, ' + colors.join(", ") + ')'
+		};
+	});
+	api.plugin('brand-font-size', function(type) {
+		switch(type) {
+			case "small": return { 'font-size': '12px'}; break;
+			case "medium": return { 'font-size': '22px'}; break;
+			case "big": return { 'font-size': '32px'}; break;
+			default: return { 'font-size': '12px'}; break;
+		}
+	});
+
+The code creates two plugins, which respond on *my-custom-gradient* and *brand-font-size* property. So, the following styles
+
+	api.add({
+		body: {
+			margin: '20px',
+			'font-size': '14px',
+			'my-custom-gradient': ['#F00', '#00F'],
+			p: {
+				'brand-font-size': 'big'	
+			}					
+		}
+	});
+
+Are compiled to:
+
+	body {
+		margin: 20px;
+		font-size: 14px;
+		background: linear-gradient(to bottom, #F00, #00F);
+	}
+	body p {
+		font-size: 32px;
+	}
+
 ## API
 
 ### .add([object])
