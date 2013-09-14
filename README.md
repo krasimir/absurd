@@ -323,7 +323,7 @@ Are compiled to:
 		font-size: 32px;
 	}
 
-Have in mind that the plugin should always return an object.
+Have in mind, that the plugin should always return an object.
 
 ## API
 
