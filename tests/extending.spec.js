@@ -4,12 +4,12 @@ describe("Extending", function() {
 
 	it("should create plugins", function(done) {
 		Absurd(function(api) {
-			api.plugin('my-custom-gradient', function(colors) {
+			api.plugin('my-custom-gradient', function(api, colors) {
 				return {
 					background: 'linear-gradient(to bottom, ' + colors.join(", ") + ')'
 				};
 			});
-			api.plugin('brand-font-size', function(type) {
+			api.plugin('brand-font-size', function(api, type) {
 				switch(type) {
 					case "small": return { 'font-size': '12px'}; break;
 					case "medium": return { 'font-size': '22px'}; break;
@@ -37,13 +37,13 @@ describe("Extending", function() {
 
 	it("should create plugin which depends on other plugin", function(done) {
 		Absurd(function(api) {
-			api.plugin('my-custom-gradient', function(colors) {
+			api.plugin('my-custom-gradient', function(api, colors) {
 				return {
 					background: 'linear-gradient(to bottom, ' + colors.join(", ") + ')',
 					'brand-font-size': 'small'
 				};
 			});
-			api.plugin('brand-font-size', function(type) {
+			api.plugin('brand-font-size', function(api, type) {
 				switch(type) {
 					case "small": return { 'font-size': '12.5px', 'brand-color': ''}; break;
 					case "medium": return { 'font-size': '22px', 'brand-color': ''}; break;
@@ -51,7 +51,7 @@ describe("Extending", function() {
 					default: return { 'font-size': '12px', 'brand-color': ''}; break;
 				}
 			});
-			api.plugin('brand-color', function() {
+			api.plugin('brand-color', function(api) {
 				return { color: '#09f' };
 			})
 			api.add({

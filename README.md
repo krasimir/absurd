@@ -285,12 +285,12 @@ Notice that the second object overwrites few styles passed via the mixin.
 
 The plugins are similar like mixins, but act as property-value pair. There is an API method for registering plugins. For example:
 
-	api.plugin('my-custom-gradient', function(colors) {
+	api.plugin('my-custom-gradient', function(api, colors) {
 		return {
 			background: 'linear-gradient(to bottom, ' + colors.join(", ") + ')'
 		};
 	});
-	api.plugin('brand-font-size', function(type) {
+	api.plugin('brand-font-size', function(api, type) {
 		switch(type) {
 			case "small": return { 'font-size': '12px'}; break;
 			case "medium": return { 'font-size': '22px'}; break;
@@ -371,11 +371,13 @@ Getting value:
 
 ### .plugin([name of property], [function])
 
-	api.plugin('my-custom-gradient', function(colors) {
+	api.plugin('my-custom-gradient', function(api, colors) {
 		return {
 			background: 'linear-gradient(to bottom, ' + colors.join(", ") + ')'
 		};
 	});
+
+The function of the plugin accepts two arguments. The first one is a reference to the API and second one is the value of the CSS property.
 
 ### .darken([color], [percents])
 
