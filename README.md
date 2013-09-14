@@ -325,6 +325,56 @@ Are compiled to:
 
 Have in mind, that the plugin should always return an object.
 
+### Media queries
+
+The following code
+
+	api.add({
+		body: {
+			'line-height': '20px',
+			'@media all (max-width: 950px)': {
+				'line-height': '40px',
+				color: '#BADA55'
+			},
+			'@media all (min-width: 550px)': {
+				'line-height': '32px'	
+			},
+			p: {
+				margin: '10px',
+				padding: '4px',
+				'@media all (max-width: 950px)': {
+					padding: '12px',
+					'brand-color': ''
+				}
+			}
+		}
+	});
+
+is compiled to
+
+	body {
+		line-height: 20px;
+	}
+	body p {
+		margin: 10px;
+		padding: 4px;
+	}
+	@media all (max-width: 950px) {
+		body {
+			line-height: 40px;
+			color: #BADA55;
+		}
+		body p {
+			color: #9fA;
+			padding: 12px;
+		}
+	}
+	@media all (min-width: 550px) {
+		body {
+			line-height: 32px;
+		}
+	}
+
 ## API
 
 ### .add([object])
