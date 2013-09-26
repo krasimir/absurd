@@ -1,7 +1,20 @@
-absurd.js
+# absurd.js
 ======
 
-Writing your CSS in JavaScript. That's it!
+### Writing your CSS in JavaScript. That's it!
+
+For AbsurdJS, the following code is valid CSS:
+
+	".navigation": {
+		margin: "12px 0 0 0 ",
+		type: "horizontal",
+		a: {
+			"element-style": "button",
+			responsive: "true"
+		}
+	}
+
+*type*, *element-style* and *resposive* are just [plugins](https://github.com/krasimir/absurd#plugins) which return pure CSS.
 
 ======
 
