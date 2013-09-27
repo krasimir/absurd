@@ -15,6 +15,8 @@ For AbsurdJS, the following code is valid CSS:
 
 *type*, *element-style* and *resposive* are just [plugins](https://github.com/krasimir/absurd#plugins) which return pure CSS.
 
+
+
 ======
 
   - [Installation](#installation)
@@ -22,6 +24,8 @@ For AbsurdJS, the following code is valid CSS:
   - [Syntax](#syntax)
   - [API](#api)
   - [Testing](#testing)
+  - Resources
+  	- In-depth article about AbsurdJS - [link](http://davidwalsh.name/write-css-javascript)
 
 ======
 
