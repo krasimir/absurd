@@ -13,7 +13,7 @@ For AbsurdJS, the following code is valid CSS:
 		}
 	}
 
-*type*, *elementstyle* and *resposive* are just [plugins](https://github.com/krasimir/absurd#plugins) which return pure CSS.
+*type*, *elementstyle* and *responsive* are just [plugins](https://github.com/krasimir/absurd#plugins) which return pure CSS.
 
 
 
