@@ -8,12 +8,12 @@ For AbsurdJS, the following code is valid CSS:
 		margin: "12px 0 0 0 ",
 		type: "horizontal",
 		a: {
-			"element-style": "button",
+			elementstyle: "button",
 			responsive: "true"
 		}
 	}
 
-*type*, *element-style* and *resposive* are just [plugins](https://github.com/krasimir/absurd#plugins) which return pure CSS.
+*type*, *elementstyle* and *resposive* are just [plugins](https://github.com/krasimir/absurd#plugins) which return pure CSS.
 
 
 
@@ -144,11 +144,11 @@ The *add* method accepts valid JSON. This could be something like
 
 	{
 		body: {
-			'margin-top': '20px',
-			'padding': 0,
-			'font-weight': 'bold',
+			marginTop: '20px',
+			padding: 0,
+			fontWeight: 'bold',
 			section: {
-				'padding-top': '20px'
+				paddingTop: '20px'
 			}
 		}
 	}
@@ -164,12 +164,16 @@ Every object defines a selector. Every property of that object could be a proper
 		padding-top: 20px;
 	}
 
+Have in mind that you don't need to quote the CSS properties. AbsurdJS converts every uppercase letter to a dash followed by the lowercase version of the letter. I.e.:
+
+	WebkitTransform -> -webkit-transform
+
 You may send even an array of style like that
 
 	{
 		'.header nav': [
-			{ 'font-size': '10px' },
-			{ 'font-size': '20px' }
+			{ fontSize: '10px' },
+			{ fontSize: '20px' }
 		]
 	}
 
@@ -185,11 +189,11 @@ And that's compiled to
 It's similar like the example above:
 
 	a: {
-		'text-decoration': 'none',
-		'color': '#000',
+		textDecoration: 'none',
+		color: '#000',
 		':hover': {
-			'text-decoration': 'underline',
-			'color': '#999'
+			textDecoration: 'underline',
+			color: '#999'
 		},
 		':before': {
 			content: '"> "'
@@ -267,7 +271,7 @@ In the context of Absurd mixins are actually normal javascript functions. The ab
 				display: "inline-block",
 				padding: "10px 20px",
 				border: "solid " + thickness + "px " + color,
-				'font-size': "10px"
+				fontSize: "10px"
 			}
 		});
 	}
@@ -279,7 +283,7 @@ In the context of Absurd mixins are actually normal javascript functions. The ab
 				api.storage("button")("#AAA", 10),
 				{
 					color: '#F00',
-					'font-size': '13px'
+					fontSize: '13px'
 				}
 			]
 		});
@@ -308,10 +312,10 @@ The plugins are similar like mixins, but act as property-value pair. There is an
 	});
 	api.plugin('brand-font-size', function(api, type) {
 		switch(type) {
-			case "small": return { 'font-size': '12px'}; break;
-			case "medium": return { 'font-size': '22px'}; break;
-			case "big": return { 'font-size': '32px'}; break;
-			default: return { 'font-size': '12px'}; break;
+			case "small": return { fontSize: '12px'}; break;
+			case "medium": return { fontSize: '22px'}; break;
+			case "big": return { fontSize: '32px'}; break;
+			default: return { fontSize: '12px'}; break;
 		}
 	});
 
@@ -320,7 +324,7 @@ The code creates two plugins, which respond on *my-custom-gradient* and *brand-f
 	api.add({
 		body: {
 			margin: '20px',
-			'font-size': '14px',
+			fontSize: '14px',
 			'my-custom-gradient': ['#F00', '#00F'],
 			p: {
 				'brand-font-size': 'big'	
@@ -347,13 +351,13 @@ The following code
 
 	api.add({
 		body: {
-			'line-height': '20px',
+			lineHeight: '20px',
 			'@media all (max-width: 950px)': {
-				'line-height': '40px',
+				lineHeight: '40px',
 				color: '#BADA55'
 			},
 			'@media all (min-width: 550px)': {
-				'line-height': '32px'	
+				lineHeight: '32px'	
 			},
 			p: {
 				margin: '10px',
@@ -420,7 +424,7 @@ Setting value:
 	module.exports = function(api) {
 	    api.storage("mixin", function(px) { 
 	    	return {
-	    		'font-size': px + 'px'
+	    		fontSize: px + 'px'
 	    	}
 	    });
 	}
