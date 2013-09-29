@@ -249,7 +249,7 @@ Of course you can't put everything in a single file. That's why there is *.impor
 		]);
 	}
 
-Pay attention to the types of the files. The first two are actually JavaScript files, because they need an access to the API (to define mixins, plugins etc ...). The second *import* statement adds the actual styling. Of course it is not necessary to use this approach, but writing pure JSON sometimes may be a better option.
+Pay attention to the type of the files. The first two are actually JavaScript files, because they need an access to the API (to define mixins, plugins etc ...). The second *import* statement adds the actual styling. Of course it is not necessary to use this approach, but writing pure JSON sometimes may be a better option.
 
 ### Using variables
 
