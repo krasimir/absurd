@@ -27,11 +27,7 @@ module.exports = absurd = function(path) {
 			_path(API);
 		} else {		
 			if(_path !== false) {
-				try {					
-					requireUncached(_path.source)(API);
-				} catch(err) {
-					console.log("Error: I can't find '" + _path.source + "'.");
-				}
+				API.import(_path.source);
 			}
 		}
 		Processor(

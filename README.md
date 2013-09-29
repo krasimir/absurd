@@ -15,8 +15,6 @@ For AbsurdJS, the following code is valid CSS:
 
 *type*, *elementstyle* and *responsive* are just [plugins](https://github.com/krasimir/absurd#plugins) which return pure CSS.
 
-
-
 ======
 
   - [Installation](#installation)
@@ -67,6 +65,27 @@ Just create a *.js* file like for example */css/styles.js*. The file should cont
 After that, in your nodejs application */app.js*
 
 	Absurd("./css/styles.js").compile(function(err, css) {
+		// ...
+	});
+
+### Importing JSON
+
+The library supports importing of pure JSON. Of course this approach doesn't give you an access to the API, but it is still useful if you want to skip the typical Nodejs module definition. For example:
+
+	// styles.json
+	{
+		"body": {
+			"margin": "0",
+			"padding": "0",
+			"fontSize": "1em",
+			"p": {
+				"line-height": "30px"
+			}
+		}
+	}
+
+	// app.js
+	Absurd("styles.json").compile(function(err, css) {
 		// ...
 	});
 
@@ -224,11 +243,13 @@ Of course you can't put everything in a single file. That's why there is *.impor
 		api.import(__dirname + '/config/colors.js');
 		api.import(__dirname + '/config/sizes.js');
 		api.import([
-			__dirname + '/layout/grid.js',
-			__dirname + '/forms/login-form.js',
-			__dirname + '/forms/feedback-form.js'
+			__dirname + '/layout/grid.json',
+			__dirname + '/forms/login-form.json',
+			__dirname + '/forms/feedback-form.json'
 		]);
 	}
+
+Pay attention to the types of the files. The first two are actually JavaScript files, because they need an access to the API (to define mixins, plugins etc ...). The second *import* statement adds the actual styling. Of course it is not necessary to use this approach, but writing pure JSON sometimes may be a better option.
 
 ### Using variables
 
@@ -416,6 +437,8 @@ is compiled to
 			__dirname + '/config/sizes.js'
 		]);
 	}
+
+AbsurdJS supports importing of JavaScript and JSON files.
 
 ### .storage([key], [value])
 
