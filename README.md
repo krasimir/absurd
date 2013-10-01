@@ -56,6 +56,8 @@ Or you may get the API separately.
 
 ### Puting the styles in an external file
 
+#### .js
+
 Just create a *.js* file like for example */css/styles.js*. The file should contain the usual nodejs module code.
 
 	module.exports = function(api) {
@@ -68,7 +70,7 @@ After that, in your nodejs application */app.js*
 		// ...
 	});
 
-### Importing JSON
+#### .json
 
 The library supports importing of pure JSON. Of course this approach doesn't give you an access to the API, but it is still useful if you want to skip the typical Nodejs module definition. For example:
 
@@ -88,6 +90,34 @@ The library supports importing of pure JSON. Of course this approach doesn't giv
 	Absurd("styles.json").compile(function(err, css) {
 		// ...
 	});
+
+#### .css
+
+Absurd accepts normal CSS. The good news is that you can still use all the other features. For example:
+
+	// styles.js
+	api.plugin("size", function(api, type) {
+		switch(type) {
+			case "large": return { fontSize: "30px" }; break;
+			case "medium": return { fontSize: "24px" }; break;
+			case "small": return { fontSize: "12px" }; break;
+			default: return { fontSize: "16px" };
+		}
+	});
+	api.import(__dirname + "/css/main.css");
+
+	// main.css
+	body {
+		margin-top: 10px;
+		size: small;
+	}
+
+And the result is:
+
+	body {
+		margin-top: 10px;
+		font-size: 12px;
+	}
 
 ### Compiling to file
 
@@ -243,9 +273,11 @@ Of course you can't put everything in a single file. That's why there is *.impor
 		api.import(__dirname + '/config/colors.js');
 		api.import(__dirname + '/config/sizes.js');
 		api.import([
-			__dirname + '/layout/grid.json',
-			__dirname + '/forms/login-form.json',
-			__dirname + '/forms/feedback-form.json'
+			__dirname + '/layout/grid.json'
+		]);
+		api.import([
+			__dirname + '/forms/login-form.css',
+			__dirname + '/forms/feedback-form.css'
 		]);
 	}
 
@@ -438,7 +470,7 @@ is compiled to
 		]);
 	}
 
-AbsurdJS supports importing of JavaScript and JSON files.
+AbsurdJS supports importing of JavaScript, JSON and CSS files.
 
 ### .storage([key], [value])
 
