@@ -28,6 +28,5 @@
   },
   "bin": {
     "absurd": "./index.js"
-  },
-  "main": "index.js"
+  }
 }
