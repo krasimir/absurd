@@ -37,8 +37,8 @@ Absurd is really simple. It just gets instructions and base on them produces css
 
 ### Compilation
 
-	compile([callback], [settings])
-	compileFile([outputFile], [callback], [settings])
+	.compile([callback], [settings])
+	.compileFile([outputFile], [callback], [settings])
 
 *settings* parameter is optional. Valid options:
 
@@ -54,7 +54,7 @@ Absurd is really simple. It just gets instructions and base on them produces css
 		// use the Absurd's api here
 	}).compile(function(err, css) {
 		// do something with the css
-	},);
+	});
 
 Or you may get the API separately.
 
