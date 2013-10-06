@@ -354,7 +354,7 @@ What you do is to send array of two objects to the selector '.header-button'. Th
 
 Notice that the second object overwrites few styles passed via the mixin.
 
-### Plugins
+### Plugins (i.e. define your own CSS properties)
 
 The plugins are similar like mixins, but act as property-value pair. There is an API method for registering plugins. For example:
 
@@ -448,6 +448,39 @@ is compiled to
 		}
 	}
 
+### Sending raw data to the final compiled CSS
+
+AbsurdJS gives you ability to directly send content to the final CSS. I.e. something which is skipped by the compiler and it is directly concatenated with the processed data.
+
+	api
+	.add({
+		body: {
+			marginTop: "20px",
+			p: {
+				fontSize: "5px"
+			}
+		}
+	})
+	.raw('/* ' + comment + ' */')
+	.add({
+		a: {
+			paddingTop: "20px"
+		}
+	});
+
+The code above is compiled to
+
+	body {
+	  margin-top: 20px;
+	}
+	body p {
+	  font-size: 5px;
+	}
+	/* AbsurdJS is awesome! */
+	a {
+	  padding-top: 20px;
+	}
+
 ## API
 
 ### .add([object])
@@ -522,6 +555,12 @@ The function of the plugin accepts two arguments. The first one is a reference t
 				color: api.lighten('#BADA55', 25) // lighten 25%
 			}
 		});
+	}
+
+### .raw([string])
+
+	module.exports = function(api) {
+		api.raw('/* comment here */');
 	}
 
 ## Testing
