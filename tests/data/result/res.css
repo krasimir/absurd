@@ -1,18 +1,1 @@
-body {
-  margin-top: 20px;
-  padding: 0;
-  font-weight: bold;
-}
-body section {
-  padding-top: 42px;
-}
-body p {
-  line-height: 32px;
-}
-header .logo a {
-  font-size: 23px;
-  padding-top: 13.22px;
-}
-header .logo a span {
-  font-weight: bold;
-}
+body{margin-top:20px;padding:0}body,header .logo a span{font-weight:700}body section{padding-top:42px}header .logo a{padding-top:13.22px;font-size:23px}body p{line-height:133px}

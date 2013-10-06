@@ -35,14 +35,26 @@ For AbsurdJS, the following code is valid CSS:
 
 Absurd is really simple. It just gets instructions and base on them produces css. So, it's just a matter of personal choice where to use it. You may want to integrate the module directly into your application. If that's not ok for you then you are able to compile the css by using the command line.
 
-### Inline styles
+### Compilation
+
+	compile([callback], [settings])
+	compileFile([outputFile], [callback], [settings])
+
+*settings* parameter is optional. Valid options:
+
+	{
+		combineSelectors: true | false (by default true),
+		minify: true | false (by default false)
+	}
+
+#### Inline
 
 	var Absurd = require("absurd");
 	Absurd(function(api) {
 		// use the Absurd's api here
 	}).compile(function(err, css) {
 		// do something with the css
-	});
+	},);
 
 Or you may get the API separately.
 
@@ -52,6 +64,13 @@ Or you may get the API separately.
 	api.add({ ... }).import("...");
 	absurd.compile(function(err, css) {
 		// do something with the css
+	});
+
+#### To file
+
+	var output = "./css/styles.css";
+	Absurd("./css/styles.js").compileFile(output, function(err, css) {
+		// ...
 	});
 
 ### Puting the styles in an external file
@@ -119,13 +138,6 @@ And the result is:
 		font-size: 12px;
 	}
 
-### Compiling to file
-
-	var output = "./css/styles.css";
-	Absurd("./css/styles.js").compileFile(output, function(err, css) {
-		// ...
-	});
-
 ### Using through command line interface
 
 	// Outputs the css in the console.
@@ -137,6 +149,9 @@ And the result is:
 	// Outputs the css to a file and watching specific directory.
 	// If some of the files there is changed a compilation is fired.
 	absurd -s [source file] -o [output file] -w [directory]
+
+	// Minify the CSS
+	absurd -s [source file] -m true
 
 ### Using with Grunt
 

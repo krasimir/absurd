@@ -17,7 +17,8 @@ module.exports = absurd = function(path) {
 	var _path = PathFormatter(path),
 		_absurd = {api: API},
 		_defaultOptions = {
-			combineSelectors: true
+			combineSelectors: true,
+			minify: false
 		};
 
 	// --------------------------------------------------- compile

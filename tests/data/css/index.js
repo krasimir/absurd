@@ -8,7 +8,7 @@ module.exports = function(A) {
 				'padding-top': '42px'
 			},
 			p: {
-				'line-height': '32px'
+				'line-height': '133px'
 			}
 		}
 	});
