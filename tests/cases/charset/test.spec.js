@@ -29,4 +29,27 @@ describe("Test case (charset)", function() {
 		});
 	});
 
+	it("charset / inline", function(done) {
+		Absurd(function(A) {
+			A.add({
+				body: {
+					borderRadius: "2px",
+					a: {
+						fontSize: "2em",
+						charset: "UTF-8"
+					}
+				},
+				p: {
+					margin: "2px",
+					charset: "BLA-BLA"
+				}
+			});
+		}).compile(function(err, css) {
+			expect(err).toBe(null);
+			expect(css).toBeDefined();
+			expect(css).toBe('body {\n  border-radius: 2px;\n}\nbody a {\n  font-size: 2em;\n}\n@charset: "BLA-BLA";\np {\n  margin: 2px;\n}\n');
+			done();
+		});
+	});
+
 });

@@ -3,6 +3,6 @@ module.exports = function(api) {
 		body: {
 			width: "100%"
 		},
-		"@charset": "UTF-8"
+		charset: "UTF-8"
 	});
 }
