@@ -1,5 +1,5 @@
 @keyframes fade {
-  0% {
+  0%, 20% {
     opacity: 0;
   }
   100% {

@@ -3,7 +3,7 @@ module.exports = function(api) {
 		keyframes: {
 			name: "fade",
 			frames: {
-				"0%": {
+				"0%, 10%, 20%": {
 					opacity: 0
 				},
 				"100%": {
