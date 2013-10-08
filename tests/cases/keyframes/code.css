@@ -1,0 +1,20 @@
+@keyframes fade {
+  0% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
+  }
+  /* comment here */
+}
+@keyframes move {
+  from {
+    top: 10px;
+    margin: 20px 0 0 0;
+  }
+  /* final frame */
+  to {
+    top: 12px;
+    margin: 40px 0 0 0;
+  }
+}
