@@ -1,0 +1,8 @@
+.header {
+	font-size: 20px;
+}
+@supports (display: flex) or (display: box) {
+	.header {
+		font-size: 30px;
+	}
+}
