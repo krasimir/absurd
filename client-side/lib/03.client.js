@@ -34,6 +34,18 @@ var client = function() {
 
 		/******************************************* Copied directly from /lib/API.js */
 
+		// client side specific methods 
+		_api.compile = function(callback) {
+			lib.Processor(
+				_api.getRules(),
+				callback || function() {},
+				{combineSelectors: true}
+			);
+		}
+		_api.getPath = function() {
+			return {};
+		}
+
 		// registering api methods
 		for(var method in lib.api) {
 			_api[method] = lib.api[method](_api);
@@ -47,15 +59,6 @@ var client = function() {
 		// accept function
 		if(typeof arg === "function") {
 			arg(_api);
-		}
-
-		// client side specific methods 
-		_api.compile = function(callback) {
-			lib.Processor(
-				_api.getRules(),
-				callback || function() {},
-				{}
-			);
 		}
 
 		return _api;

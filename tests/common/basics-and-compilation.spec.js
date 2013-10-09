@@ -32,7 +32,7 @@ describe("Absurd acting in code:", function() {
 
 	it("should work with no path passed", function(done) {
 		absurd = Absurd();
-		absurd.api.add({a: {color: "#123"}});
+		absurd.add({a: {color: "#123"}});
 		absurd.compile(function(err, css) {
 			expect(err).toBe(null);
 			expect(css).toBeDefined();

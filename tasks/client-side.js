@@ -10,11 +10,11 @@ module.exports = function(grunt) {
 
     	content = "var Absurd = (function(w) {\n";
 
-        if(fs.existsSync(__dirname + "/client-side-libs")) {
-			var libs = fs.readdirSync(__dirname + "/client-side-libs");
+        if(fs.existsSync(__dirname + "/../client-side/lib")) {
+			var libs = fs.readdirSync(__dirname + "/../client-side/lib");
 			for(var i=0; i<libs.length; i++) {
-				var fileContent = fs.readFileSync(__dirname + "/client-side-libs/" + libs[i], {encoding: 'utf8'});
-				content += fileContent + ";\n";
+				var fileContent = fs.readFileSync(__dirname + "/../client-side/lib/" + libs[i], {encoding: 'utf8'});
+				content += fileContent + "\n";
 			}
 		}
 

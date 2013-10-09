@@ -5,9 +5,8 @@ describe("Using mixins", function() {
 	it("should use a mixin", function(done) {
 
 		var absurd = Absurd();
-		var api = absurd.api;
 
-		api.storage("button", function(color, thickness) {
+		absurd.storage("button", function(color, thickness) {
 			return {
 				color: color,
 				display: "inline-block",
@@ -17,9 +16,9 @@ describe("Using mixins", function() {
 			}
 		});
 
-		api.add({
+		absurd.add({
 			'.header-button': [
-				api.storage("button")("#AAA", 10),
+				absurd.storage("button")("#AAA", 10),
 				{
 					color: '#F00',
 					'font-size': '13px'

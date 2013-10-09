@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<title>AbsurdJS</title>
+	<style type="text/css">
+		body {
+			background: #E3E3E3;
+		}
+	</style>
+	<link rel="stylesheet" href="jasmine-1.3.1/jasmine.css">
+	<script src="../build/absurd.js"></script>
+	<script>
+		var require = function(path) {
+			if(path == '../../../index.js') return Absurd;
+			if(path == '../../index.js') return Absurd;
+		}
+		var __dirname = "";
+	</script>
+	<script src="jasmine-1.3.1/jasmine.js"></script>
+	<script src="jasmine-1.3.1/jasmine-html.js"></script>
+	<script src="tests.js"></script>
+	<script src="tests.from.node.js"></script>
+</head>
+<body>
+	<div id="content"></div>	
+	<script>
+		(function() {
+			var jasmineEnv = jasmine.getEnv();
+			var htmlReporter = new jasmine.HtmlReporter(null, document.getElementById("content"));
+			jasmineEnv.updateInterval = 1000;
+			jasmineEnv.clearReporters();
+			jasmineEnv.addReporter(htmlReporter);
+			jasmineEnv.specFilter = function(spec) {
+				return htmlReporter.specFilter(spec);
+			};
+			var currentWindowOnload = window.onload;
+			window.onload = function() {
+				if (currentWindowOnload) {
+					currentWindowOnload();
+				}
+				execJasmine();
+			};
+			function execJasmine() {
+				jasmineEnv.execute();
+			}
+		})();
+	</script>
+</body>
+</html>

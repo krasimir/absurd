@@ -15,14 +15,13 @@ module.exports = absurd = function(path) {
 	API = require("./lib/API.js")();
 
 	var _path = PathFormatter(path),
-		_absurd = {api: API},
 		_defaultOptions = {
 			combineSelectors: true,
 			minify: false
 		};
 
 	// --------------------------------------------------- compile
-	var compile = _absurd.compile = function(callback, options) {
+	var compile = API.compile = function(callback, options) {
 		options = _.extend(_defaultOptions, options || {});
 		if(typeof _path == "function") {
 			_path(API);
@@ -38,7 +37,7 @@ module.exports = absurd = function(path) {
 		);
 	}
 	// --------------------------------------------------- compile to file
-	var compileFile = _absurd.compileFile = function(file, compileFileCallback, options) {
+	var compileFile = API.compileFile = function(file, compileFileCallback, options) {
 		compile(function(err, css) {
 			try {
 				fs.writeFile(file, css, function (err) {
@@ -50,11 +49,11 @@ module.exports = absurd = function(path) {
 		}, options);
 	}
 	// --------------------------------------------------- getPaths
-	var getPath = _absurd.getPath = function() {
+	var getPath = API.getPath = function() {
 		return _path;
 	}
 
-	return _absurd;
+	return API;
 
 }
 

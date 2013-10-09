@@ -4,12 +4,11 @@ describe("Storage variables", function() {
 
 	it("should use variables", function(done) {
 		var absurd = Absurd();
-		var api = absurd.api;
-		api
+		absurd
 		.storage("brand-color", "#BADA55")
 		.add({
 			body: {
-				color: absurd.api.storage("brand-color")
+				color: absurd.storage("brand-color")
 			}
 		});
 		absurd.compile(function(err, css) {
@@ -31,14 +30,13 @@ describe("Storage variables", function() {
 
 	it("should use function", function(done) {
 		var absurd = Absurd();
-		var api = absurd.api;
-		api
+		absurd
 		.storage("border", function(color) {
 			return 'solid 1px ' + color;
 		})
 		.add({
 			header: {
-				border: api.storage("border")("#0099AA")
+				border: absurd.storage("border")("#0099AA")
 			}
 		});
 		absurd.compile(function(err, css) {

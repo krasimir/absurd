@@ -8,9 +8,13 @@ module.exports = function(grunt) {
 				src: [
 					'lib/**/*.js',
 					'!lib/CLI.js',
-					'!lib/API.js'
+					'!lib/API.js',
+					'!lib/api/handlecss.js',
+					'!lib/api/handlecssrule.js',
+					'!lib/api/handlecssimport.js',
+					'!lib/api/import.js'
 				],
-				dest: 'tmp/absurd.js',
+				dest: 'client-side/tmp/absurd.js',
 				options: {
 					process: function(src, filepath) {
 						var moduleDef = filepath
@@ -20,29 +24,50 @@ module.exports = function(grunt) {
 						return src.replace("module.exports", moduleDef);
 					}
 				}
+			},
+			'node-tests-to-client': {
+				src: [
+					'tests/common/*.js',
+					'!tests/common/api.import.spec.js',
+					'!tests/common/compile-and-save.spec.js',
+					'!tests/common/minify.spec.js',
+					'!tests/common/using-css.spec.js',
+					'!tests/common/using-json.spec.js',
+					'!tests/common/basics-and-compilation.spec.js',
+					'!tests/common/variables-and-functions.spec.js'
+				],
+				dest: 'client-side/tests/tests.from.node.js',
 			}
 		},
 		'client-side': {
 			index: {
 				src: '<%= concat.absurd.dest %>',
-				dest: 'build/absurd.js'
+				dest: 'client-side/build/absurd.js'
+			}
+		},
+		uglify: {
+			absurd: {
+				src: 'client-side/build/absurd.js',
+				dest: 'client-side/build/absurd.min.js'
 			}
 		},
 		watch: {
 			commands: {
 				files: [
 					'<%= concat.absurd.src[0] %>',
-					'tasks/client-side-libs/**/*.js'
+					'client-side/lib/**/*.js',
+					'tests/**/*.js'
 				],
-				tasks: ['concat', 'client-side']
+				tasks: ['concat', 'client-side', 'uglify']
 			}
 		}
 	});
 
 	grunt.loadNpmTasks('grunt-contrib-concat');
 	grunt.loadNpmTasks('grunt-contrib-watch');
+	grunt.loadNpmTasks('grunt-contrib-uglify');
 	grunt.loadTasks('tasks');
 
-	grunt.registerTask('default', ['concat', 'client-side', 'watch']);
+	grunt.registerTask('default', ['concat', 'client-side', 'uglify', 'watch']);
 
 }

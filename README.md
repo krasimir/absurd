@@ -56,16 +56,6 @@ Absurd is really simple. It just gets instructions and base on them produces css
 		// do something with the css
 	});
 
-Or you may get the API separately.
-
-	var Absurd = require("absurd");
-	var absurd = Absurd();
-	var api = absurd.api;
-	api.add({ ... }).import("...");
-	absurd.compile(function(err, css) {
-		// do something with the css
-	});
-
 #### To file
 
 	var output = "./css/styles.css";
