@@ -1,10 +1,10 @@
 describe("Import CSS", function() {
 
-	var Absurd = require('../index.js');
+	var Absurd = require('../../index.js');
 
 	it("importing css (api usage)", function(done) {
 		Absurd(function(api) {
-			api.import(__dirname + "/data/styles.css");
+			api.import(__dirname + "/../data/styles.css");
 		}).compile(function(err, css) {
 			expect(err).toBe(null);
 			expect(css).toBeDefined();
@@ -14,7 +14,7 @@ describe("Import CSS", function() {
 	});
 
 	it("importing css", function(done) {
-		Absurd(__dirname + "/data/styles.css").compile(function(err, css) {
+		Absurd(__dirname + "/../data/styles.css").compile(function(err, css) {
 			expect(err).toBe(null);
 			expect(css).toBeDefined();
 			expect(css).toBe("body {\n  margin-top: 10px;\n}\nh1, h2, h3 {\n  margin: 0;\n  padding: 0;\n}\n");
@@ -32,7 +32,7 @@ describe("Import CSS", function() {
 					default: return { fontSize: "16px" };
 				}
 			})
-			api.import(__dirname + "/data/styles.plugin.css");
+			api.import(__dirname + "/../data/styles.plugin.css");
 		}).compile(function(err, css) {
 			expect(err).toBe(null);
 			expect(css).toBeDefined();
@@ -42,7 +42,7 @@ describe("Import CSS", function() {
 	});
 
 	it("handling css imports", function(done) {
-		Absurd(__dirname + "/data/main.css").compile(function(err, css) {
+		Absurd(__dirname + "/../data/main.css").compile(function(err, css) {
 			expect(err).toBe(null);
 			expect(css).toBeDefined();
 			expect(css).toBe("body {\n  width: 100%;\n  margin-top: 10px;\n}\nh1, h2, h3 {\n  margin: 0;\n  padding: 0;\n}\n");

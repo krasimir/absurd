@@ -3,13 +3,13 @@ describe("Absurd acting in code:", function() {
 	var Absurd, absurd;
 
 	it("shoud create an instance of absurd", function(done) {
-		Absurd = require("../index.js");
+		Absurd = require("../../index.js");
 		expect(Absurd).toBeDefined();
 		done();
 	});
 
 	it("should initialize absurd", function(done) {
-		absurd = Absurd("./data/css/index.js");
+		absurd = Absurd("./../data/css/index.js");
 		expect(typeof absurd).toBe("object");
 		done();
 	});
@@ -17,15 +17,15 @@ describe("Absurd acting in code:", function() {
 	it("should work with different path passing", function(done) {
 		var path = '';
 
-		absurd = Absurd("./data/css/index.js");
+		absurd = Absurd("./../data/css/index.js");
 		path = absurd.getPath();
 		expect(path.source).toBeDefined();
-		expect(path.source).toBe("./data/css/index.js");
+		expect(path.source).toBe("./../data/css/index.js");
 
-		absurd = Absurd({source: "./data/css/index.js"});
+		absurd = Absurd({source: "./../data/css/index.js"});
 		path = absurd.getPath();
 		expect(path.source).toBeDefined();
-		expect(path.source).toBe("./data/css/index.js");
+		expect(path.source).toBe("./../data/css/index.js");
 
 		done();
 	});
@@ -58,7 +58,7 @@ describe("Absurd acting in code:", function() {
 	});
 
 	it("should compile a file", function(done) {
-		absurd = Absurd(__dirname + "/data/css/index.js");
+		absurd = Absurd(__dirname + "/../data/css/index.js");
 		absurd.compile(function(err, css) {
 			expect(err).toBe(null);
 			expect(css).toBeDefined();

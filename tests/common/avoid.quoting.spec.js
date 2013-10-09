@@ -1,6 +1,6 @@
 describe("Avoid quoting of properties", function() {
 
-	var Absurd = require('../index.js');
+	var Absurd = require('../../index.js');
 
 	it("passing properties", function(done) {
 		Absurd(function(api) {

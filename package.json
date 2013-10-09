@@ -1,6 +1,6 @@
 {
   "name": "absurd",
-  "version": "0.0.28",
+  "version": "0.0.29",
   "homepage": "https://github.com/krasimir/absurd",
   "description": "CSS preprocessor",
   "main": "index.js",
@@ -18,6 +18,11 @@
     "underscore": "1.5.1",
     "css-parse": "1.5.3",
     "clean-css": "1.1.3"
+  },
+  "devDependencies": {
+    "grunt": "0.4.1",
+    "grunt-contrib-concat": "0.3.0",
+    "grunt-contrib-watch": "0.4.4"
   },
   "keywords": [
     "css",

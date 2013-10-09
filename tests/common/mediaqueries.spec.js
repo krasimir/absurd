@@ -1,6 +1,6 @@
 describe("Media queries", function() {
 
-	var Absurd = require('../index.js');
+	var Absurd = require('../../index.js');
 
 	it("Media queries", function(done) {
 		Absurd(function(api) {

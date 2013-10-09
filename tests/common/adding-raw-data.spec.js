@@ -1,6 +1,6 @@
 describe("Adding raw data", function() {
 
-	var Absurd = require('../index.js'),
+	var Absurd = require('../../index.js'),
 		comment = "AbsurdJS is awesome!";
 
 	it("should send raw data", function(done) {

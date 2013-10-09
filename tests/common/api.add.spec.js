@@ -1,6 +1,6 @@
 describe("API(add)", function() {
 
-	var Absurd = require('../index.js');
+	var Absurd = require('../../index.js');
 
 	it("should use add", function(done) {
 		Absurd(function(A) {

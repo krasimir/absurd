@@ -1,6 +1,6 @@
 describe("Minification", function() {
 
-	var Absurd = require('../index.js');
+	var Absurd = require('../../index.js');
 
 	it("should send raw data", function(done) {
 		Absurd(function(api) {

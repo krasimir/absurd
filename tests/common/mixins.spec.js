@@ -1,6 +1,6 @@
 describe("Using mixins", function() {
 
-	var Absurd = require("../index.js");
+	var Absurd = require("../../index.js");
 
 	it("should use a mixin", function(done) {
 

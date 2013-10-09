@@ -1,6 +1,6 @@
 describe("Storage variables", function() {
 
-	var Absurd = require("../index.js");
+	var Absurd = require("../../index.js");
 
 	it("should use variables", function(done) {
 		var absurd = Absurd();
@@ -21,7 +21,7 @@ describe("Storage variables", function() {
 	});
 
 	it("should use variables stored in different files", function(done) {
-		Absurd(__dirname + "/data/css/storage.js").compile(function(err, css) {
+		Absurd(__dirname + "/../data/css/storage.js").compile(function(err, css) {
 			expect(err).toBe(null);
 			expect(css).toBeDefined();
 			expect(css).toContain('color: #BADA55');

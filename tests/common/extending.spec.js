@@ -1,6 +1,6 @@
 describe("Extending", function() {
 
-	var Absurd = require('../index.js');
+	var Absurd = require('../../index.js');
 
 	it("should create plugins", function(done) {
 		Absurd(function(api) {

@@ -1,6 +1,6 @@
 describe("API(colors)", function() {
 
-	var Absurd = require('../index.js');
+	var Absurd = require('../../index.js');
 
 	it("should use darken", function(done) {
 		Absurd(function(api) {

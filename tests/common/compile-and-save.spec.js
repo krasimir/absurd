@@ -2,14 +2,14 @@ var fs = require("fs");
 
 describe("Compile and save", function() {
 
-	var Absurd = require("../index.js"),
-		file = __dirname + '/data/result/styles.css';
+	var Absurd = require("../../index.js"),
+		file = __dirname + '/../data/result/styles.css';
 
 	it("save to file", function(done) {
 		if(fs.existsSync(file)) {
 			fs.unlinkSync(file);	
 		}
-		Absurd(__dirname + '/data/css/header.js').compileFile(
+		Absurd(__dirname + '/../data/css/header.js').compileFile(
 			file,
 			function(err, css) {
 				expect(err).toBe(null);

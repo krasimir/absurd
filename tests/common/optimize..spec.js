@@ -1,6 +1,6 @@
 describe("Optimize CSS", function() {
 
-	var Absurd = require("../index.js");
+	var Absurd = require("../../index.js");
 
 	it("should not include empty selectors", function(done) {
 		Absurd(function(api){

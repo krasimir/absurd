@@ -1,9 +1,9 @@
 describe("Nested selectors", function() {
 
-	var Absurd = require("../index.js");
+	var Absurd = require("../../index.js");
 
 	it("should use nesting", function(done) {
-		Absurd(__dirname + '/data/css/nested.js').compile(function(err, css) {
+		Absurd(__dirname + '/../data/css/nested.js').compile(function(err, css) {
 			expect(err).toBe(null);
 			expect(css).toBeDefined();
 			expect(css).toContain('.content p');
