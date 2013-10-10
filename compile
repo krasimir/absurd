@@ -1,1 +1,1 @@
-absurd -s ./client-side/example/css/styles.js -o ./client-side/example/styles.css -w ./client-side/example/css/
+absurd -s ./css/styles.js -o ./styles.css -w ./css/ -m true

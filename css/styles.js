@@ -1,11 +1,21 @@
 var base = function() {
 	return {
+		"html, body": {
+			margin: 0,
+			padding: 0,
+			width: "100%",
+			height: "100%",
+			fontFamily: "Georgia",
+			fontSize: "20px",
+			lineHeight: "24px"
+		},
+		h1: title(),
+		h2: title(30),
 		".clear": {
 			clear: "both"
 		}
 	}
 }
-
 var title = function(size) {
 	size = size ? size : 60;
 	return {
@@ -16,7 +26,6 @@ var title = function(size) {
 		margin: "0"
 	}
 }
-
 var demoBlock = function() {
 	return {
 		width: "50%",
@@ -30,52 +39,20 @@ var demoBlock = function() {
 		MozBoxSizing: "border-box"
 	}
 }
-
-var footer = function(api) {
+var social = function(api) {
 	var color = "#E0E2D1";
 	return {
-		footer: {
+		".social": {
 			background: "#ECECEC",
 			padding: "20px",
 			boxSizing: "border-box",
 			MozBoxSizing: "border-box",
-			textAlign: "center",
-			color: api.darken(color, 50),
-			a: {
-				fontSize: "30px",
-				display: "inline-block",
-				color: api.darken(color, 50),
-				textDecoration: "none",
-				":hover": {
-					color: api.darken(color, 80)
-				}
-			},
-			".delimeter": {
-				margin: "4px 0 4px 0",
-				":after": {
-					content: "\"...\"",
-					fontSize: "30px"
-				}
-			}
+			textAlign: "center"
 		}
 	}
 }
-
-module.exports = function(api) {
-	api
-	.add(base())
-	.add({
-		"html, body": {
-			margin: 0,
-			padding: 0,
-			width: "100%",
-			height: "100%",
-			fontFamily: "Georgia",
-			fontSize: "20px",
-			lineHeight: "24px"
-		},
-		h1: title(),
-		h2: title(30),
+var demo = function() {
+	return {
 		".content": {
 			margin: "20px 0 20px 0"
 		},
@@ -117,6 +94,13 @@ module.exports = function(api) {
 				lineHeight: "11px"
 			}
 		}
-	})
-	.add(footer(api));
+	};
+}
+
+module.exports = function(api) {
+	api
+	.add(base())
+	.add(demo())
+	.add(social(api))
+	.import(__dirname + "/documentation.js");
 }
