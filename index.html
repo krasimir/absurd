@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html>
+<head>
+	
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+	<meta name="viewport" content="user-scalable=no, width=device-width, initial-scale=1.0, maximum-scale=1.0" />
+	<meta name="author" content="Krasimir Tsonev" />
+	<meta name="copyright" content="Krasimir Tsonev" />
+	<meta name="robots" content="follow,index" />
+	<meta name="title" content="AbsurdJS - JavaScript based CSS preprocessor" />
+	<meta name="keywords" content="AbsurdJS - JavaScript based CSS preprocessor" lang="en-us" />
+	<meta name="description" content="AbsurdJS - JavaScript based CSS preprocessor" />
+	<meta property="og:site_name" content="https://github.com/krasimir/absurd"/>
+	<meta property="og:title" content="AbsurdJS - JavaScript based CSS preprocessor"/> 
+	<meta property="og:description" content="AbsurdJS - JavaScript based CSS preprocessor"/>
+	
+	<title>AbsurdJS</title>
+	<link rel="stylesheet" href="styles.css">
+
+</head>
+<body>
+
+	<header>
+		<h1>AbsurdJS</h1>
+		<h2>JavaScript based CSS preprocessor</h2>
+	</header>
+	<div class="content">
+		<div class="editor-wrapper">
+<div id="editor">var textColor = "#BADA55";
+api.add({
+	body: {
+		marginTop: "20px",
+		width: "100%",
+		p: {
+			color: textColor
+		}
+	},
+	".content": {
+		width: "100%",
+		".header": {
+			color: textColor,
+			fontSize: "23px"
+		}
+	}
+});</div>
+		</div>
+		<div class="result"><pre></pre></div>
+		<br class="clear" />
+		<a href="javascript:void(0);" id="compile" class="compile">Compile<br /><small>Click me or press Ctrl+Enter</small></a>
+		<footer>
+
+		</footer>
+	</div>
+	
+	<a href="https://github.com/krasimir/absurd"><img style="position: absolute; top: 0; right: 0; border: 0;" src="https://s3.amazonaws.com/github/ribbons/forkme_right_darkblue_121621.png" alt="Fork me on GitHub"></a>
+
+	<script src="absurd.min.js"></script>
+	<script src="./jquery-1.10.2.min.js"></script>
+	<script src="./ace/src-noconflict/ace.js" type="text/javascript" charset="utf-8"></script>
+
+	<script>
+		$(document).ready(function() {
+
+			var compile = function() {
+				var api = Absurd();
+				var code = editor.getSession().getValue();
+				try {
+					eval(code);
+					api.compile(function(err, css) {
+						result.html(css);
+					});
+				} catch(err) {
+					result.html((err.stack ? err.stack : err.toString()));
+				}
+			}
+
+			var editor = ace.edit("editor");
+		    editor.setTheme("ace/theme/tomorrow");
+		    editor.renderer.setShowGutter(true); 
+		    editor.renderer.setShowPrintMargin(false); 
+		    editor.setFontSize("18px");
+		    editor.getSession().setMode("ace/mode/javascript");
+
+		    var compileButton = $("#compile");
+		    compileButton.on("click", compile);
+
+		    var result = $(".result pre");
+
+		    // compile on Ctrl+Enter
+		    var isCtrl = false;
+			$(document).keyup(function(e) {
+				if(e.which == 17) {
+					isCtrl = false;
+				}
+			});
+			$(document).keydown(function(e) {
+				if(e.which == 17) {
+					isCtrl = true; 
+				}
+				if(e.which == 13 && isCtrl) { 
+					compile();
+				} 
+			});
+
+		    compile();
+
+		});
+	</script>
+
+</body>
+</html>
