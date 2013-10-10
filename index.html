@@ -20,6 +20,16 @@
 </head>
 <body>
 
+	<!-- facebook -->
+	<div id="fb-root"></div>
+	<script>(function(d, s, id) {
+	  var js, fjs = d.getElementsByTagName(s)[0];
+	  if (d.getElementById(id)) return;
+	  js = d.createElement(s); js.id = id;
+	  js.src = "//connect.facebook.net/en_GB/all.js#xfbml=1&appId=130923167067801";
+	  fjs.parentNode.insertBefore(js, fjs);
+	}(document, 'script', 'facebook-jssdk'));</script>
+
 	<header>
 		<h1>AbsurdJS</h1>
 		<h2>JavaScript based CSS preprocessor</h2>
@@ -49,16 +59,6 @@ api.add({
 		<a href="javascript:void(0);" id="compile" class="compile">Compile<br /><small>Click me or press Ctrl+Enter</small></a>
 		<footer>
 
-			<!-- facebook -->
-			<div id="fb-root"></div>
-			<script>(function(d, s, id) {
-			  var js, fjs = d.getElementsByTagName(s)[0];
-			  if (d.getElementById(id)) return;
-			  js = d.createElement(s); js.id = id;
-			  js.src = "//connect.facebook.net/en_GB/all.js#xfbml=1&appId=130923167067801";
-			  fjs.parentNode.insertBefore(js, fjs);
-			}(document, 'script', 'facebook-jssdk'));</script>
-
 			<!-- Twitter -->
 			<a href="https://twitter.com/share" class="twitter-share-button" data-via="KrasimirTsonev" data-hashtags="AbsurdJS">Tweet</a>
 <script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'https';if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src=p+'://platform.twitter.com/widgets.js';fjs.parentNode.insertBefore(js,fjs);}}(document, 'script', 'twitter-wjs');</script>
@@ -66,7 +66,7 @@ api.add({
 			<!-- GitHub -->
 			<iframe src="http://ghbtns.com/github-btn.html?user=krasimir&repo=absurd&type=watch&count=true"
   allowtransparency="true" frameborder="0" scrolling="0" width="100" height="20"></iframe>
-
+  
   			<!-- Google plus -->
 			<!-- Place this tag where you want the +1 button to render. -->
 			<div class="g-plusone" data-size="medium" data-annotation="inline" data-width="120"></div>
@@ -79,6 +79,9 @@ api.add({
 			    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(po, s);
 			  })();
 			</script>
+
+			<!-- Facebook -->
+  			<div class="fb-like" data-href="http://krasimir.github.io/absurd/" data-width="80" data-height="The pixel height of the plugin" data-colorscheme="light" data-layout="standard" data-action="like" data-show-faces="false" data-send="false"></div>
 
 		</footer>
 	</div>
