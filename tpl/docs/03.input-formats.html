@@ -1,0 +1,66 @@
+<h3>Input formats</h3>
+
+<section>
+	<div class="desc">
+		<h4>JavaScript</h4>
+		<p>Just create a .js file like for example /css/styles.js. The file should contain the usual nodejs module code.</p>
+	</div>
+	<div class="code"><pre><code class="language-javascript">module.exports = function(api) {
+    // use the Absurd's api here
+}</code></pre></div>
+	<br class="clear">
+</section>
+
+<section>
+	<div class="desc">
+		<h4>JSON</h4>
+		<p>The library supports importing of pure JSON. Of course this approach doesn't give you an access to the API, but it is still useful if you want to skip the typical Nodejs module definition.</p>
+	</div>
+	<div class="code"><pre><code class="language-javascript">// styles.json
+{
+    "body": {
+        "margin": "0",
+        "padding": "0",
+        "fontSize": "1em",
+        "p": {
+            "line-height": "30px"
+        }
+    }
+}
+
+// app.js
+Absurd("styles.json").compile(function(err, css) {
+    // ...
+});</code></pre></div>
+	<br class="clear">
+</section>
+
+<section>
+	<div class="desc">
+		<h4>CSS</h4>
+		<p>Absurd accepts normal CSS. The good news is that you can still use all the other features.</p>
+	</div>
+	<div class="code"><pre><code class="language-javascript">// styles.js
+api.plugin("size", function(api, type) {
+    switch(type) {
+        case "large": return { fontSize: "30px" }; break;
+        case "medium": return { fontSize: "24px" }; break;
+        case "small": return { fontSize: "12px" }; break;
+        default: return { fontSize: "16px" };
+    }
+});
+api.import(__dirname + "/css/main.css");
+
+// main.css
+body {
+    margin-top: 10px;
+    size: small;
+}</code></pre>
+	<p>And the result is:</p>
+	<pre><code class="language-css">body {
+    margin-top: 10px;
+    font-size: 12px;
+}</code></pre>
+	</div>
+	<br class="clear">
+</section>

@@ -1,0 +1,41 @@
+<h2>Client-side usage</h2>
+
+<section>
+	<div class="desc">
+		<p>Get the client-side version of AbsurdJS from <a href="https://github.com/krasimir/absurd/tree/master/client-side/build" target="_blank">here</a> and add it to your page.</p>
+	</div>
+	<div class="code">
+		<pre><code class="language-markup">&lt;script src="absurd.min.js">&lt;/script></code></pre>
+	</div>
+	<br class="clear">
+</section>
+
+<section>
+	<div class="desc">
+		<p>Initialize Absurd and use the API.</p>
+	</div>
+	<div class="code">
+		<pre><code class="language-javascript">var api = Absurd();
+api.add({
+	body: {
+		marginTop: "20px",
+		p: {
+			color: "#000"
+		}
+	}
+});</code></pre>
+	</div>
+	<br class="clear">
+</section>
+
+<section>
+	<div class="desc">
+		<p>Compile and get the CSS.</p>
+	</div>
+	<div class="code">
+		<pre><code class="language-javascript">api.compile(function(err, css) {
+	// use the compiled css
+});</code></pre>
+	</div>
+	<br class="clear">
+</section>

@@ -1,0 +1,128 @@
+<h3>API</h3>
+
+<section>
+	<div class="desc">
+		<h4>.add([object])</h4>
+	</div>
+	<div class="code">
+		<pre><code class="language-javascript">module.exports = function(api) {
+    api.add({
+        body: { 
+            padding: 0 
+        }
+    });
+}</code></pre>
+	</div>
+	<br class="clear">
+</section>
+
+<section>
+	<div class="desc">
+		<h4>.import([string] | [[string, string, ...]])</h4>
+	</div>
+	<div class="code">
+		<pre><code class="language-javascript">module.exports = function(A) {
+    A.import(__dirname + '/config/sizes.js');
+    A.import([
+        __dirname + '/config/colors.js',
+        __dirname + '/config/sizes.js'
+    ]);
+}</code></pre>
+		<p>AbsurdJS supports importing of JavaScript, JSON and CSS files.</p>
+	</div>
+	<br class="clear">
+</section>
+
+<section>
+	<div class="desc">
+		<h4>.storage([key], [value])</h4>
+	</div>
+	<div class="code">
+		<p>Setting value:</p>
+		<pre><code class="language-javascript">module.exports = function(api) {
+    api.storage("mixin", function(px) { 
+        return {
+            fontSize: px + 'px'
+        }
+    });
+}</code></pre>
+		<p>Getting value:</p>
+		<pre><code class="language-javascript">module.exports = function(api) {
+    api.add({
+        body: [
+            api.storage("mixin")(18)
+        ]
+    });
+}  </code></pre>
+	</div>
+	<br class="clear">
+</section>
+
+<section>
+	<div class="desc">
+		<h4></h4>
+	</div>
+	<div class="code">
+		<pre><code class="language-javascript"></code></pre>
+	</div>
+	<br class="clear">
+</section>
+
+<section>
+	<div class="desc">
+		<h4>.plugin([name of property], [function])</h4>
+	</div>
+	<div class="code">
+		<pre><code class="language-javascript">api.plugin('my-custom-gradient', function(api, colors) {
+    return {
+        background: 'linear-gradient(to bottom, ' + colors.join(", ") + ')'
+    };
+});</code></pre>
+		<p>The function of the plugin accepts two arguments. The first one is a reference to the API and second one is the value of the CSS property.</p>
+	</div>
+	<br class="clear">
+</section>
+
+<section>
+	<div class="desc">
+		<h4>.darken([color], [percents])</h4>
+	</div>
+	<div class="code">
+		<pre><code class="language-javascript">module.exports = function(api) {
+    api.add({
+        body: {
+            color: api.darken('#BADA55', 25) // darken 25%
+        }
+    });
+}</code></pre>
+	</div>
+	<br class="clear">
+</section>
+
+<section>
+	<div class="desc">
+		<h4>.lighten([color], [percents])</h4>
+	</div>
+	<div class="code">
+		<pre><code class="language-javascript">module.exports = function(api) {
+    api.add({
+        body: {
+            color: api.lighten('#BADA55', 25) // lighten 25%
+        }
+    });
+}</code></pre>
+	</div>
+	<br class="clear">
+</section>
+
+<section>
+	<div class="desc">
+		<h4>.raw([string])</h4>
+	</div>
+	<div class="code">
+		<pre><code class="language-javascript">module.exports = function(api) {
+    api.raw('/* comment here */');
+}</code></pre>
+	</div>
+	<br class="clear">
+</section>

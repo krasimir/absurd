@@ -1,107 +1,16 @@
-<!DOCTYPE html>
-<html>
-<head>
-	
-	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-	<meta name="viewport" content="user-scalable=no, width=device-width, initial-scale=1.0, maximum-scale=1.0" />
-	<meta name="author" content="Krasimir Tsonev" />
-	<meta name="copyright" content="Krasimir Tsonev" />
-	<meta name="robots" content="follow,index" />
-	<meta name="title" content="AbsurdJS - JavaScript based CSS preprocessor in less then 10Kb" />
-	<meta name="keywords" content="AbsurdJS - JavaScript based CSS preprocessor" lang="en-us" />
-	<meta name="description" content="AbsurdJS - JavaScript based CSS preprocessor" />
-	<meta property="og:site_name" content="https://github.com/krasimir/absurd"/>
-	<meta property="og:title" content="AbsurdJS - JavaScript based CSS preprocessor"/> 
-	<meta property="og:description" content="AbsurdJS - JavaScript based CSS preprocessor"/>
-	
-	<title>AbsurdJS - the new CSS preprocessor</title>
-	<link rel="stylesheet" href="./css/styles.css">
-	<link rel="stylesheet" href="./css/prism.css">
-
-</head>
-<body>
-
-	<!-- facebook -->
-	<div id="fb-root"></div>
-	<script>(function(d, s, id) {
-	  var js, fjs = d.getElementsByTagName(s)[0];
-	  if (d.getElementById(id)) return;
-	  js = d.createElement(s); js.id = id;
-	  js.src = "//connect.facebook.net/en_GB/all.js#xfbml=1&appId=130923167067801";
-	  fjs.parentNode.insertBefore(js, fjs);
-	}(document, 'script', 'facebook-jssdk'));</script>
-
-	<header>
-		<h1>AbsurdJS</h1>
-		<h2>JavaScript based CSS preprocessor in less then 10Kb</h2>
-	</header>
-	<div class="content">
-		<div class="editor-wrapper">
-<div id="editor">var textColor = "#BADA55";
-api.add({
-	body: {
-		marginTop: "20px",
-		width: "100%",
-		p: {
-			color: textColor
-		}
-	},
-	".content": {
-		width: "100%",
-		".header": {
-			color: textColor,
-			fontSize: "23px"
-		}
-	}
-});</div>
-		</div>
-		<div class="result"><pre></pre></div>
-		<br class="clear" />
-		<a href="javascript:void(0);" id="compile" class="compile">Compile<br /><small>Click me or press Ctrl+Enter</small></a>
-
-		<section class="social">
-
-			<!-- Twitter -->
-			<a href="https://twitter.com/share" class="twitter-share-button" data-via="KrasimirTsonev" data-hashtags="AbsurdJS">Tweet</a>
-<script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'https';if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src=p+'://platform.twitter.com/widgets.js';fjs.parentNode.insertBefore(js,fjs);}}(document, 'script', 'twitter-wjs');</script>
-
-			<!-- GitHub -->
-			<iframe src="http://ghbtns.com/github-btn.html?user=krasimir&repo=absurd&type=watch&count=true"
-  allowtransparency="true" frameborder="0" scrolling="0" width="100" height="20"></iframe>
-
-  			<!-- Google plus -->
-			<!-- Place this tag where you want the +1 button to render. -->
-			<div class="g-plusone" data-size="medium" data-annotation="inline" data-width="120"></div>
-
-			<!-- Place this tag after the last +1 button tag. -->
-			<script>
-			  (function() {
-			    var po = document.createElement('script'); po.type = 'text/javascript'; po.async = true;
-			    po.src = 'https://apis.google.com/js/plusone.js';
-			    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(po, s);
-			  })();
-			</script>
-
-			<!-- Facebook -->
-  			<div class="fb-like" data-href="http://krasimir.github.io/absurd/" data-width="80" data-height="The pixel height of the plugin" data-colorscheme="light" data-layout="standard" data-action="like" data-show-faces="false" data-send="false"></div>
-
-		</section>
-
-		<div class="documentation">
-			<div class="documentation-inner">
-				<h2><a href="#server-side-usage" name="server-side-usage">&#187;</a>Server-side usage</h2>
+<h2>Server-side usage</h2>
 <section>
 	<div class="desc">
-		<h4><a href="#installation" name="installation">&#187;</a>Installation</h4>
+		<h4>Installation</h4>
 	</div>
 	<div class="code"><pre><code class="language-javascript">npm install -g absurd</code></pre></div>
 	<br class="clear">
 </section>
-<h3><a href="#compilation" name="compilation">&#187;</a>Compilation</h3>
+<h3>Compilation</h3>
 
 <section>
 	<div class="desc">
-		<h4><a href="#inline-compilation" name="inline-compilation">&#187;</a>Inline compilation</h4>
+		<h4>Inline compilation</h4>
 		<p>Use this approach if you want to integrate AbsurdJS into your NodeJS app.</p>
 	</div>
 	<div class="code">
@@ -117,7 +26,7 @@ Absurd(function(api) {
 
 <section>
 	<div class="desc">
-		<h4><a href="#inline-compilation-to-a-file" name="inline-compilation-to-a-file">&#187;</a>Inline compilation to a file</h4>
+		<h4>Inline compilation to a file</h4>
 		<p>Use this approach if you want to integrate AbsurdJS into your NodeJS app and save the result to a file.</p>
 	</div>
 	<div class="code">
@@ -131,7 +40,7 @@ Absurd("./css/styles.js").compileFile(output, function(err, css) {
 
 <section>
 	<div class="desc">
-		<h4><a href="#compiling-through-command-line-interface" name="compiling-through-command-line-interface">&#187;</a>Compiling through command line interface</h4>
+		<h4>Compiling through command line interface</h4>
 	</div>
 	<div class="code">
 		<pre><code class="language-javascript">// Outputs the css in the console.
@@ -153,7 +62,7 @@ absurd -s [source file] -m true</code></pre>
 
 <section>
 	<div class="desc">
-		<h4><a href="#using-with-grunt" name="using-with-grunt">&#187;</a>Using with Grunt</h4>
+		<h4>Using with Grunt</h4>
 	</div>
 	<div class="code">
 		<p>Dependencies for your package.json:</p>
@@ -193,11 +102,11 @@ absurd -s [source file] -m true</code></pre>
 
 
 
-<h3><a href="#input-formats" name="input-formats">&#187;</a>Input formats</h3>
+<h3>Input formats</h3>
 
 <section>
 	<div class="desc">
-		<h4><a href="#javascript" name="javascript">&#187;</a>JavaScript</h4>
+		<h4>JavaScript</h4>
 		<p>Just create a .js file like for example /css/styles.js. The file should contain the usual nodejs module code.</p>
 	</div>
 	<div class="code"><pre><code class="language-javascript">module.exports = function(api) {
@@ -208,7 +117,7 @@ absurd -s [source file] -m true</code></pre>
 
 <section>
 	<div class="desc">
-		<h4><a href="#json" name="json">&#187;</a>JSON</h4>
+		<h4>JSON</h4>
 		<p>The library supports importing of pure JSON. Of course this approach doesn't give you an access to the API, but it is still useful if you want to skip the typical Nodejs module definition.</p>
 	</div>
 	<div class="code"><pre><code class="language-javascript">// styles.json
@@ -232,7 +141,7 @@ Absurd("styles.json").compile(function(err, css) {
 
 <section>
 	<div class="desc">
-		<h4><a href="#css" name="css">&#187;</a>CSS</h4>
+		<h4>CSS</h4>
 		<p>Absurd accepts normal CSS. The good news is that you can still use all the other features.</p>
 	</div>
 	<div class="code"><pre><code class="language-javascript">// styles.js
@@ -259,7 +168,7 @@ body {
 	</div>
 	<br class="clear">
 </section>
-<h3><a href="#syntax" name="syntax">&#187;</a>Syntax</h3>
+<h3>Syntax</h3>
 
 <section>
 	<div class="desc">
@@ -335,7 +244,7 @@ body section {
 
 <section>
 	<div class="desc">
-		<h4><a href="#pseudo-classes" name="pseudo-classes">&#187;</a>Pseudo classes</h4>
+		<h4>Pseudo classes</h4>
 		<p>It's similar like the example above:</p>
 	</div>
 	<div class="code">
@@ -368,7 +277,7 @@ a:before {
 
 <section>
 	<div class="desc">
-		<h4><a href="#importing" name="importing">&#187;</a>Importing</h4>
+		<h4>Importing</h4>
 		<p>Of course you can't put everything in a single file. That's why there is .import method:</p>
 	</div>
 	<div class="code">
@@ -390,7 +299,7 @@ a:before {
 
 <section>
 	<div class="desc">
-		<h4><a href="#using-variables" name="using-variables">&#187;</a>Using variables</h4>
+		<h4>Using variables</h4>
 		<p>There is no need to use something special. Because that's pure javascript you may write:</p>
 	</div>
 	<div class="code">
@@ -422,7 +331,7 @@ module.exports = function(api) {
 
 <section>
 	<div class="desc">
-		<h4><a href="#mixins" name="mixins">&#187;</a>Mixins</h4>
+		<h4>Mixins</h4>
 		<p>In the context of Absurd mixins are actually normal javascript functions. The ability to put things inside the Absurd's storage gives you also the power to share mixins between the files. For example:</p>
 	</div>
 	<div class="code">
@@ -510,7 +419,7 @@ body p {
 
 <section>
 	<div class="desc">
-		<h4><a href="#media-queries" name="media-queries">&#187;</a>Media queries</h4>
+		<h4>Media queries</h4>
 	</div>
 	<div class="code">
 		<p>The following code</p>
@@ -563,7 +472,7 @@ body p {
 
 <section>
 	<div class="desc">
-		<h4><a href="#sending-raw-data-to-the-final-compiled-css" name="sending-raw-data-to-the-final-compiled-css">&#187;</a>Sending raw data to the final compiled CSS</h4>
+		<h4>Sending raw data to the final compiled CSS</h4>
 		<p>AbsurdJS gives you ability to directly send content to the final CSS. I.e. something which is skipped by the compiler and it is directly concatenated with the processed data.</p>
 	</div>
 	<div class="code">
@@ -596,7 +505,7 @@ a {
 	</div>
 	<br class="clear">
 </section>
-<h3><a href="#api" name="api">&#187;</a>API</h3>
+<h3>API</h3>
 
 <section>
 	<div class="desc">
@@ -658,7 +567,7 @@ a {
 
 <section>
 	<div class="desc">
-		<h4><a href="#" name="">&#187;</a></h4>
+		<h4></h4>
 	</div>
 	<div class="code">
 		<pre><code class="language-javascript"></code></pre>
@@ -724,7 +633,7 @@ a {
 	</div>
 	<br class="clear">
 </section>
-<h3><a href="#testing" name="testing">&#187;</a>Testing</h3>
+<h3>Testing</h3>
 
 <section>
 	<div class="desc">
@@ -735,7 +644,7 @@ a {
 	</div>
 	<br class="clear">
 </section>
-<h2><a href="#client-side-usage" name="client-side-usage">&#187;</a>Client-side usage</h2>
+<h2>Client-side usage</h2>
 
 <section>
 	<div class="desc">
@@ -776,66 +685,3 @@ api.add({
 	</div>
 	<br class="clear">
 </section>
-			</div>
-		</div>
-
-	</div>
-
-	<a href="https://github.com/krasimir/absurd"><img style="position: absolute; top: 0; right: 0; border: 0;" src="https://s3.amazonaws.com/github/ribbons/forkme_right_darkblue_121621.png" alt="Fork me on GitHub"></a>
-
-	<script src="./js/absurd.min.js"></script>
-	<script src="./js/jquery-1.10.2.min.js"></script>
-	<script src="./js/ace/src-noconflict/ace.js"></script>
-	<script src="./js/prism.js"></script>
-
-	<script>
-		$(document).ready(function() {
-
-			var compile = function() {
-				var api = Absurd();
-				var code = editor.getSession().getValue();
-				try {
-					eval(code);
-					api.compile(function(err, css) {
-						result.html(css);
-					});
-				} catch(err) {
-					result.html((err.stack ? err.stack : err.toString()));
-				}
-			}
-
-			var editor = ace.edit("editor");
-		    editor.setTheme("ace/theme/tomorrow");
-		    editor.renderer.setShowGutter(true); 
-		    editor.renderer.setShowPrintMargin(false); 
-		    editor.setFontSize("18px");
-		    editor.getSession().setMode("ace/mode/javascript");
-
-		    var compileButton = $("#compile");
-		    compileButton.on("click", compile);
-
-		    var result = $(".result pre");
-
-		    // compile on Ctrl+Enter
-		    var isCtrl = false;
-			$(document).keyup(function(e) {
-				if(e.which == 17) {
-					isCtrl = false;
-				}
-			});
-			$(document).keydown(function(e) {
-				if(e.which == 17) {
-					isCtrl = true; 
-				}
-				if(e.which == 13 && isCtrl) { 
-					compile();
-				} 
-			});
-
-		    compile();
-
-		});
-	</script>
-
-</body>
-</html>

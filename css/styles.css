@@ -1,0 +1,159 @@
+html, body, h1, h2, .result pre, .documentation p {
+  margin: 0;
+}
+.content {
+  margin: 20px 0 20px 0;
+}
+.compile {
+  margin: 40px auto;
+  padding: 6px 10px;
+  width: 140px;
+  line-height: 18px;
+  background: #B1E9B1;
+  display: block;
+  color: #000;
+  border-radius: 6px;
+  border: solid 1px #4FBB4F;
+  box-shadow: 0px 0px 6px #888888;
+}
+.documentation .documentation-inner {
+  margin: 0 auto;
+  max-width: 950px;
+}
+.documentation h2 a {
+  margin: 0 0 0 -45px;
+}
+.documentation h3 a {
+  margin: 0 0 0 -35px;
+}
+.documentation h4 {
+  margin: 10px 0 10px 0;
+  padding: 0 10px 0 0 ;
+}
+.documentation h4 a {
+  margin: 0 0 0 -25px;
+}
+html, body, .result pre {
+  padding: 0;
+}
+h1 {
+  padding: 60px 0 30px 0;
+  font-size: 60px;
+}
+h2 {
+  padding: 30px 0 15px 0;
+}
+.editor-wrapper, .result {
+  padding: 20px 10px 20px 10px;
+  width: 50%;
+  height: 420px;
+  border-top: solid 2px #C9C9C9;
+  border-bottom: solid 2px #C9C9C9;
+  background: solid 1px #C9C9C9;
+}
+.social {
+  padding: 20px;
+  background: #ECECEC;
+}
+.documentation p {
+  padding: 0 20px 0 0;
+}
+html, body, #editor {
+  width: 100%;
+  height: 100%;
+}
+.documentation .desc {
+  width: 30%;
+}
+.documentation .code {
+  width: 70%;
+}
+html, body {
+  font-family: Georgia;
+}
+html, body, .compile {
+  font-size: 20px;
+}
+h2, .documentation h4 {
+  font-size: 30px;
+}
+.result, .documentation p {
+  font-size: 18px;
+}
+.compile small {
+  font-size: 11px;
+  line-height: 11px;
+}
+.documentation h2 {
+  font-size: 50px;
+  line-height: 50px;
+  border-bottom: solid 4px #FFF;
+}
+.documentation h3 {
+  font-size: 40px;
+  border-bottom: dotted 2px #666666;
+}
+html, body, .documentation p {
+  line-height: 24px;
+}
+.documentation h3, .documentation h4 {
+  line-height: 40px;
+}
+h1, h2, .compile, .social {
+  text-align: center;
+}
+.documentation h2, .documentation h3, .documentation h4 {
+  text-align: left;
+}
+h1, h2, .documentation h3, .documentation h4 {
+  font-weight: normal;
+}
+.clear {
+  clear: both;
+}
+.documentation .documentation-inner section {
+  border-bottom: dotted 1px #000;
+  margin-top: 20px;
+}
+.compile:hover {
+  background: #74DF68;
+}
+.documentation {
+  background: #353535;
+}
+.editor-wrapper, .result, .documentation .desc, .documentation .code {
+  float: left;
+}
+.editor-wrapper, .result, .social, .documentation, .documentation h4, .documentation .code {
+  box-sizing: border-box;
+  -moz-box-sizing: border-box;
+}
+.result {
+  pre: [object Object];
+}
+.result pre {
+  word-wrap: break-word;
+}
+.documentation h2 a, .documentation h3 a, .documentation h4, .documentation h4 a {
+  display: inline-block;
+}
+.compile, .documentation h2 a, .documentation h3 a, .documentation h4 a, .documentation .menu a:hover {
+  text-decoration: none;
+}
+.documentation, .documentation p a, .documentation .menu a {
+  color: #FFF;
+}
+.documentation h2 a, .documentation h3 a, .documentation h4 a {
+  color: #696969;
+  margin-right: 10px;
+  opacity: 0;
+}
+.documentation h4, .documentation p {
+  color: #8C8C8C;
+}
+.documentation .documentation-inner section, .documentation h3 {
+  padding-bottom: 20px;
+}
+.documentation h2:hover a, .documentation h3:hover a, .documentation h4:hover a {
+  opacity: 1;
+}

@@ -1,0 +1,29 @@
+{
+  "name": "absurd-page",
+  "version": "0.0.1",
+  "homepage": "http://krasimir.github.io/absurd/",
+  "description": "CSS preprocessor",
+  "author": {
+    "name": "Krasimir Tsonev",
+    "email": "info@krasimirtsonev.com",
+    "url": "http://krasimirtsonev.com"
+  },
+  "license": "MIT",
+  "dependencies": { 
+    
+  },
+  "devDependencies": {
+    "grunt": "0.4.1",
+    "grunt-contrib-concat": "0.3.0",
+    "grunt-contrib-watch": "0.4.4",
+    "grunt-absurd": "*"
+  },
+  "keywords": [
+    "css",
+    "preprocessor"
+  ],
+  "repository" : {
+    "type": "git",
+    "url": "https://github.com/krasimir/absurd.git"
+  }
+}

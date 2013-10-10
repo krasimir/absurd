@@ -1,0 +1,95 @@
+<h3>Compilation</h3>
+
+<section>
+	<div class="desc">
+		<h4>Inline compilation</h4>
+		<p>Use this approach if you want to integrate AbsurdJS into your NodeJS app.</p>
+	</div>
+	<div class="code">
+		<pre><code class="language-javascript">var Absurd = require("absurd");
+Absurd(function(api) {
+    // use the Absurd's api here
+}).compile(function(err, css) {
+    // do something with the css
+});</code></pre>
+	</div>
+	<br class="clear">
+</section>
+
+<section>
+	<div class="desc">
+		<h4>Inline compilation to a file</h4>
+		<p>Use this approach if you want to integrate AbsurdJS into your NodeJS app and save the result to a file.</p>
+	</div>
+	<div class="code">
+		<pre><code class="language-javascript">var output = "./css/styles.css";
+Absurd("./css/styles.js").compileFile(output, function(err, css) {
+    // ...
+});</code></pre>
+	</div>
+	<br class="clear">
+</section>
+
+<section>
+	<div class="desc">
+		<h4>Compiling through command line interface</h4>
+	</div>
+	<div class="code">
+		<pre><code class="language-javascript">// Outputs the css in the console.
+absurd -s [source file] 
+
+// Outputs the css to a file.
+absurd -s [source file] -o [output file]
+
+// Outputs the css to a file and watching 
+// specific directory. If some of the files 
+// there is changed a compilation is fired.
+absurd -s [source file] -o [output file] -w [directory]
+
+// Minify the CSS
+absurd -s [source file] -m true</code></pre>
+	</div>
+	<br class="clear">
+</section>
+
+<section>
+	<div class="desc">
+		<h4>Using with Grunt</h4>
+	</div>
+	<div class="code">
+		<p>Dependencies for your package.json:</p>
+		<pre><code class="language-javascript">"dependencies": {
+    "grunt": "~0.4.1",
+    "grunt-contrib-watch": "*",
+    "grunt-absurd": "*"
+}</code></pre>
+	<p>Simple Gruntfile.js:</p>
+	<pre><code class="language-javascript">module.exports = function(grunt) {
+
+    grunt.initConfig({
+        absurd: {
+            task: {
+                src: __dirname + "/css/absurd/index.js",
+                dest: 'css/styles.css'
+            }
+        },
+        watch: {
+            css: {
+                files: ['css/absurd/**/*.js'],
+                tasks: ['absurd']
+            }
+        }
+    });
+
+    grunt.loadNpmTasks('grunt-contrib-watch');
+    grunt.loadNpmTasks('grunt-absurd');
+
+    // grunt.registerTask('default', ['concat', 'less']);
+    grunt.registerTask('default', ['absurd', 'watch']);
+
+}</code></pre>
+	</div>
+	<br class="clear">
+</section>
+
+
