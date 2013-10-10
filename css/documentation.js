@@ -10,9 +10,13 @@ module.exports = function(api) {
 				maxWidth: "950px",
 				margin: "0 auto"
 			},
+			h2: {
+				fontSize: "50px",
+				lineHeight: "50px"
+			},
 			h3: {
 				display: "inline-block",
-				textAlign: "center",
+				textAlign: "left",
 				fontSize: "30px",
 				margin: "40px 0 40px 0",
 				padding: 0,
