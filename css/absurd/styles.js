@@ -97,10 +97,52 @@ var demo = function() {
 	};
 }
 
+var menu = function(api) {
+	return {
+		".menu": {
+			background: "#575757",
+			boxSizing: "border-box",
+			MozBoxSizing: "border-box",
+			color: "#FFF",
+			textAlign: "center",
+			padding: "60px 0 60px 0",
+			borderTop: "solid 1px #FFF",
+			borderBottom: "solid 1px #6C6C6C",
+			p: {
+				maxWidth: "600px",
+				margin: "0 auto",
+				fontSize: "30px",
+				lineHeight: "30px",
+				a: {
+					display: "block",
+					color: "#FFF",
+					textDecoration: "none",
+					textShadow: "1px 1px #000",
+					":hover": {
+						textShadow: "3px 3px #000",
+					},
+					small: {
+						fontSize: "18px",
+						color: api.darken("#FFF", 20)
+					}
+				}
+			},
+			hr: {
+				display: "block",
+				borderTop: "none",
+				borderBottom: "solid 1px #000",
+				maxWidth: "600px",
+				margin: "20px auto"
+			}
+		}
+	}
+}
+
 module.exports = function(api) {
 	api
 	.add(base())
 	.add(demo())
 	.add(social(api))
+	.add(menu(api))
 	.import(__dirname + "/documentation.js");
 }

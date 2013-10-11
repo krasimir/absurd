@@ -23,6 +23,8 @@ module.exports = function(api) {
 			background: mainColor,
 			boxSizing: "border-box",
 			MozBoxSizing: "border-box",
+			paddingTop: "100px",
+			paddingBottom: "100px",
 			".documentation-inner": {
 				maxWidth: "950px",
 				margin: "0 auto",

@@ -10,15 +10,18 @@ html, body, h1, h2, .result pre, .documentation p {
   width: 140px;
   line-height: 18px;
   background: #B1E9B1;
-  display: block;
   color: #000;
   border-radius: 6px;
   border: solid 1px #4FBB4F;
   box-shadow: 0px 0px 6px #888888;
 }
-.documentation .documentation-inner {
+.menu p, .documentation .documentation-inner {
   margin: 0 auto;
-  max-width: 950px;
+}
+.menu hr {
+  margin: 20px auto;
+  border-top: none;
+  border-bottom: solid 1px #000;
 }
 .documentation h2 a {
   margin: 0 0 0 -45px;
@@ -55,6 +58,12 @@ h2 {
   padding: 20px;
   background: #ECECEC;
 }
+.menu {
+  padding: 60px 0 60px 0;
+  border-top: solid 1px #FFF;
+  border-bottom: solid 1px #6C6C6C;
+  background: #575757;
+}
 .documentation p {
   padding: 0 20px 0 0;
 }
@@ -74,10 +83,10 @@ html, body {
 html, body, .compile {
   font-size: 20px;
 }
-h2, .documentation h4 {
+h2, .menu p, .documentation h4 {
   font-size: 30px;
 }
-.result, .documentation p {
+.result, .menu p a small, .documentation p {
   font-size: 18px;
 }
 .compile small {
@@ -96,10 +105,13 @@ h2, .documentation h4 {
 html, body, .documentation p {
   line-height: 24px;
 }
+.menu p {
+  line-height: 30px;
+}
 .documentation h3, .documentation h4 {
   line-height: 40px;
 }
-h1, h2, .compile, .social {
+h1, h2, .compile, .social, .menu {
   text-align: center;
 }
 .documentation h2, .documentation h3, .documentation h4 {
@@ -120,11 +132,13 @@ h1, h2, .documentation h3, .documentation h4 {
 }
 .documentation {
   background: #353535;
+  padding-top: 100px;
+  padding-bottom: 100px;
 }
 .editor-wrapper, .result, .documentation .desc, .documentation .code {
   float: left;
 }
-.editor-wrapper, .result, .social, .documentation, .documentation h4, .documentation .code {
+.editor-wrapper, .result, .social, .menu, .documentation, .documentation h4, .documentation .code {
   box-sizing: border-box;
   -moz-box-sizing: border-box;
 }
@@ -134,14 +148,20 @@ h1, h2, .documentation h3, .documentation h4 {
 .result pre {
   word-wrap: break-word;
 }
+.compile, .menu p a, .menu hr {
+  display: block;
+}
 .documentation h2 a, .documentation h3 a, .documentation h4, .documentation h4 a {
   display: inline-block;
 }
-.compile, .documentation h2 a, .documentation h3 a, .documentation h4 a, .documentation .menu a:hover {
+.compile, .menu p a, .documentation h2 a, .documentation h3 a, .documentation h4 a, .documentation .menu a:hover {
   text-decoration: none;
 }
-.documentation, .documentation p a, .documentation .menu a {
+.menu, .menu p a, .documentation, .documentation p a, .documentation .menu a {
   color: #FFF;
+}
+.menu p a small {
+  color: #cccccc;
 }
 .documentation h2 a, .documentation h3 a, .documentation h4 a {
   color: #696969;
@@ -150,6 +170,18 @@ h1, h2, .documentation h3, .documentation h4 {
 }
 .documentation h4, .documentation p {
   color: #8C8C8C;
+}
+.menu p, .menu hr {
+  max-width: 600px;
+}
+.documentation .documentation-inner {
+  max-width: 950px;
+}
+.menu p a {
+  text-shadow: 1px 1px #000;
+}
+.menu p a:hover {
+  text-shadow: 3px 3px #000;
 }
 .documentation .documentation-inner section, .documentation h3 {
   padding-bottom: 20px;
