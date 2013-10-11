@@ -10,7 +10,7 @@ api
 .raw("/* content */")
 .add({
 	".content": {
-		fontSize: "18px"
+		background: "#000"
 	}
 })
-.raw("/* end of styles */");
+.raw(".absurdjs { color: #F00; }");
