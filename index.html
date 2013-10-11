@@ -74,6 +74,11 @@
 
 		<div class="menu">
 			<p>
+				<a href="#client-side-usage">Client-side usage</a>
+				<a href="#client-side-tests"><small>Client-side tests</small></a>
+			</p>
+			<hr />
+			<p>
 				<a href="#server-side-usage">Server-side usage</a>
 				<a href="#compilation"><small>Compilation</small></a>
 				<a href="#input-formats"><small>Input formats</small></a>
@@ -81,16 +86,69 @@
 				<a href="#api"><small>API</small></a>
 				<a href="#testing"><small>Testing</small></a>
 			</p>
-			<hr />
-			<p>
-				<a href="#client-side-usage">Client-side usage</a>
-				<a href="#client-side-tests"><small>Client-side tests</small></a>
-			</p>
 		</div>
 
 		<div class="documentation">
 			<div class="documentation-inner">
-				<h2><a href="#server-side-usage" name="server-side-usage">&#187;</a>Server-side usage</h2>
+				<h2><a href="#client-side-usage" name="client-side-usage">&#187;</a>Client-side usage</h2>
+
+<section>
+	<div class="desc">
+		<p>
+			Download the client-side version:<br />
+			<a href="https://raw.github.com/krasimir/absurd/master/client-side/build/absurd.js" target="_blank">absurd.js</a><br />
+			<a href="https://raw.github.com/krasimir/absurd/master/client-side/build/absurd.min.js" target="_blank">absurd.min.js</a><br /><br />
+			After that simply include the file into your page.
+		</p>
+	</div>
+	<div class="code">
+		<pre><code class="language-markup">&lt;script src="absurd.min.js">&lt;/script></code></pre>
+	</div>
+	<br class="clear">
+</section>
+
+<section>
+	<div class="desc">
+		<p>Initialize Absurd and use the API.</p>
+	</div>
+	<div class="code">
+		<pre><code class="language-javascript">var api = Absurd();
+api.add({
+	body: {
+		marginTop: "20px",
+		p: {
+			color: "#000"
+		}
+	}
+});</code></pre>
+	</div>
+	<br class="clear">
+</section>
+
+<section>
+	<div class="desc">
+		<p>Compile and get the CSS.</p>
+	</div>
+	<div class="code">
+		<pre><code class="language-javascript">api.compile(function(err, css) {
+	// use the compiled css
+});</code></pre>
+	</div>
+	<br class="clear">
+</section>
+
+<h3><a href="#client-side-tests" name="client-side-tests">&#187;</a>Client-side tests</h3>
+
+<section>
+	<div class="desc">
+		<p>Just download the files from the repository and open <strong>/client-side/tests</strong> in your browser.</p>
+	</div>
+	<div class="code">
+		<pre><code class="language-javascript">/client-side/tests</code></pre>
+	</div>
+	<br class="clear">
+</section>
+<h2><a href="#server-side-usage" name="server-side-usage">&#187;</a>Server-side usage</h2>
 <section>
 	<div class="desc">
 		<h4><a href="#installation" name="installation">&#187;</a>Installation</h4>
@@ -733,59 +791,6 @@ a {
 	</div>
 	<div class="code">
 		<pre><code class="language-javascript">jasmine ./tests</code></pre>
-	</div>
-	<br class="clear">
-</section>
-<h2><a href="#client-side-usage" name="client-side-usage">&#187;</a>Client-side usage</h2>
-
-<section>
-	<div class="desc">
-		<p>Get the client-side version of AbsurdJS from <a href="https://github.com/krasimir/absurd/tree/master/client-side/build" target="_blank">here</a> and add it to your page.</p>
-	</div>
-	<div class="code">
-		<pre><code class="language-markup">&lt;script src="absurd.min.js">&lt;/script></code></pre>
-	</div>
-	<br class="clear">
-</section>
-
-<section>
-	<div class="desc">
-		<p>Initialize Absurd and use the API.</p>
-	</div>
-	<div class="code">
-		<pre><code class="language-javascript">var api = Absurd();
-api.add({
-	body: {
-		marginTop: "20px",
-		p: {
-			color: "#000"
-		}
-	}
-});</code></pre>
-	</div>
-	<br class="clear">
-</section>
-
-<section>
-	<div class="desc">
-		<p>Compile and get the CSS.</p>
-	</div>
-	<div class="code">
-		<pre><code class="language-javascript">api.compile(function(err, css) {
-	// use the compiled css
-});</code></pre>
-	</div>
-	<br class="clear">
-</section>
-
-<h3><a href="#client-side-tests" name="client-side-tests">&#187;</a>Client-side tests</h3>
-
-<section>
-	<div class="desc">
-		<p>Just download the files from the repository and open <strong>/client-side/tests</strong> in your browser.</p>
-	</div>
-	<div class="code">
-		<pre><code class="language-javascript">/client-side/tests</code></pre>
 	</div>
 	<br class="clear">
 </section>
