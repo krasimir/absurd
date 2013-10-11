@@ -86,7 +86,7 @@ var toCSS = function(rules) {
 	for(var selector in rules) {
 		// handling raw content
 		if(selector.indexOf("____raw") === 0) {
-			css += rules[selector].value + newline;
+			css += rules[selector][selector] + newline;
 		// handling normal styles
 		} else {
 			var entity = selector + ' {' + newline;
@@ -325,8 +325,10 @@ lib.api.plugin = function(api) {
 }
 lib.api.raw = function(api) {
 	return function(raw) {
-		var o = {};
-		o["____raw_" + api.numOfAddedRules] = { value: raw };
+		var o = {}, v = {};
+		var id = "____raw_" + api.numOfAddedRules;
+		v[id] = raw;
+		o[id] = v;
 		api.add(o);
 		return api;
 	}

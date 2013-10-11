@@ -8,10 +8,7 @@ describe("Adding raw data", function() {
 			api
 			.add({
 				body: {
-					marginTop: "20px",
-					p: {
-						fontSize: "5px"
-					}
+					marginTop: "20px"
 				}
 			})
 			.raw('/* ' + comment + ' */')
@@ -19,11 +16,12 @@ describe("Adding raw data", function() {
 				a: {
 					paddingTop: "20px"
 				}
-			});
+			})
+			.raw('/* end of styles */');
 		}).compile(function(err, css) {
 			expect(err).toBe(null);
 			expect(css).toBeDefined();
-			expect(css).toBe("body {\n  margin-top: 20px;\n}\nbody p {\n  font-size: 5px;\n}\n/* " + comment + " */\na {\n  padding-top: 20px;\n}\n");
+			expect(css).toBe("body {\n  margin-top: 20px;\n}\n/* " + comment + " */\na {\n  padding-top: 20px;\n}\n/* end of styles */\n");
 			done();
 		});		
 	});

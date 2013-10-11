@@ -47,7 +47,7 @@ describe("Test case (charset)", function() {
 		}).compile(function(err, css) {
 			expect(err).toBe(null);
 			expect(css).toBeDefined();
-			expect(css).toBe('body {\n  border-radius: 2px;\n}\nbody a {\n  font-size: 2em;\n}\n@charset: "UTF-8";\n@charset: "BLA-BLA";\np {\n  margin: 2px;\n}\n');
+			expect(css).toBe('body {\n  border-radius: 2px;\n}\nbody a {\n  font-size: 2em;\n}\n@charset: "UTF-8";\np {\n  margin: 2px;\n}\n@charset: "BLA-BLA";\n');
 			done();
 		});
 	});
