@@ -28,13 +28,14 @@ module.exports = function(grunt) {
 			'node-tests-to-client': {
 				src: [
 					'tests/common/*.js',
+					'tests/bugs/*.js',
 					'!tests/common/api.import.spec.js',
 					'!tests/common/compile-and-save.spec.js',
 					'!tests/common/minify.spec.js',
 					'!tests/common/using-css.spec.js',
 					'!tests/common/using-json.spec.js',
 					'!tests/common/basics-and-compilation.spec.js',
-					'!tests/common/variables-and-functions.spec.js'
+					'!tests/common/variables-and-functions.spec.js',
 				],
 				dest: 'client-side/tests/tests.from.node.js',
 			}
