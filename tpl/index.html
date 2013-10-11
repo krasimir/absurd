@@ -36,24 +36,9 @@
 		<h2>JavaScript based CSS preprocessor in less then 10Kb</h2>
 	</header>
 	<div class="content">
+		<div class="demo-selector"></div>
 		<div class="editor-wrapper">
-<div id="editor">var textColor = "#BADA55";
-api.add({
-	body: {
-		marginTop: "20px",
-		width: "100%",
-		p: {
-			color: textColor
-		}
-	},
-	".content": {
-		width: "100%",
-		".header": {
-			color: textColor,
-			fontSize: "23px"
-		}
-	}
-});</div>
+			<div id="editor"></div>
 		</div>
 		<div class="result"><pre></pre></div>
 		<br class="clear" />
@@ -117,6 +102,7 @@ api.add({
 	<script src="./js/jquery-1.10.2.min.js"></script>
 	<script src="./js/ace/src-noconflict/ace.js"></script>
 	<script src="./js/prism.js"></script>
+	<script src="./js/demos.js"></script>
 
 	<script>
 		$(document).ready(function() {
@@ -161,6 +147,24 @@ api.add({
 					compile();
 				} 
 			});
+
+			// demo selector
+			var demoSelectMarkup = '<select id="demo-selector-control">';
+		    for(var i=0; i<demos.length; i++) {
+		    	var demo = demos[i];
+		    	if(i === 0) {
+		    		editor.getSession().setValue(demo.content);
+		    	}
+		    	demoSelectMarkup += '<option value="' + i + '">' + demo.name + '</option>';
+		    }
+		    demoSelectMarkup += '</select>';
+		    var demoSelect = $(demoSelectMarkup);
+		    $(".demo-selector").append(demoSelect);
+		    demoSelect.on("change", function() {
+				editor.getSession().setValue(demos[parseInt(demoSelect.val())].content);
+				compile();
+				demoSelect.blur();
+		    });
 
 		    compile();
 

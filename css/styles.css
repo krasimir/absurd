@@ -64,6 +64,12 @@ h2 {
   border-bottom: solid 1px #6C6C6C;
   background: #575757;
 }
+.demo-selector select {
+  padding: 6px 8px 6px 6px;
+  border-radius: 10px;
+  border: solid 2px #C2C2C2;
+  min-width: 240px;
+}
 .documentation p {
   padding: 0 20px 0 0;
 }
@@ -77,7 +83,7 @@ html, body, #editor {
 .documentation .code {
   width: 70%;
 }
-html, body {
+html, body, .demo-selector select {
   font-family: Georgia;
 }
 html, body, .compile {
@@ -86,7 +92,7 @@ html, body, .compile {
 h2, .menu p, .documentation h4 {
   font-size: 30px;
 }
-.result, .menu p a small, .documentation p {
+.result, .menu p a small, .demo-selector select, .documentation p {
   font-size: 18px;
 }
 .compile small {
@@ -111,7 +117,7 @@ html, body, .documentation p {
 .documentation h3, .documentation h4 {
   line-height: 40px;
 }
-h1, h2, .compile, .social, .menu {
+h1, h2, .compile, .social, .menu, .demo-selector {
   text-align: center;
 }
 .documentation h2, .documentation h3, .documentation h4 {
@@ -132,8 +138,8 @@ h1, h2, .documentation h3, .documentation h4 {
 }
 .documentation {
   background: #353535;
-  padding-top: 100px;
   padding-bottom: 100px;
+  padding-top: 100px;
 }
 .editor-wrapper, .result, .documentation .desc, .documentation .code {
   float: left;
@@ -183,7 +189,7 @@ h1, h2, .documentation h3, .documentation h4 {
 .menu p a:hover {
   text-shadow: 3px 3px #000;
 }
-.documentation .documentation-inner section, .documentation h3 {
+.demo-selector, .documentation .documentation-inner section, .documentation h3 {
   padding-bottom: 20px;
 }
 .documentation h2:hover a, .documentation h3:hover a, .documentation h4:hover a {

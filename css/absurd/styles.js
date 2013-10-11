@@ -97,6 +97,23 @@ var demo = function() {
 	};
 }
 
+var demoSelector = function() {
+	return {
+		".demo-selector": {
+			textAlign: "center",
+			paddingBottom: "20px",
+			select: {
+				padding: "6px 8px 6px 6px",
+				border: "solid 2px #C2C2C2",
+				borderRadius: "10px",
+				minWidth: "240px",
+				fontSize: "18px",
+				fontFamily: "Georgia"
+			}
+		}
+	}
+}
+
 var menu = function(api) {
 	return {
 		".menu": {
@@ -144,5 +161,6 @@ module.exports = function(api) {
 	.add(demo())
 	.add(social(api))
 	.add(menu(api))
+	.add(demoSelector())
 	.import(__dirname + "/documentation.js");
 }

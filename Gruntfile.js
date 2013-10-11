@@ -9,6 +9,21 @@ module.exports = function(grunt) {
 					'tpl/docs/**/*.html'
 				],
 				dest: 'tpl/docs.html'
+			},
+			demos: {
+				src: [
+					'js/demos/**/*.js'
+				],
+				dest: 'js/demos.js',
+				options: {
+					process: function(src, filepath) {
+						var content = '';
+						content += 'if(typeof demos === "undefined") { demos = []; }';
+						content += 'demos.push({name: "' + filepath.replace(/\.js/, '').replace("js/demos/", "");
+						content += '", content: \'' + src.replace(/\n/g, '\\n').replace(/\r/g, '') + '\'});';
+						return content;
+					}
+				}
 			}
 		},
 		absurd: {
