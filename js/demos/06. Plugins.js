@@ -1,7 +1,8 @@
 api.plugin("hoverEffect", function(api, color) {
 	return {
 		":hover": {
-			color: color
+			color: color,
+            background: api.lighten(color, 60)
 		}
 	}
 })
