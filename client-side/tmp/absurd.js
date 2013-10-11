@@ -119,13 +119,23 @@ lib.api.add = function(API) {
 			return false;
 		}
 	}
-	var clearingPluginsCalls = function(props) {
+	var clearing = function(props) {
+
+		// plugins
 		var plugins = API.getPlugins();
 		for(var prop in props) {
 			if(typeof plugins[prop] !== 'undefined') {
 				props[prop] = false;
 			}
 		}
+
+		// pseudo classes
+		for(var prop in props) {
+			if(prop.charAt(0) === ":") {
+				props[prop] = false;
+			}
+		}
+
 	}
 	var checkForNesting = function(selector, props, stylesheet) {
 		for(var prop in props) {
@@ -157,9 +167,11 @@ lib.api.add = function(API) {
 			}
 			return;
 		}
-
+ 
 		// check for plugin
-		if(checkAndExecutePlugin(null, selector, props, stylesheet)) return;	
+		if(checkAndExecutePlugin(null, selector, props, stylesheet)) {
+			return;	
+		}
 
 		// if the selector is already there
 		if(typeof API.getRules(stylesheet || "mainstream")[selector] == 'object') {
@@ -172,8 +184,9 @@ lib.api.add = function(API) {
 		} else {
 			API.getRules(stylesheet || "mainstream")[selector] = props;
 		}
+
 		checkForNesting(selector, props, stylesheet || "mainstream");
-		clearingPluginsCalls(props);
+		clearing(props);
 		
 	}
 	var add = function(rules, stylesheet) {
