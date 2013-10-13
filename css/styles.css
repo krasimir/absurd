@@ -9,13 +9,13 @@ html, body, h1, h2, .result pre, .documentation p {
   padding: 6px 10px;
   width: 140px;
   line-height: 18px;
+  border: solid 1px #4FBB4F;
   background: #B1E9B1;
   color: #000;
   border-radius: 6px;
-  border: solid 1px #4FBB4F;
   box-shadow: 0px 0px 6px #888888;
 }
-.menu p, .documentation .documentation-inner {
+.menu p, .demo, .documentation .documentation-inner {
   margin: 0 auto;
 }
 .menu hr {
@@ -47,11 +47,10 @@ h2 {
   padding: 30px 0 15px 0;
 }
 .editor-wrapper, .result {
-  padding: 20px 10px 20px 10px;
+  padding: 10px;
   width: 50%;
   height: 420px;
-  border-top: solid 2px #C9C9C9;
-  border-bottom: solid 2px #C9C9C9;
+  border: dotted 1px #C9C9C9;
   background: solid 1px #C9C9C9;
 }
 .social {
@@ -60,14 +59,14 @@ h2 {
 }
 .menu {
   padding: 60px 0 60px 0;
+  background: #575757;
   border-top: solid 1px #FFF;
   border-bottom: solid 1px #6C6C6C;
-  background: #575757;
 }
 .demo-selector select {
   padding: 6px 8px 6px 6px;
-  border-radius: 10px;
   border: solid 2px #C2C2C2;
+  border-radius: 10px;
   min-width: 240px;
 }
 .documentation p {
@@ -129,10 +128,6 @@ h1, h2, .documentation h3, .documentation h4 {
 .clear {
   clear: both;
 }
-.documentation .documentation-inner section {
-  border-bottom: dotted 1px #000;
-  margin-top: 20px;
-}
 .compile:hover {
   background: #74DF68;
 }
@@ -177,8 +172,15 @@ h1, h2, .documentation h3, .documentation h4 {
 .documentation h4, .documentation p {
   color: #8C8C8C;
 }
+.documentation .documentation-inner section {
+  border-bottom: dotted 1px #000;
+  margin-top: 20px;
+}
 .menu p, .menu hr {
   max-width: 600px;
+}
+.demo {
+  max-width: 1000px;
 }
 .documentation .documentation-inner {
   max-width: 950px;

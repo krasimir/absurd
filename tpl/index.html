@@ -37,11 +37,13 @@
 	</header>
 	<div class="content">
 		<div class="demo-selector"></div>
-		<div class="editor-wrapper">
-			<div id="editor"></div>
+		<div class="demo">
+			<div class="editor-wrapper">
+				<div id="editor"></div>
+			</div>
+			<div class="result"><pre></pre></div>
+			<br class="clear" />
 		</div>
-		<div class="result"><pre></pre></div>
-		<br class="clear" />
 		<a href="javascript:void(0);" id="compile" class="compile">Compile<br /><small>Click me or press Ctrl+Enter</small></a>
 
 		<section class="social">
@@ -106,6 +108,20 @@
 
 	<script>
 		$(document).ready(function() {
+
+			var shortenURL = function(url, callback) {
+				var bitlyToken = "32ce8abb603b17721ba37a343a357c4c7394813f";
+				var bitlyURL = "https://api-ssl.bitly.com/v3/shorten?access_token=" + bitlyToken + "&longUrl=" + encodeURIComponent(url);
+				var jqxhr = $.getJSON(bitlyURL, function(data) {
+					if(data && data.status_code === "200" && data.data.url) {
+						callback(null, data.data.url);
+					}
+				})
+				.fail(function() {
+					callback({error: "Can't shorten url"}, url);
+				});
+			}
+			// shortenURL("http://krasimir.github.io/absurd");
 
 			var compile = function() {
 				var api = Absurd();

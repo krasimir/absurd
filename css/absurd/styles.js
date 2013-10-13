@@ -30,9 +30,8 @@ var demoBlock = function() {
 	return {
 		width: "50%",
 		height: "420px",
-		padding: "20px 10px 20px 10px",
-		borderTop: "solid 2px #C9C9C9",
-		borderBottom: "solid 2px #C9C9C9",
+		padding: "10px",
+		border: "dotted 1px #C9C9C9",
 		background: "solid 1px #C9C9C9",
 		float: "left",
 		boxSizing: "border-box",
@@ -97,8 +96,12 @@ var demo = function() {
 	};
 }
 
-var demoSelector = function() {
+var demoStyles = function() {
 	return {
+		".demo": {
+			maxWidth: "1000px",
+			margin: "0 auto"
+		},
 		".demo-selector": {
 			textAlign: "center",
 			paddingBottom: "20px",
@@ -161,6 +164,6 @@ module.exports = function(api) {
 	.add(demo())
 	.add(social(api))
 	.add(menu(api))
-	.add(demoSelector())
+	.add(demoStyles())
 	.import(__dirname + "/documentation.js");
 }
