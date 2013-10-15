@@ -6,7 +6,7 @@ var PathFormatter = require("./lib/helpers/PathFormatter.js"),
 	requireUncached = require('./lib/helpers/RequireUncached.js');
 	fs = require("fs"),
 	argv = require('optimist').argv,
-	_ = require("underscore"),
+	hasOwnProperty = Object.prototype.hasOwnProperty,
 	API = null,
 	absurd = null,
 
@@ -20,12 +20,21 @@ module.exports = absurd = function(path) {
 			minify: false
 		};
 
+	var extend = function(destination, source) {
+		for (var key in source) {
+			if (hasOwnProperty.call(source, key)) {
+				destination[key] = source[key];
+			}
+		}
+		return destination;
+	};
+
 	// --------------------------------------------------- compile
 	var compile = API.compile = function(callback, options) {
-		options = _.extend(_defaultOptions, options || {});
+		options = extend(_defaultOptions, options || {});
 		if(typeof _path == "function") {
 			_path(API);
-		} else {		
+		} else {
 			if(_path !== false) {
 				API.import(_path.source);
 			}
