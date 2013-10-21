@@ -1,7 +1,6 @@
 #!/usr/bin/env node
 
 var PathFormatter = require("./lib/helpers/PathFormatter.js"),
-	Processor = require("./lib/Processor.js"),
 	cli = require('./lib/CLI.js'),
 	requireUncached = require('./lib/helpers/RequireUncached.js');
 	fs = require("fs"),
@@ -17,7 +16,8 @@ module.exports = absurd = function(path) {
 	var _path = PathFormatter(path),
 		_defaultOptions = {
 			combineSelectors: true,
-			minify: false
+			minify: false,
+			processor: require("./lib/processors/CSS.js")
 		};
 
 	var extend = function(destination, source) {
@@ -39,7 +39,7 @@ module.exports = absurd = function(path) {
 				API.import(_path.source);
 			}
 		}
-		Processor(
+		options.processor(
 			API.getRules(),
 			_path.callback || callback || function() {},
 			options

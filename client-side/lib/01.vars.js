@@ -1,5 +1,6 @@
 var lib = { 
 	api: {},
 	helpers: {},
-	plugins: {}
+	plugins: {},
+	processors: {}
 };

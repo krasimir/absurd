@@ -3,10 +3,24 @@ var client = function() {
 
 		/******************************************* Copied directly from /lib/API.js */
 
+		var extend = function(destination, source) {
+			for (var key in source) {
+				if (hasOwnProperty.call(source, key)) {
+					destination[key] = source[key];
+				}
+			}
+			return destination;
+		};
+
 		var _api = {},
 			_rules = {},
 			_storage = {},
-			_plugins = {};
+			_plugins = {},
+			_defaultOptions = {
+				combineSelectors: true,
+				minify: false,
+				processor: lib.processors.CSS
+			};
 
 		_api.getRules = function(stylesheet) {
 			if(typeof stylesheet === 'undefined') {
@@ -35,8 +49,9 @@ var client = function() {
 		/******************************************* Copied directly from /lib/API.js */
 
 		// client side specific methods 
-		_api.compile = function(callback) {
-			lib.Processor(
+		_api.compile = function(callback, options) {
+			options = extend(_defaultOptions, options || {});
+			options.processor(
 				_api.getRules(),
 				callback || function() {},
 				{combineSelectors: true}
