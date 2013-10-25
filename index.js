@@ -1,7 +1,6 @@
 #!/usr/bin/env node
 
-var PathFormatter = require("./lib/helpers/PathFormatter.js"),
-	cli = require('./lib/CLI.js'),
+var cli = require('./lib/CLI.js'),
 	requireUncached = require('./lib/helpers/RequireUncached.js');
 	fs = require("fs"),
 	argv = require('optimist').argv,
@@ -9,16 +8,15 @@ var PathFormatter = require("./lib/helpers/PathFormatter.js"),
 	API = null,
 	absurd = null,
 
-module.exports = absurd = function(path) {
+module.exports = absurd = function(func) {
 
 	API = require("./lib/API.js")();
 
-	var _path = PathFormatter(path),
-		_defaultOptions = {
-			combineSelectors: true,
-			minify: false,
-			processor: require("./lib/processors/CSS.js")
-		};
+	var _defaultOptions = {
+		combineSelectors: true,
+		minify: false,
+		processor: require("./lib/processors/CSS.js")
+	};
 
 	var extend = function(destination, source) {
 		for (var key in source) {
@@ -32,16 +30,14 @@ module.exports = absurd = function(path) {
 	// --------------------------------------------------- compile
 	var compile = API.compile = function(callback, options) {
 		options = extend(_defaultOptions, options || {});
-		if(typeof _path == "function") {
-			_path(API);
-		} else {
-			if(_path !== false) {
-				API.import(_path.source);
-			}
+		if(typeof func == "function") {
+			func(API);
+		} else if(typeof func == "string") {
+			API.import(func);	
 		}
 		options.processor(
 			API.getRules(),
-			_path.callback || callback || function() {},
+			callback || function() {},
 			options
 		);
 	}
@@ -56,10 +52,6 @@ module.exports = absurd = function(path) {
 				compileFileCallback(err);
 			}
 		}, options);
-	}
-	// --------------------------------------------------- getPaths
-	var getPath = API.getPath = function() {
-		return _path;
 	}
 
 	return API;

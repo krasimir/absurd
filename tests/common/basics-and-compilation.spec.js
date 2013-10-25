@@ -14,22 +14,6 @@ describe("Absurd acting in code:", function() {
 		done();
 	});
 
-	it("should work with different path passing", function(done) {
-		var path = '';
-
-		absurd = Absurd("./../data/css/index.js");
-		path = absurd.getPath();
-		expect(path.source).toBeDefined();
-		expect(path.source).toBe("./../data/css/index.js");
-
-		absurd = Absurd({source: "./../data/css/index.js"});
-		path = absurd.getPath();
-		expect(path.source).toBeDefined();
-		expect(path.source).toBe("./../data/css/index.js");
-
-		done();
-	});
-
 	it("should work with no path passed", function(done) {
 		absurd = Absurd();
 		absurd.add({a: {color: "#123"}});

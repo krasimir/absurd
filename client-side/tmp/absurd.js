@@ -165,17 +165,6 @@ lib.api.storage = function(API) {
 	}
 	return storage;
 }
-lib.helpers.PathFormatter = function(path) {
-	var _path = {};
-	if(!path) {
-		return false;
-	} else if(typeof path == "string") {
-		_path = {source: path};
-	} else {
-		_path = path;
-	}
-	return _path;
-}
 lib.helpers.RequireUncached = function(module) {
 	delete require.cache[require.resolve(module)]
     return require(module);
