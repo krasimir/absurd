@@ -2,11 +2,17 @@
 
 var fs = require("fs");
 
+var getVersion = function(callback) {
+    var p = require(__dirname + "/../package.json");
+    callback(p.version)
+}
+
 module.exports = function(grunt) {
     grunt.registerMultiTask('client-side', 'generate client-side version of the library', function() {
         
-        var tmp = grunt.file.read(this.data.src, {});
-    	var content = '';
+        var tmp = grunt.file.read(this.data.src, {}),
+    	   content = '',
+           self = this;
 
     	content = "var Absurd = (function(w) {\n";
 
@@ -22,7 +28,9 @@ module.exports = function(grunt) {
         content += ';\nreturn client();\n';
         content += '})(window);';
 
-        grunt.file.write(this.data.dest, content, {});
+        getVersion(function(version) {
+            grunt.file.write(self.data.dest, "/* version: "  + version +  " */\n" + content, {});
+        });        
 
     });
 };
