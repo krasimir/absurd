@@ -9,7 +9,7 @@ describe("Absurd acting in code:", function() {
 	});
 
 	it("should initialize absurd", function(done) {
-		absurd = Absurd("./../data/css/index.js");
+		absurd = Absurd(__dirname + "/../data/css/index.js");
 		expect(typeof absurd).toBe("object");
 		done();
 	});

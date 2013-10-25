@@ -19,7 +19,7 @@ var client = function() {
 			_defaultOptions = {
 				combineSelectors: true,
 				minify: false,
-				processor: lib.processors.CSS
+				processor: lib.processors.CSS()
 			};
 
 		_api.getRules = function(stylesheet) {
@@ -63,7 +63,9 @@ var client = function() {
 
 		// registering api methods
 		for(var method in lib.api) {
-			_api[method] = lib.api[method](_api);
+			if(method !== "compile") {
+				_api[method] = lib.api[method](_api);
+			}
 		}
 
 		// registering plugins
