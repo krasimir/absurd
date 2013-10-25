@@ -52,7 +52,8 @@ module.exports = function(grunt) {
 					'!js/absurd.min.js',
 					'css/**/*.js',
 					'tpl/docs/**/*.html',
-					'tpl/index.html'
+					'tpl/index.html',
+					'!js/demos.js'
 				],
 				tasks: ['concat', 'absurd', 'generate-index']
 			}

@@ -1,4 +1,4 @@
-/* version: 0.0.37 */
+/* version: 0.0.39 */
 var Absurd = (function(w) {
 var lib = { 
 	api: {},
@@ -7,7 +7,7 @@ var lib = {
 	processors: {}
 };
 var require = function() {
-	
+	return function() {}
 };
 var client = function() {
 	return function(arg) {
@@ -30,7 +30,7 @@ var client = function() {
 			_defaultOptions = {
 				combineSelectors: true,
 				minify: false,
-				processor: lib.processors.CSS
+				processor: lib.processors.CSS()
 			};
 
 		_api.getRules = function(stylesheet) {
@@ -74,7 +74,9 @@ var client = function() {
 
 		// registering api methods
 		for(var method in lib.api) {
-			_api[method] = lib.api[method](_api);
+			if(method !== "compile") {
+				_api[method] = lib.api[method](_api);
+			}
 		}
 
 		// registering plugins
@@ -225,6 +227,45 @@ lib.api.colors = function(api) {
 	}
 
 }
+var extend = function(destination, source) {
+	for (var key in source) {
+		if (hasOwnProperty.call(source, key)) {
+			destination[key] = source[key];
+		}
+	}
+	return destination;
+};
+
+
+
+lib.api.compile = function(api) {
+	return function(callback, options) {
+		var _defaultOptions = {
+			combineSelectors: true,
+			minify: false,
+			processor: require("../processors/CSS.js")()
+		};
+		options = extend(_defaultOptions, options || {});
+		options.processor(
+			api.getRules(),
+			callback || function() {},
+			options
+		);
+	}
+}
+lib.api.compileFile = function(api) {
+	return function(file, compileFileCallback, options) {
+		api.compile(function(err, css) {
+			try {
+				fs.writeFile(file, css, function (err) {
+					compileFileCallback(err, css);
+				});
+			} catch(err) {
+				compileFileCallback(err);
+			}
+		}, options);
+	}
+}
 lib.api.plugin = function(api) {
 	var plugin = function(name, func) {
 		api.getPlugins()[name] = func;
@@ -290,7 +331,7 @@ lib.plugins.document = function() {
 }
 lib.plugins.keyframes = function() {
 	return function(api, value) {
-		var processor = require(__dirname + "/../processors/CSS");
+		var processor = require(__dirname + "/../processors/CSS")();
 		if(typeof value === "object") {			
 			// js or json
 			if(typeof value.frames != "undefined") {
@@ -321,7 +362,7 @@ lib.plugins.keyframes = function() {
 }
 lib.plugins.media = function() {
 	return function(api, value) {
-		var processor = require(__dirname + "/../processors/CSS");
+		var processor = require(__dirname + "/../processors/CSS")();
 		if(typeof value === "object") {
 			var content = '@media ' + value.media + " {\n";
 			var rules = {};
@@ -372,7 +413,7 @@ lib.plugins.page = function() {
 }
 lib.plugins.supports = function() {
 	return function(api, value) {
-		var processor = require(__dirname + "/../processors/CSS");
+		var processor = require(__dirname + "/../processors/CSS")();
 		if(typeof value === "object") {
 			var content = '@supports ' + value.supports + " {\n";
 			var rules = {};
@@ -479,26 +520,28 @@ var transformUppercase = function(prop) {
 	return transformed;
 }
 
-lib.processors.CSS = function(rules, callback, options) {
-	options = options || defaultOptions;
-	var css = '';
-	for(var stylesheet in rules) {
-		var r = filterRules(rules[stylesheet]);
-		r = options.combineSelectors ? combineSelectors(r) : r;
-		if(stylesheet === "mainstream") {
-			css += toCSS(r);
+lib.processors.CSS = function() {
+	return function(rules, callback, options) {
+		options = options || defaultOptions;
+		var css = '';
+		for(var stylesheet in rules) {
+			var r = filterRules(rules[stylesheet]);
+			r = options.combineSelectors ? combineSelectors(r) : r;
+			if(stylesheet === "mainstream") {
+				css += toCSS(r);
+			} else {
+				css += stylesheet + " {" + newline + toCSS(r) + "}" + newline;
+			}		
+		}
+		// Minification
+		if(options.minify) {
+			css = cleanCSS.process(css);
+			if(callback) callback(null, css);
 		} else {
-			css += stylesheet + " {" + newline + toCSS(r) + "}" + newline;
-		}		
+			if(callback) callback(null, css);
+		}
+		return css;
 	}
-	// Minification
-	if(options.minify) {
-		css = cleanCSS.process(css);
-		if(callback) callback(null, css);
-	} else {
-		if(callback) callback(null, css);
-	}
-	return css;
 };
 return client();
 })(window);
