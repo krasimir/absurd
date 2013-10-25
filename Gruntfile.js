@@ -38,10 +38,18 @@ module.exports = function(grunt) {
 				dest: 'index.html'
 			}
 		},
+		'copy-build-files': {
+			index: {
+				src: '',
+				dest: ''
+			}
+		},
 		watch: {
 			gogo: {
 				files: [
 					'js/**/*.js',
+					'!js/absurd.js',
+					'!js/absurd.min.js',
 					'css/**/*.js',
 					'tpl/docs/**/*.html',
 					'tpl/index.html'
@@ -56,6 +64,6 @@ module.exports = function(grunt) {
 	grunt.loadNpmTasks('grunt-absurd');
 	grunt.loadTasks('tasks');
 
-	grunt.registerTask('default', ['concat', 'absurd', 'generate-index', 'watch']);
+	grunt.registerTask('default', ['concat', 'absurd', 'generate-index', 'copy-build-files', 'watch']);
 
 }
