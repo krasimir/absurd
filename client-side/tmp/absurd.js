@@ -96,42 +96,6 @@ lib.api.add = function(API) {
 	}
 	return add;
 }
-// credits: http://www.sitepoint.com/javascript-generate-lighter-darker-color/
-function ColorLuminance(hex, lum) {
-
-	// validate hex string
-	hex = String(hex).replace(/[^0-9a-f]/gi, '');
-	if (hex.length < 6) {
-		hex = hex[0]+hex[0]+hex[1]+hex[1]+hex[2]+hex[2];
-	}
-	lum = lum || 0;
-
-	// convert to decimal and change luminosity
-	var rgb = "#", c, i;
-	for (i = 0; i < 3; i++) {
-		c = parseInt(hex.substr(i*2,2), 16);
-		c = Math.round(Math.min(Math.max(0, c + (c * lum)), 255)).toString(16);
-		rgb += ("00"+c).substr(c.length);
-	}
-
-	return rgb;
-}
-
-lib.api.colors = function(api) {
-
-	var darken = api.darken = function(color, percents) {
-		return ColorLuminance(color, -(percents/100));
-	}
-	var lighten = api.lighten = function(color, percents) {
-		return ColorLuminance(color, percents/100);
-	}
-
-	return {
-		darken: darken,
-		lighten: lighten
-	}
-
-}
 var extend = function(destination, source) {
 	for (var key in source) {
 		if (hasOwnProperty.call(source, key)) {
@@ -140,8 +104,6 @@ var extend = function(destination, source) {
 	}
 	return destination;
 };
-
-
 
 lib.api.compile = function(api) {
 	return function(callback, options) {
@@ -169,6 +131,60 @@ lib.api.compileFile = function(api) {
 				compileFileCallback(err);
 			}
 		}, options);
+	}
+}
+var ColorLuminance = function (hex, lum) {
+
+	// validate hex string
+	hex = String(hex).replace(/[^0-9a-f]/gi, '');
+	if (hex.length < 6) {
+		hex = hex[0]+hex[0]+hex[1]+hex[1]+hex[2]+hex[2];
+	}
+	lum = lum || 0;
+
+	// convert to decimal and change luminosity
+	var rgb = "#", c, i;
+	for (i = 0; i < 3; i++) {
+		c = parseInt(hex.substr(i*2,2), 16);
+		c = Math.round(Math.min(Math.max(0, c + (c * lum)), 255)).toString(16);
+		rgb += ("00"+c).substr(c.length);
+	}
+
+	return rgb;
+};
+lib.api.darken = function(api) {
+	return function(color, percents) {
+		return ColorLuminance(color, -(percents/100));
+	}
+}
+lib.api.hook = function(api) {
+	return function(method, callback) {
+		api.addHook(method, callback);
+		return api;
+	}
+}
+var ColorLuminance = function (hex, lum) {
+
+	// validate hex string
+	hex = String(hex).replace(/[^0-9a-f]/gi, '');
+	if (hex.length < 6) {
+		hex = hex[0]+hex[0]+hex[1]+hex[1]+hex[2]+hex[2];
+	}
+	lum = lum || 0;
+
+	// convert to decimal and change luminosity
+	var rgb = "#", c, i;
+	for (i = 0; i < 3; i++) {
+		c = parseInt(hex.substr(i*2,2), 16);
+		c = Math.round(Math.min(Math.max(0, c + (c * lum)), 255)).toString(16);
+		rgb += ("00"+c).substr(c.length);
+	}
+
+	return rgb;
+};
+lib.api.lighten = function(api) {
+	return function(color, percents) {
+		return ColorLuminance(color, percents/100);
 	}
 }
 lib.api.plugin = function(api) {
@@ -203,6 +219,26 @@ lib.api.storage = function(API) {
 		return API;
 	}
 	return storage;
+}
+// credits: http://www.sitepoint.com/javascript-generate-lighter-darker-color/
+lib.helpers.ColorLuminance = function (hex, lum) {
+
+	// validate hex string
+	hex = String(hex).replace(/[^0-9a-f]/gi, '');
+	if (hex.length < 6) {
+		hex = hex[0]+hex[0]+hex[1]+hex[1]+hex[2]+hex[2];
+	}
+	lum = lum || 0;
+
+	// convert to decimal and change luminosity
+	var rgb = "#", c, i;
+	for (i = 0; i < 3; i++) {
+		c = parseInt(hex.substr(i*2,2), 16);
+		c = Math.round(Math.min(Math.max(0, c + (c * lum)), 255)).toString(16);
+		rgb += ("00"+c).substr(c.length);
+	}
+
+	return rgb;
 }
 lib.helpers.RequireUncached = function(module) {
 	delete require.cache[require.resolve(module)]

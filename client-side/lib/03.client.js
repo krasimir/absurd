@@ -16,6 +16,7 @@ var client = function() {
 			_rules = {},
 			_storage = {},
 			_plugins = {},
+			_hooks = {},
 			_defaultOptions = {
 				combineSelectors: true,
 				minify: false,
@@ -42,6 +43,30 @@ var client = function() {
 			_rules = {};
 			_storage = [];
 		}
+		_api.import = function() { 
+			if(_api.callHooks("import", arguments)) return _api;
+			return _api; 
+		}
+
+		// hooks
+		_api.addHook = function(method, callback) {
+			if(!_hooks[method]) _hooks[method] = [];
+			var isAlreadyAdded = false;
+			for(var i=0; c=_hooks[method][i]; i++) {
+				if(c === callback) {
+					isAlreadyAdded = true;
+				}
+			}
+			isAlreadyAdded === false ? _hooks[method].push(callback) : null;
+		}
+		_api.callHooks = function(method, args) {
+			if(_hooks[method]) {
+				for(var i=0; c=_hooks[method][i]; i++) {
+					if(c.apply(_api, args) === true) return true;
+				}
+			}
+			return false;
+		}
 
 		// internal variables
 		_api.numOfAddedRules = 0;
@@ -50,6 +75,7 @@ var client = function() {
 
 		// client side specific methods 
 		_api.compile = function(callback, options) {
+			if(_api.callHooks("compile", arguments)) return _api;
 			options = extend(_defaultOptions, options || {});
 			options.processor(
 				_api.getRules(),
@@ -57,14 +83,18 @@ var client = function() {
 				{combineSelectors: true}
 			);
 		}
-		_api.getPath = function() {
-			return {};
-		}
 
 		// registering api methods
 		for(var method in lib.api) {
 			if(method !== "compile") {
 				_api[method] = lib.api[method](_api);
+				_api[method] = (function(method) {
+					return function() {
+						var f = lib.api[method](_api);
+						if(_api.callHooks(method, arguments)) return _api;
+						return f.apply(_api, arguments);
+					}
+				})(method);		
 			}
 		}
 
