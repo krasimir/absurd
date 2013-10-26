@@ -119,12 +119,19 @@
 
 <section>
 	<div class="desc">
-		<h4>.compile([function])</h4>
+		<h4>.compile([function], [options])</h4>
 	</div>
 	<div class="code">
 		<pre><code class="language-javascript">api.compile(function(err, css) {
 	// use the compiled css
-});
+}, {});
+		</code></pre>
+		<p>The <em>options</em> parameter is optional. It's default value is:</p>
+	<pre><code class="language-javascript">{
+	combineSelectors: true,
+	minify: false,
+	processor: [internal CSS preprocessor]
+}
 		</code></pre>
 	</div>
 	<br class="clear">
@@ -132,13 +139,14 @@
 
 <section>
 	<div class="desc">
-		<h4>.compileFile([path], [function])</h4>
+		<h4>.compileFile([path], [function], [options])</h4>
 	</div>
 	<div class="code">
 		<pre><code class="language-javascript">api.compileFile("css/styles.css", function(err, css) {
     // use the compiled css
-});
+}, {});
 		</code></pre>
+		<p>Check <em>.compile</em> method for more information regarding <em>options</em> parameter.</p>
 	</div>
 	<br class="clear">
 </section>
