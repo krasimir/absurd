@@ -1,4 +1,4 @@
-/* version: 0.0.41 */
+/* version: 0.0.42 */
 var Absurd = (function(w) {
 var lib = { 
 	api: {},
@@ -537,7 +537,10 @@ var toCSS = function(rules) {
 			var entity = selector + ' {' + newline;
 			for(var prop in rules[selector]) {
 				var value = rules[selector][prop];
-				entity += '  ' + transformUppercase(prop) + ': ' + rules[selector][prop] + ';' + newline;
+				if(value === "") {
+					value = '""';
+				}
+				entity += '  ' + transformUppercase(prop) + ': ' + value + ';' + newline;
 			}
 			entity += '}' + newline;
 			css += entity;
