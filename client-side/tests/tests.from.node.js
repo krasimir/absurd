@@ -96,79 +96,6 @@ describe("API(colors)", function() {
 	});
 
 });
-describe("Extending", function() {
-
-	var Absurd = require('../../index.js');
-
-	it("should create plugins", function(done) {
-		Absurd(function(api) {
-			api.plugin('my-custom-gradient', function(api, colors) {
-				return {
-					background: 'linear-gradient(to bottom, ' + colors.join(", ") + ')'
-				};
-			});
-			api.plugin('brand-font-size', function(api, type) {
-				switch(type) {
-					case "small": return { 'font-size': '12px'}; break;
-					case "medium": return { 'font-size': '22px'}; break;
-					case "big": return { 'font-size': '32px'}; break;
-					default: return { 'font-size': '12px'}; break;
-				}
-			});
-			api.add({
-				body: {
-					margin: '20px',
-					'font-size': '14px',
-					'my-custom-gradient': ['#F00', '#00F'],
-					p: {
-						'brand-font-size': 'big'	
-					}					
-				}
-			});
-		}).compile(function(err, css) {
-			expect(err).toBe(null);
-			expect(css).toBeDefined();
-			expect(css).toBe('body {\n  margin: 20px;\n  font-size: 14px;\n  background: linear-gradient(to bottom, #F00, #00F);\n}\nbody p {\n  font-size: 32px;\n}\n');
-			done();
-		});		
-	});
-
-	it("should create plugin which depends on other plugin", function(done) {
-		Absurd(function(api) {
-			api.plugin('my-custom-gradient', function(api, colors) {
-				return {
-					background: 'linear-gradient(to bottom, ' + colors.join(", ") + ')',
-					'brand-font-size': 'small'
-				};
-			});
-			api.plugin('brand-font-size', function(api, type) {
-				switch(type) {
-					case "small": return { 'font-size': '12.5px', 'brand-color': ''}; break;
-					case "medium": return { 'font-size': '22px', 'brand-color': ''}; break;
-					case "big": return { 'font-size': '32px', 'brand-color': ''}; break;
-					default: return { 'font-size': '12px', 'brand-color': ''}; break;
-				}
-			});
-			api.plugin('brand-color', function(api) {
-				return { color: '#09f' };
-			})
-			api.add({
-				body: {
-					margin: '20px',
-					color: '#FAA',
-					'font-size': '14px',
-					'my-custom-gradient': ['#F00', '#00F']
-				}
-			});
-		}).compile(function(err, css) {
-			expect(err).toBe(null);
-			expect(css).toBeDefined();
-			expect(css).toBe('body {\n  margin: 20px;\n  color: #09f;\n  font-size: 12.5px;\n  background: linear-gradient(to bottom, #F00, #00F);\n}\n');
-			done();
-		});	
-	});
-
-});
 describe("Hooks", function() {
 
 	var Absurd = require('../../index.js');
@@ -444,6 +371,79 @@ describe("Optimize CSS", function() {
 	});
 
 });
+describe("Extending", function() {
+
+	var Absurd = require('../../index.js');
+
+	it("should create plugins", function(done) {
+		Absurd(function(api) {
+			api.plugin('my-custom-gradient', function(api, colors) {
+				return {
+					background: 'linear-gradient(to bottom, ' + colors.join(", ") + ')'
+				};
+			});
+			api.plugin('brand-font-size', function(api, type) {
+				switch(type) {
+					case "small": return { 'font-size': '12px'}; break;
+					case "medium": return { 'font-size': '22px'}; break;
+					case "big": return { 'font-size': '32px'}; break;
+					default: return { 'font-size': '12px'}; break;
+				}
+			});
+			api.add({
+				body: {
+					margin: '20px',
+					'font-size': '14px',
+					'my-custom-gradient': ['#F00', '#00F'],
+					p: {
+						'brand-font-size': 'big'	
+					}					
+				}
+			});
+		}).compile(function(err, css) {
+			expect(err).toBe(null);
+			expect(css).toBeDefined();
+			expect(css).toBe('body {\n  margin: 20px;\n  font-size: 14px;\n  background: linear-gradient(to bottom, #F00, #00F);\n}\nbody p {\n  font-size: 32px;\n}\n');
+			done();
+		});		
+	});
+
+	it("should create plugin which depends on other plugin", function(done) {
+		Absurd(function(api) {
+			api.plugin('my-custom-gradient', function(api, colors) {
+				return {
+					background: 'linear-gradient(to bottom, ' + colors.join(", ") + ')',
+					'brand-font-size': 'small'
+				};
+			});
+			api.plugin('brand-font-size', function(api, type) {
+				switch(type) {
+					case "small": return { 'font-size': '12.5px', 'brand-color': ''}; break;
+					case "medium": return { 'font-size': '22px', 'brand-color': ''}; break;
+					case "big": return { 'font-size': '32px', 'brand-color': ''}; break;
+					default: return { 'font-size': '12px', 'brand-color': ''}; break;
+				}
+			});
+			api.plugin('brand-color', function(api) {
+				return { color: '#09f' };
+			})
+			api.add({
+				body: {
+					margin: '20px',
+					color: '#FAA',
+					'font-size': '14px',
+					'my-custom-gradient': ['#F00', '#00F']
+				}
+			});
+		}).compile(function(err, css) {
+			expect(err).toBe(null);
+			expect(css).toBeDefined();
+			expect(css).toBe('body {\n  margin: 20px;\n  color: #09f;\n  font-size: 12.5px;\n  background: linear-gradient(to bottom, #F00, #00F);\n}\n');
+			done();
+		});	
+	});
+
+});
 describe("Pseudo classes", function() {
 
 	var Absurd = require("../../index.js");
@@ -469,6 +469,50 @@ describe("Pseudo classes", function() {
 			expect(css).toContain('a:hover {');
 			expect(css).toContain('a:before {');
 			done();
+		});
+	});
+
+});
+describe("Register api method", function() {
+
+	var Absurd = require('../../index.js');
+
+	it("should register toJSON API method", function(done) {
+		Absurd(function(api) {
+			api.register("toJSON", function(callback) {
+				api.compile(
+					callback, 
+					{ 
+						processor: function(rules, callback) {
+							var filterRules = function(r) {
+								for(var prop in r) {
+									if(typeof r[prop] === "object") {
+										filterRules(r[prop]);
+									} else if(r[prop] === false) {
+										delete r[prop];
+									}
+								}
+							}
+							filterRules(rules)
+							callback(null, rules);
+						}
+					}
+				);
+			}).add({
+				section: {
+					margin: 0,
+					padding: "20px",
+					a: {
+						padding: "20px"
+					}
+				}
+			}).toJSON(function(err, json) {
+				expect(json).toBeDefined();
+				expect(err).toBe(null);
+				expect(typeof json).toBe("object");
+				expect(json.mainstream.section.padding).toBe("20px");
+				done();
+			})
 		});
 	});
 

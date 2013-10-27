@@ -217,6 +217,12 @@ lib.api.raw = function(api) {
 		return api;
 	}
 }
+lib.api.register = function(api) {
+	return function(method, func) {
+		api[method] = func;
+		return api;
+	}
+}
 lib.api.storage = function(API) {
 	var _s = API.getStorage();
 	var storage = function(name, value) {

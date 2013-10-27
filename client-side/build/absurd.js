@@ -1,4 +1,4 @@
-/* version: 0.0.40 */
+/* version: 0.0.41 */
 var Absurd = (function(w) {
 var lib = { 
 	api: {},
@@ -340,6 +340,12 @@ lib.api.raw = function(api) {
 		v[id] = raw;
 		o[id] = v;
 		api.add(o);
+		return api;
+	}
+}
+lib.api.register = function(api) {
+	return function(method, func) {
+		api[method] = func;
 		return api;
 	}
 }

@@ -1,6 +1,6 @@
 {
   "name": "absurd",
-  "version": "0.0.40",
+  "version": "0.0.41",
   "homepage": "https://github.com/krasimir/absurd",
   "description": "CSS preprocessor",
   "main": "index.js",
