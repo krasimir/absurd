@@ -6,13 +6,15 @@ describe("Fixing allow empty values - ", function() {
 		Absurd(function(api) {
 			api.add({
 				section: {
-					content: ""
+					":after": {
+						content: ""
+					}
 				}
 			});
 		}).compile(function(err, css) {
 			expect(err).toBe(null);
 			expect(css).toBeDefined();
-			expect(css).toBe("section {\n  content: \"\";\n}\n");
+			expect(css).toBe("section:after {\n  content: \"\";\n}\n");
 			done();
 		});		
 	});
