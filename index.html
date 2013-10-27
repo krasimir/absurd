@@ -942,6 +942,13 @@ api.buttonize(".header a");</code></pre>The code above produces:<pre><code class
 	<script>
 		$(document).ready(function() {
 
+			var getParameterByName = function(name) {
+				name = name.replace(/[\[]/, "\\\[").replace(/[\]]/, "\\\]");
+				var regex = new RegExp("[\\?&]" + name + "=([^&#]*)"),
+				    results = regex.exec(location.search);
+				return results == null ? "" : decodeURIComponent(results[1].replace(/\+/g, " "));
+			}
+
 			var shortenURL = function(url, callback) {
 				var bitlyToken = "32ce8abb603b17721ba37a343a357c4c7394813f";
 				var bitlyURL = "https://api-ssl.bitly.com/v3/shorten?access_token=" + bitlyToken + "&longUrl=" + encodeURIComponent(url);
@@ -998,13 +1005,17 @@ api.buttonize(".header a");</code></pre>The code above produces:<pre><code class
 			});
 
 			// demo selector
+			var defaultDemo = getParameterByName("demo");
+			defaultDemo = defaultDemo != '' ? parseInt(defaultDemo)-1 : 0;
 			var demoSelectMarkup = '<select id="demo-selector-control">';
 		    for(var i=0; i<demos.length; i++) {
 		    	var demo = demos[i];
-		    	if(i === 0) {
+		    	var selected = '';
+		    	if(i === defaultDemo) {
 		    		editor.getSession().setValue(demo.content);
+		    		selected = ' selected="selected"'
 		    	}
-		    	demoSelectMarkup += '<option value="' + i + '">' + demo.name + '</option>';
+		    	demoSelectMarkup += '<option value="' + i + '"' + selected + '>' + demo.name + '</option>';
 		    }
 		    demoSelectMarkup += '</select>';
 		    var demoSelect = $(demoSelectMarkup);
