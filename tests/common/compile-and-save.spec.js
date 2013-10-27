@@ -21,4 +21,20 @@ describe("Compile and save", function() {
 		);
 	});
 
+	it("save to file using compile method", function(done) {
+		if(fs.existsSync(file)) {
+			fs.unlinkSync(file);	
+		}
+		Absurd(__dirname + '/../data/css/header.js').compile(
+			file,
+			function(err, css) {
+				expect(err).toBe(null);
+				expect(css).toBeDefined();
+				expect(fs.existsSync(file)).toBe(true);
+				expect(fs.readFileSync(file, {encoding: 'utf-8'})).toContain('background: #BADA55');
+				done();
+			}
+		);
+	});
+
 });

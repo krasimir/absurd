@@ -106,32 +106,45 @@ var extend = function(destination, source) {
 };
 
 lib.api.compile = function(api) {
-	return function(callback, options) {
+	return function() {
+		var path = null, callback = null, options = null;
+		for(var i=0; i<arguments.length; i++) {
+			switch(typeof arguments[i]) {
+				case "function": callback = arguments[i]; break;
+				case "string": path = arguments[i]; break;
+				case "object": options = arguments[i]; break;
+			}
+		}
+
 		var _defaultOptions = {
 			combineSelectors: true,
 			minify: false,
 			processor: require("../processors/CSS.js")()
 		};
 		options = extend(_defaultOptions, options || {});
+
 		options.processor(
 			api.getRules(),
-			callback || function() {},
+			function(err, css) {
+				if(path != null) {
+					try {
+						fs.writeFile(path, css, function (err) {
+							callback(err, css);
+						});
+					} catch(err) {
+						callback(err);
+					}
+				} else {
+					callback(err, css);
+				}
+			},
 			options
 		);
+		
 	}
 }
 lib.api.compileFile = function(api) {
-	return function(file, compileFileCallback, options) {
-		api.compile(function(err, css) {
-			try {
-				fs.writeFile(file, css, function (err) {
-					compileFileCallback(err, css);
-				});
-			} catch(err) {
-				compileFileCallback(err);
-			}
-		}, options);
-	}
+	return api.compile;
 }
 var ColorLuminance = function (hex, lum) {
 
