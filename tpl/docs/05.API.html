@@ -150,3 +150,31 @@
 	</div>
 	<br class="clear">
 </section>
+
+<section>
+	<div class="desc">
+		<h4>.hook([method], [function])</h4>
+	</div>
+	<div class="code">
+		<pre><code class="language-javascript">api.hook("add", function(rules, stylesheet) {
+	// write your logic here
+	return true;
+});
+		</code></pre>
+		<p>If your hook handler returns <em>true</em> the default method behaviour is skipped.</p>
+	</div>
+	<br class="clear">
+</section>
+
+<section>
+	<div class="desc">
+		<h4>.register([method], [function])</h4>
+	</div>
+	<div class="code">
+		<pre><code class="language-javascript">api.register("toJSON", function(callback) {
+	// your custom code here
+})
+		</code></pre>
+	</div>
+	<br class="clear">
+</section>

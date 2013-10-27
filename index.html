@@ -87,8 +87,15 @@
 						<a href="#compilation"><small>Compilation</small></a>
 						<a href="#input-formats"><small>Input formats</small></a>
 						<a href="#syntax"><small>Syntax</small></a>
+						<a href="#extending"><small>Extending</small></a>
 						<a href="#api"><small>API</small></a>
 						<a href="#testing"><small>Testing</small></a>
+					</p>
+				</section>
+				<section class="centered must-read">
+					<img src="img/must-read.jpg" class="must-read" />
+					<p>
+						<a href="http://davidwalsh.name/write-css-javascript" target="_blank"><small>&#9830;<br />Write your CSS with JavaScript<br />(an AbsurdJS concept presentation)</small></a>
 					</p>
 				</section>
 			</div>
@@ -661,6 +668,72 @@ a {
 	</div>
 	<br class="clear">
 </section>
+<h2><a href="#extending" name="extending">&#187;</a>Extending</h2>
+
+<section>
+	<div class="desc">
+		<p>
+			You may create your own CSS properties by using the <em>plugins</em> feature.
+		</p>
+	</div>
+	<div class="code">
+		<pre><code class="language-javascript">api.plugin("hoverEffect", function(api, color) {
+	return {
+		":hover": {
+			color: color,
+            background: api.lighten(color, 60)
+		}
+	}
+})
+api.add({
+	a: {
+		color: "#000",
+		hoverEffect: "#999"
+	}
+});</code></pre>
+	</div>
+	<br class="clear">
+</section>
+
+<section>
+	<div class="desc">
+		<p>
+			You could create your own API methods.
+		</p>
+	</div>
+	<div class="code"><pre><code class="language-javascript">api.register("buttonize", function(selector) {
+	var styles = {};
+	styles[selector] = {
+		cursor: "pointer",
+		display: "block",
+		background: "#aaa",
+		":hover": {
+			background: "#ddd"
+		}
+	};
+	api.add(styles);
+});
+api.buttonize(".header a");</code></pre>The code above produces:<pre><code class="language-javascript">.header a {
+  cursor: pointer;
+  display: block;
+  background: #aaa;
+}
+.header a:hover {
+  background: #ddd;
+}</code></pre>
+</div>
+	<br class="clear">
+</section>
+
+<section>
+	<div class="desc">
+		<p>
+			Every API method could be overwritten. You are able to run your own function instead of the original one.
+		</p>
+	</div>
+	<div class="code"><pre><code class="language-javascript"></code></pre></div>
+	<br class="clear">
+</section>
 <h3><a href="#api" name="api">&#187;</a>API</h3>
 
 <section>
@@ -810,6 +883,34 @@ a {
 }, {});
 		</code></pre>
 		<p>Check <em>.compile</em> method for more information regarding <em>options</em> parameter.</p>
+	</div>
+	<br class="clear">
+</section>
+
+<section>
+	<div class="desc">
+		<h4>.hook([method], [function])</h4>
+	</div>
+	<div class="code">
+		<pre><code class="language-javascript">api.hook("add", function(rules, stylesheet) {
+	// write your logic here
+	return true;
+});
+		</code></pre>
+		<p>If your hook handler returns <em>true</em> the default method behaviour is skipped.</p>
+	</div>
+	<br class="clear">
+</section>
+
+<section>
+	<div class="desc">
+		<h4>.register([method], [function])</h4>
+	</div>
+	<div class="code">
+		<pre><code class="language-javascript">api.register("toJSON", function(callback) {
+	// your custom code here
+})
+		</code></pre>
 	</div>
 	<br class="clear">
 </section>

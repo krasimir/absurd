@@ -13,6 +13,9 @@ var base = function() {
 		h2: title(30),
 		".clear": {
 			clear: "both"
+		},
+		".centered": {
+			textAlign: "center"
 		}
 	}
 }
@@ -160,9 +163,19 @@ var menu = function(api) {
 				maxWidth: "950px",
 				margin: "0 auto",
 				":after": {
-					content: " ",
+					content: "",
 					display: "table",
 					clear: "both"
+				}
+			},
+			".must-read": {
+				img: {
+					width: "356px",
+					display: "block",
+					margin: "0 auto 30px auto"
+				},
+				p: {
+					lineHeight: "20px"
 				}
 			}
 		}

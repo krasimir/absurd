@@ -23,6 +23,10 @@ html, body, h1, h2, .result pre, .documentation p {
   border-top: none;
   border-bottom: solid 1px #000;
 }
+.menu .must-read img {
+  margin: 0 auto 30px auto;
+  width: 356px;
+}
 .documentation h2 a {
   margin: 0 0 0 -45px;
 }
@@ -115,10 +119,13 @@ html, body, .documentation p {
 .menu p {
   line-height: 30px;
 }
+.menu .must-read p {
+  line-height: 20px;
+}
 .documentation h3, .documentation h4 {
   line-height: 40px;
 }
-h1, h2, .compile, .social, .demo-selector {
+h1, h2, .centered, .compile, .social, .demo-selector {
   text-align: center;
 }
 .documentation h2, .documentation h3, .documentation h4 {
@@ -153,12 +160,12 @@ h1, h2, .documentation h3, .documentation h4 {
 .result pre {
   word-wrap: break-word;
 }
-.compile, .menu p a, .menu hr {
+.compile, .menu p a, .menu hr, .menu .must-read img {
   display: block;
 }
 .menu .menu-inner:after {
   display: table;
-  content:  ;
+  content: "";
 }
 .documentation h2 a, .documentation h3 a, .documentation h4, .documentation h4 a {
   display: inline-block;
