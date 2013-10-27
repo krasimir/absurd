@@ -411,7 +411,10 @@ var toCSS = function(rules) {
 			var entity = selector + ' {' + newline;
 			for(var prop in rules[selector]) {
 				var value = rules[selector][prop];
-				entity += '  ' + transformUppercase(prop) + ': ' + rules[selector][prop] + ';' + newline;
+				if(value === "") {
+					value = '""';
+				}
+				entity += '  ' + transformUppercase(prop) + ': ' + value + ';' + newline;
 			}
 			entity += '}' + newline;
 			css += entity;
