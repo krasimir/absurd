@@ -124,12 +124,10 @@ var menu = function(api) {
 			boxSizing: "border-box",
 			MozBoxSizing: "border-box",
 			color: "#FFF",
-			textAlign: "center",
 			padding: "60px 0 60px 0",
 			borderTop: "solid 1px #FFF",
 			borderBottom: "solid 1px #6C6C6C",
 			p: {
-				maxWidth: "600px",
 				margin: "0 auto",
 				fontSize: "30px",
 				lineHeight: "30px",
@@ -151,8 +149,21 @@ var menu = function(api) {
 				display: "block",
 				borderTop: "none",
 				borderBottom: "solid 1px #000",
-				maxWidth: "600px",
 				margin: "20px auto"
+			},
+			section: {
+				width: "50%",
+				boxSizing: "border-box",
+				float: "left"
+			},
+			".menu-inner": {
+				maxWidth: "950px",
+				margin: "0 auto",
+				":after": {
+					content: " ",
+					display: "table",
+					clear: "both"
+				}
 			}
 		}
 	}

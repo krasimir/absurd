@@ -15,7 +15,7 @@ html, body, h1, h2, .result pre, .documentation p {
   border-radius: 6px;
   box-shadow: 0px 0px 6px #888888;
 }
-.menu p, .demo, .documentation .documentation-inner {
+.menu p, .menu .menu-inner, .demo, .documentation .documentation-inner {
   margin: 0 auto;
 }
 .menu hr {
@@ -48,7 +48,6 @@ h2 {
 }
 .editor-wrapper, .result {
   padding: 10px;
-  width: 50%;
   height: 420px;
   border: dotted 1px #C9C9C9;
   background: solid 1px #C9C9C9;
@@ -75,6 +74,9 @@ h2 {
 html, body, #editor {
   width: 100%;
   height: 100%;
+}
+.editor-wrapper, .result, .menu section {
+  width: 50%;
 }
 .documentation .desc {
   width: 30%;
@@ -116,7 +118,7 @@ html, body, .documentation p {
 .documentation h3, .documentation h4 {
   line-height: 40px;
 }
-h1, h2, .compile, .social, .menu, .demo-selector {
+h1, h2, .compile, .social, .demo-selector {
   text-align: center;
 }
 .documentation h2, .documentation h3, .documentation h4 {
@@ -125,7 +127,7 @@ h1, h2, .compile, .social, .menu, .demo-selector {
 h1, h2, .documentation h3, .documentation h4 {
   font-weight: normal;
 }
-.clear {
+.clear, .menu .menu-inner:after {
   clear: both;
 }
 .compile:hover {
@@ -136,11 +138,13 @@ h1, h2, .documentation h3, .documentation h4 {
   padding-bottom: 100px;
   padding-top: 100px;
 }
-.editor-wrapper, .result, .documentation .desc, .documentation .code {
+.editor-wrapper, .result, .menu section, .documentation .desc, .documentation .code {
   float: left;
 }
-.editor-wrapper, .result, .social, .menu, .documentation, .documentation h4, .documentation .code {
+.editor-wrapper, .result, .social, .menu, .menu section, .documentation, .documentation h4, .documentation .code {
   box-sizing: border-box;
+}
+.editor-wrapper, .result, .social, .menu, .documentation, .documentation h4, .documentation .code {
   -moz-box-sizing: border-box;
 }
 .result {
@@ -151,6 +155,10 @@ h1, h2, .documentation h3, .documentation h4 {
 }
 .compile, .menu p a, .menu hr {
   display: block;
+}
+.menu .menu-inner:after {
+  display: table;
+  content:  ;
 }
 .documentation h2 a, .documentation h3 a, .documentation h4, .documentation h4 a {
   display: inline-block;
@@ -176,20 +184,17 @@ h1, h2, .documentation h3, .documentation h4 {
   border-bottom: dotted 1px #000;
   margin-top: 20px;
 }
-.menu p, .menu hr {
-  max-width: 600px;
-}
-.demo {
-  max-width: 1000px;
-}
-.documentation .documentation-inner {
-  max-width: 950px;
-}
 .menu p a {
   text-shadow: 1px 1px #000;
 }
 .menu p a:hover {
   text-shadow: 3px 3px #000;
+}
+.menu .menu-inner, .documentation .documentation-inner {
+  max-width: 950px;
+}
+.demo {
+  max-width: 1000px;
 }
 .demo-selector, .documentation .documentation-inner section, .documentation h3 {
   padding-bottom: 20px;
