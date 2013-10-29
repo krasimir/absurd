@@ -4,8 +4,8 @@ api.plugin("hoverEffect", function(api, color) {
 			color: color,
             background: api.lighten(color, 60)
 		}
-	}
-})
+	};
+});
 api.add({
 	a: {
 		color: "#000",
