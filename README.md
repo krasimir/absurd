@@ -1,3 +1,5 @@
+[![Build Status](https://travis-ci.org/gundead222/absurd.png)](https://travis-ci.org/gundead222/absurd)
+
 # AbsurdJS
 
 ### JavaScript based CSS preprocessor
