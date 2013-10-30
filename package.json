@@ -16,6 +16,7 @@
     "gaze": "0.4.1",
     "glob": "3.2.6",
     "css-parse": "1.5.3",
+    "yamljs": "0.1.4",
     "clean-css": "1.1.3"
   },
   "devDependencies": {
