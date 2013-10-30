@@ -173,6 +173,8 @@ absurd -s [source file] -m true</code></pre>
 	<br class="clear">
 </section>
 
+
+
 <section>
 	<div class="desc">
 		<h4>JSON</h4>
@@ -196,6 +198,8 @@ Absurd("styles.json").compile(function(err, css) {
 });</code></pre></div>
 	<br class="clear">
 </section>
+
+
 
 <section>
 	<div class="desc">
@@ -224,6 +228,28 @@ body {
     font-size: 12px;
 }</code></pre>
 	</div>
+	<br class="clear">
+</section>
+
+
+<section>
+	<div class="desc">
+		<h4>YAML</h4>
+		<p>The library supports import of YAML files</p>
+	</div>
+	<div class="code"><pre><code class="language-javascript">// styles.yaml
+---
+body:
+  margin: 0
+  padding: 0
+  fontSize: 1em
+  p:
+    line-height: 30px
+
+// app.js
+Absurd("styles.yaml").compile(function(err, css) {
+    // ...
+});</code></pre></div>
 	<br class="clear">
 </section>
 <h3>Syntax</h3>
@@ -623,10 +649,44 @@ api.buttonize(".header a");</code></pre>The code above produces:<pre><code class
 <section>
 	<div class="desc">
 		<p>
-			Every API method could be overwritten. You are able to run your own function instead of the original one.
+			Every API method could be overwritten. You are able to run your own function instead of the original one. If your method returns <em>true</em> then the default behaviour of the method is suppressed and only your implementation works.
 		</p>
 	</div>
-	<div class="code"><pre><code class="language-javascript"></code></pre></div>
+	<div class="code"><pre><code class="language-javascript">api.hook("add", function(rules) {	
+	if(rules.grid) {
+		var styles = {};
+		styles[rules.grid.parent] = parentStyles = {
+			":after": {
+				display: "table",
+				content: "",
+				clear: "both"
+			}
+		};
+		parentStyles[rules.grid.child] = {
+			width: (100 / rules.grid.columns) + "%",
+			float: "left"
+		};
+		api.add(styles);
+		return true;
+	}
+});
+api.add({
+	grid: {
+		parent: ".header .menu",
+		child: ".link",
+		columns: 4
+	}
+});</code></pre>
+		<p>And the result is:</p><pre><code class="language-javascript">.header .menu:after {
+  display: table;
+  content: "";
+  clear: both;
+}
+.header .menu .link {
+  width: 25%;
+  float: left;
+}</code></pre>
+</div>
 	<br class="clear">
 </section>
 <h3>API</h3>

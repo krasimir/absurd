@@ -58,9 +58,43 @@ api.buttonize(".header a");</code></pre>The code above produces:<pre><code class
 <section>
 	<div class="desc">
 		<p>
-			Every API method could be overwritten. You are able to run your own function instead of the original one.
+			Every API method could be overwritten. You are able to run your own function instead of the original one. If your method returns <em>true</em> then the default behaviour of the method is suppressed and only your implementation works.
 		</p>
 	</div>
-	<div class="code"><pre><code class="language-javascript"></code></pre></div>
+	<div class="code"><pre><code class="language-javascript">api.hook("add", function(rules) {	
+	if(rules.grid) {
+		var styles = {};
+		styles[rules.grid.parent] = parentStyles = {
+			":after": {
+				display: "table",
+				content: "",
+				clear: "both"
+			}
+		};
+		parentStyles[rules.grid.child] = {
+			width: (100 / rules.grid.columns) + "%",
+			float: "left"
+		};
+		api.add(styles);
+		return true;
+	}
+});
+api.add({
+	grid: {
+		parent: ".header .menu",
+		child: ".link",
+		columns: 4
+	}
+});</code></pre>
+		<p>And the result is:</p><pre><code class="language-javascript">.header .menu:after {
+  display: table;
+  content: "";
+  clear: both;
+}
+.header .menu .link {
+  width: 25%;
+  float: left;
+}</code></pre>
+</div>
 	<br class="clear">
 </section>
