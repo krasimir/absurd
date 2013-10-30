@@ -34,6 +34,7 @@ module.exports = function(grunt) {
 					'!tests/common/minify.spec.js',
 					'!tests/common/using-css.spec.js',
 					'!tests/common/using-json.spec.js',
+					'!tests/common/using-yaml.spec.js',
 					'!tests/common/basics-and-compilation.spec.js',
 					'!tests/common/variables-and-functions.spec.js',
 				],
