@@ -1,6 +1,6 @@
 # AbsurdJS
 
-+[![Build Status](https://travis-ci.org/krasimir/absurd.png?branch=master)](https://travis-ci.org/krasimir/absurd)
+[![Build Status](https://travis-ci.org/krasimir/absurd.png?branch=master)](https://travis-ci.org/krasimir/absurd)
 
 ### JavaScript based CSS preprocessor
 
