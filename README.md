@@ -12,4 +12,4 @@ AbsurdJS is a CSS preprocessor, which accepts JavaScript, JSON, YAML and CSS. It
 
 ### Resources
 
-  - Article about AbsurdJS - [link](http://davidwalsh.name/write-css-javascript)
+  - Writing your CSS with JavaScript - [link](http://davidwalsh.name/write-css-javascript)
