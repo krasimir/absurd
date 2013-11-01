@@ -1,4 +1,4 @@
-/* version: 0.0.45 */
+/* version: 0.0.46 */
 var Absurd = (function(w) {
 var lib = { 
 	api: {},
@@ -169,6 +169,9 @@ lib.api.add = function(API) {
 					addRule(selector + " " + prop, props[prop], stylesheet);
 				}
 				props[prop] = false;
+			} else if(typeof props[prop] === 'function') {
+				props[prop] = props[prop]();
+				checkForNesting(selector, props, stylesheet);
 			} else {
 				if(checkAndExecutePlugin(selector, prop, props[prop], stylesheet)) {
 					props[prop] = false;

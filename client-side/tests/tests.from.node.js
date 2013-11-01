@@ -526,7 +526,6 @@ describe("Using functions inside the json file", function() {
 			api.add({
 				body: {
 					p: {
-						margin: 0,
 						fontSize: function() {
 							return "10px"
 						}
@@ -534,10 +533,9 @@ describe("Using functions inside the json file", function() {
 				}
 			});
 		}).compile(function(err, css) {
-			// console.log(css);
 			expect(err).toBe(null);
 			expect(css).toBeDefined();
-			// expect(css).toBe("body p {\n  font-size: 10px;\n}\n")
+			expect(css).toBe("body p {\n  font-size: 10px;\n}\n")
 			done();
 		});
 	});
