@@ -122,7 +122,7 @@ lib.api.compile = function(api) {
 		var _defaultOptions = {
 			combineSelectors: true,
 			minify: false,
-			processor: require("../processors/CSS/CSS.js")()
+			processor: require(__dirname + "/../processors/css/CSS.js")()
 		};
 		options = extend(_defaultOptions, options || {});
 

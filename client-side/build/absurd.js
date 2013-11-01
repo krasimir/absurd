@@ -1,4 +1,4 @@
-/* version: 0.0.46 */
+/* version: 0.0.48 */
 var Absurd = (function(w) {
 var lib = { 
 	api: {},
@@ -248,7 +248,7 @@ lib.api.compile = function(api) {
 		var _defaultOptions = {
 			combineSelectors: true,
 			minify: false,
-			processor: require("../processors/CSS/CSS.js")()
+			processor: require(__dirname + "/../processors/css/CSS.js")()
 		};
 		options = extend(_defaultOptions, options || {});
 
