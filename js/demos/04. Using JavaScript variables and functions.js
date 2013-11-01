@@ -8,13 +8,13 @@ var textStyles = function(size) {
 }
 api.add({
 	body: {
-		color: themeColor,
+		color: function() {
+			return "#000"
+		},
 		p: textStyles(16),
 		h1: [
 			textStyles(50),
-			{
-				lineHeight: "60px"
-			} 
+			{ lineHeight: "60px" } 
 		]
 	}
 });
