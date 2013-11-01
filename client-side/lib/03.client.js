@@ -20,7 +20,7 @@ var client = function() {
 			_defaultOptions = {
 				combineSelectors: true,
 				minify: false,
-				processor: lib.processors.CSS()
+				processor: lib.processors.css.CSS()
 			};
 
 		_api.getRules = function(stylesheet) {

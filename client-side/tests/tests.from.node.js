@@ -517,6 +517,32 @@ describe("Register api method", function() {
 	});
 
 });
+describe("Using functions inside the json file", function() {
+
+	var Absurd = require("../../index.js");
+
+	it("should not include empty selectors", function(done) {
+		Absurd(function(api){
+			api.add({
+				body: {
+					p: {
+						margin: 0,
+						fontSize: function() {
+							return "10px"
+						}
+					}
+				}
+			});
+		}).compile(function(err, css) {
+			// console.log(css);
+			expect(err).toBe(null);
+			expect(css).toBeDefined();
+			// expect(css).toBe("body p {\n  font-size: 10px;\n}\n")
+			done();
+		});
+	});
+
+});
 describe("Fixing allow empty values - ", function() {
 
 	var Absurd = require('../../index.js');

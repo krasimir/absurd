@@ -119,7 +119,7 @@ lib.api.compile = function(api) {
 		var _defaultOptions = {
 			combineSelectors: true,
 			minify: false,
-			processor: require("../processors/CSS.js")()
+			processor: require("../processors/CSS/CSS.js")()
 		};
 		options = extend(_defaultOptions, options || {});
 
@@ -263,136 +263,6 @@ lib.helpers.RequireUncached = function(module) {
 	delete require.cache[require.resolve(module)]
     return require(module);
 }
-lib.plugins.charset = function() {	
-	return function(api, charsetValue) {
-		if(typeof charsetValue === "string") {
-			api.raw("@charset: \"" + charsetValue + "\";");
-		} else if(typeof charsetValue === "object") {
-			charsetValue = charsetValue.charset.replace(/:/g, '').replace(/'/g, '').replace(/"/g, '').replace(/ /g, '');
-			api.raw("@charset: \"" + charsetValue + "\";");
-		}
-	}
-}
-lib.plugins.document = function() {	
-	return function(api, value) {
-		if(typeof value === "object") {
-			var stylesheet = '';
-			stylesheet += '@' + value.vendor + 'document';
-			stylesheet += ' ' + value.document;
-			if(value.rules && value.rules.length) {
-				for(var i=0; rule=value.rules[i]; i++) {
-					api.handlecssrule(rule, stylesheet);
-				}
-			} else if(typeof value.styles != "undefined") {
-				api.add(value.styles, stylesheet);
-			}
-		}
-	}
-}
-lib.plugins.keyframes = function() {
-	return function(api, value) {
-		var processor = require(__dirname + "/../processors/CSS")();
-		if(typeof value === "object") {			
-			// js or json
-			if(typeof value.frames != "undefined") {
-				var content = '@keyframes ' + value.name + " {\n";
-				content += processor({mainstream: value.frames});
-				content += "}";
-				api.raw(content + "\n" + content.replace("@keyframes", "@-webkit-keyframes"));
-			// css
-			} else if(typeof value.keyframes != "undefined") {
-				var content = '@keyframes ' + value.name + " {\n";
-				var frames = {};
-				for(var i=0; rule=value.keyframes[i]; i++) {
-					if(rule.type === "keyframe") {
-						var f = frames[rule.values] = {};
-						for(var j=0; declaration=rule.declarations[j]; j++) {
-							if(declaration.type === "declaration") {
-								f[declaration.property] = declaration.value;
-							}
-						}
-					}
-				}
-				content += processor({mainstream: frames});
-				content += "}";
-				api.raw(content + "\n" + content.replace("@keyframes", "@-webkit-keyframes"));
-			}
-		}
-	}
-}
-lib.plugins.media = function() {
-	return function(api, value) {
-		var processor = require(__dirname + "/../processors/CSS")();
-		if(typeof value === "object") {
-			var content = '@media ' + value.media + " {\n";
-			var rules = {};
-			for(var i=0; rule=value.rules[i]; i++) {				
-				var r = rules[rule.selectors.toString()] = {};
-				if(rule.type === "rule") {
-					for(var j=0; declaration=rule.declarations[j]; j++) {
-						if(declaration.type === "declaration") {
-							r[declaration.property] = declaration.value;
-						}
-					}
-				}
-			}
-			content += processor({mainstream: rules});
-			content += "}";
-			api.raw(content);
-		}
-	}
-}
-lib.plugins.namespace = function() {	
-	return function(api, value) {
-		if(typeof value === "string") {
-			api.raw("@namespace: \"" + value + "\";");
-		} else if(typeof value === "object") {
-			value = value.namespace.replace(/: /g, '').replace(/'/g, '').replace(/"/g, '').replace(/ /g, '').replace(/:h/g, 'h');
-			api.raw("@namespace: \"" + value + "\";");
-		}
-	}
-}
-lib.plugins.page = function() {	
-	return function(api, value) {
-		if(typeof value === "object") {
-			var content = ""; 
-			if(value.selectors.length > 0) {
-				content += "@page " + value.selectors.join(", ") + " {\n";
-			} else {
-				content += "@page {\n";
-			}
-			for(var i=0; declaration=value.declarations[i]; i++) {
-				if(declaration.type == "declaration") {
-					content += "  " + declaration.property + ": " + declaration.value + ";\n";
-				}
-			}
-			content += "}";
-			api.raw(content);
-		}
-	}
-}
-lib.plugins.supports = function() {
-	return function(api, value) {
-		var processor = require(__dirname + "/../processors/CSS")();
-		if(typeof value === "object") {
-			var content = '@supports ' + value.supports + " {\n";
-			var rules = {};
-			for(var i=0; rule=value.rules[i]; i++) {				
-				var r = rules[rule.selectors.toString()] = {};
-				if(rule.type === "rule") {
-					for(var j=0; declaration=rule.declarations[j]; j++) {
-						if(declaration.type === "declaration") {
-							r[declaration.property] = declaration.value;
-						}
-					}
-				}
-			}
-			content += processor({mainstream: rules});
-			content += "}";
-			api.raw(content);
-		}
-	}
-}
 var cleanCSS = require('clean-css'),
 	newline = '\n',
 	defaultOptions = {
@@ -483,7 +353,7 @@ var transformUppercase = function(prop) {
 	return transformed;
 }
 
-lib.processors.CSS = function() {
+lib.processors.css.CSS = function() {
 	return function(rules, callback, options) {
 		options = options || defaultOptions;
 		var css = '';
@@ -504,5 +374,135 @@ lib.processors.CSS = function() {
 			if(callback) callback(null, css);
 		}
 		return css;
+	}
+}
+lib.processors.css.plugins.charset = function() {	
+	return function(api, charsetValue) {
+		if(typeof charsetValue === "string") {
+			api.raw("@charset: \"" + charsetValue + "\";");
+		} else if(typeof charsetValue === "object") {
+			charsetValue = charsetValue.charset.replace(/:/g, '').replace(/'/g, '').replace(/"/g, '').replace(/ /g, '');
+			api.raw("@charset: \"" + charsetValue + "\";");
+		}
+	}
+}
+lib.processors.css.plugins.document = function() {	
+	return function(api, value) {
+		if(typeof value === "object") {
+			var stylesheet = '';
+			stylesheet += '@' + value.vendor + 'document';
+			stylesheet += ' ' + value.document;
+			if(value.rules && value.rules.length) {
+				for(var i=0; rule=value.rules[i]; i++) {
+					api.handlecssrule(rule, stylesheet);
+				}
+			} else if(typeof value.styles != "undefined") {
+				api.add(value.styles, stylesheet);
+			}
+		}
+	}
+}
+lib.processors.css.plugins.keyframes = function() {
+	return function(api, value) {
+		var processor = require(__dirname + "/../CSS.js")();
+		if(typeof value === "object") {			
+			// js or json
+			if(typeof value.frames != "undefined") {
+				var content = '@keyframes ' + value.name + " {\n";
+				content += processor({mainstream: value.frames});
+				content += "}";
+				api.raw(content + "\n" + content.replace("@keyframes", "@-webkit-keyframes"));
+			// css
+			} else if(typeof value.keyframes != "undefined") {
+				var content = '@keyframes ' + value.name + " {\n";
+				var frames = {};
+				for(var i=0; rule=value.keyframes[i]; i++) {
+					if(rule.type === "keyframe") {
+						var f = frames[rule.values] = {};
+						for(var j=0; declaration=rule.declarations[j]; j++) {
+							if(declaration.type === "declaration") {
+								f[declaration.property] = declaration.value;
+							}
+						}
+					}
+				}
+				content += processor({mainstream: frames});
+				content += "}";
+				api.raw(content + "\n" + content.replace("@keyframes", "@-webkit-keyframes"));
+			}
+		}
+	}
+}
+lib.processors.css.plugins.media = function() {
+	return function(api, value) {
+		var processor = require(__dirname + "/../CSS.js")();
+		if(typeof value === "object") {
+			var content = '@media ' + value.media + " {\n";
+			var rules = {};
+			for(var i=0; rule=value.rules[i]; i++) {				
+				var r = rules[rule.selectors.toString()] = {};
+				if(rule.type === "rule") {
+					for(var j=0; declaration=rule.declarations[j]; j++) {
+						if(declaration.type === "declaration") {
+							r[declaration.property] = declaration.value;
+						}
+					}
+				}
+			}
+			content += processor({mainstream: rules});
+			content += "}";
+			api.raw(content);
+		}
+	}
+}
+lib.processors.css.plugins.namespace = function() {	
+	return function(api, value) {
+		if(typeof value === "string") {
+			api.raw("@namespace: \"" + value + "\";");
+		} else if(typeof value === "object") {
+			value = value.namespace.replace(/: /g, '').replace(/'/g, '').replace(/"/g, '').replace(/ /g, '').replace(/:h/g, 'h');
+			api.raw("@namespace: \"" + value + "\";");
+		}
+	}
+}
+lib.processors.css.plugins.page = function() {	
+	return function(api, value) {
+		if(typeof value === "object") {
+			var content = ""; 
+			if(value.selectors.length > 0) {
+				content += "@page " + value.selectors.join(", ") + " {\n";
+			} else {
+				content += "@page {\n";
+			}
+			for(var i=0; declaration=value.declarations[i]; i++) {
+				if(declaration.type == "declaration") {
+					content += "  " + declaration.property + ": " + declaration.value + ";\n";
+				}
+			}
+			content += "}";
+			api.raw(content);
+		}
+	}
+}
+lib.processors.css.plugins.supports = function() {
+	return function(api, value) {
+		var processor = require(__dirname + "/../CSS.js")();
+		if(typeof value === "object") {
+			var content = '@supports ' + value.supports + " {\n";
+			var rules = {};
+			for(var i=0; rule=value.rules[i]; i++) {				
+				var r = rules[rule.selectors.toString()] = {};
+				if(rule.type === "rule") {
+					for(var j=0; declaration=rule.declarations[j]; j++) {
+						if(declaration.type === "declaration") {
+							r[declaration.property] = declaration.value;
+						}
+					}
+				}
+			}
+			content += processor({mainstream: rules});
+			content += "}";
+			api.raw(content);
+		}
 	}
 }
