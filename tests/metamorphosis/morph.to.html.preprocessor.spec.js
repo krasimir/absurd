@@ -4,7 +4,7 @@ describe("Metamorphosis (to html preprocessor)", function() {
 
 	api.morph("html");
 
-	it("should accept and compile html", function(done) {
+	xit("should accept and compile html", function(done) {
 		api.add({
 			_raw:'<!DOCTYPE html>',
 			html: {
