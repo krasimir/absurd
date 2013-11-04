@@ -6,7 +6,7 @@ describe("Metamorphosis (to html preprocessor)", function() {
 
 	it("should compile raw content", function(done) {
 		api.add({
-			_raw: '<html></html>'
+			_: '<html></html>'
 		}).compile(function(err, html) {
 			expect(err).toBe(null);
 			expect(html).toBeDefined();
@@ -58,9 +58,35 @@ describe("Metamorphosis (to html preprocessor)", function() {
 		});
 	});
 
+	it("should compile raw content + nested tag", function(done) {
+		api.add({
+			body: {
+				p: {
+					_: "That's my text",
+					a: {
+						_: "read more",
+						_attrs: { href: "#"}
+					}
+				}
+			}
+		}).compile(function(err, html) {
+			expect(err).toBe(null);
+			expect(html).toBeDefined();
+			expect(html).toBe('<body>\n\
+<p>\n\
+That\'s my text\n\
+<a href="#">\n\
+read more\n\
+</a>\n\
+</p>\n\
+</body>');
+			done();
+		});
+	});
+
 	it("complex html", function(done) {
 		api.add({
-			_raw:'<!DOCTYPE html>',
+			_:'<!DOCTYPE html>',
 			html: {
 				head: {
 					title: "html page",
