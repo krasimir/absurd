@@ -58,21 +58,21 @@ describe("Metamorphosis (to html preprocessor)", function() {
 		});
 	});
 
-	it("should use function", function(done) {
+	xit("should use function", function(done) {
+		var getTitleTag = function(value) {
+			return { title: value }
+		}
+		var getMetaTag = function(value) {
+			return { 
+				meta: {
+					_attrs: {
+						httpEquiv: "Content-Type",
+						content: "text/html; charset=utf-8"
+					}
+				} 
+			}
+		}
 		api.add({
-			var getTitleTag = function(value) {
-				return { title: value }
-			}
-			var getMetaTag = function(value) {
-				return { 
-					meta: {
-						_attrs: {
-							httpEquiv: "Content-Type",
-							content: "text/html; charset=utf-8"
-						}
-					} 
-				}
-			}
 			html: {
 				head: [getTitleTag, getMetaTag],
 				body: {}
