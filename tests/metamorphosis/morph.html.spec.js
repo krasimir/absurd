@@ -58,34 +58,6 @@ describe("Metamorphosis (to html preprocessor)", function() {
 		});
 	});
 
-	xit("should use function", function(done) {
-		var getTitleTag = function(value) {
-			return { title: value }
-		}
-		var getMetaTag = function(value) {
-			return { 
-				meta: {
-					_attrs: {
-						httpEquiv: "Content-Type",
-						content: "text/html; charset=utf-8"
-					}
-				} 
-			}
-		}
-		api.add({
-			html: {
-				head: [getTitleTag, getMetaTag],
-				body: {}
-			}
-		}).compile(function(err, html) {
-			console.log(html);
-			expect(err).toBe(null);
-			expect(html).toBeDefined();
-			expect(html).toBe('<html>\n<head>\n<title>title</title>\n</head>\n<body/>\n</html>');
-			done();
-		});
-	});
-
 	it("should compile raw content + nested tag", function(done) {
 		api.add({
 			body: {
