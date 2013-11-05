@@ -650,6 +650,26 @@ describe("Metamorphosis (to html preprocessor)", function() {
 		});
 	});
 
+	it("should compile list", function(done) {
+		var getList = function(data) {
+			var list = { ul: [] };
+			for(var i=0; item=data[i]; i++) {
+				list.ul.push({ li:item });
+			}
+			return list;
+		}
+		api.add({
+			html: {
+				body: getList(["A", "B", "C", "D"])
+			}
+		}).compile(function(err, html) {
+			expect(err).toBe(null);
+			expect(html).toBeDefined();
+			expect(html).toBe('<html>\n<body>\n<ul>\n<li>\nA\n</li>\n<li>\nB\n</li>\n<li>\nC\n</li>\n<li>\nD\n</li>\n</ul>\n</body>\n</html>');
+			done();
+		});
+	});
+
 });
 describe("Metamorphosis (to html preprocessor)", function() {
 
@@ -916,6 +936,70 @@ read more\n\
 </a>\n\
 </p>\n\
 </body>');
+			done();
+		});
+	});
+
+});
+describe("Metamorphosis (to html preprocessor)", function() {
+
+	var api = require('../../../index.js')();
+
+	api.morph("html");
+
+	it("should use templates", function(done) {
+
+		api.add({
+			title: "AbsurdJS preprocessor"
+		}, "title");
+
+		api.add({
+			a: {
+				_: "link",
+				_attrs: {
+					href: "#",
+					target: "_blank"
+				}
+			}
+		}, "link");
+
+		api.add({
+			footer: {
+				_: "footer text"
+			}
+		}, "footer");
+
+		api.add({
+			html: {
+				head: {
+					_tpl: "title"
+				},
+				body: {
+					_: "<h1>oh yeah</h1>",
+					_tpl: ["link", "footer"]
+				}
+			}
+		})
+
+		api.compile(function(err, html) {
+			expect(err).toBe(null);
+			expect(html).toBeDefined();
+			expect(html).toBe('<html>\n\
+<head>\n\
+<title>\n\
+AbsurdJS preprocessor\n\
+</title>\n\
+</head>\n\
+<body>\n\
+<h1>oh yeah</h1>\n\
+<a href="#" target="_blank">\n\
+link\n\
+</a>\n\
+<footer>\n\
+footer text\n\
+</footer>\n\
+</body>\n\
+</html>');
 			done();
 		});
 	});

@@ -727,6 +727,19 @@ var process = function(tagName, obj) {
 				addToChilds(value);
 				obj[directiveName] = false;
 			break;
+			case "_tpl": 
+				if(typeof value == "string") {
+					addToChilds(processTemplate(value));
+				} else if(typeof value == "object" && value.length && value.length > 0) {
+					var tmp = '';
+					for(var i=0; tpl=value[i]; i++) {
+						tmp += processTemplate(tpl)
+						if(i < value.length-1) tmp += newline;
+					}
+					addToChilds(tmp);
+				}
+				obj[directiveName] = false;
+			break;
 		}
 	}
 
@@ -740,9 +753,7 @@ var process = function(tagName, obj) {
 						var tmp = '';
 						for(var i=0; v=value[i]; i++) {
 							tmp += process('', typeof v == "function" ? v() : v);
-							if(i < value.length-1) {
-								tmp += newline;
-							}
+							if(i < value.length-1) tmp += newline;
 						}
 						addToChilds(process(name, tmp));
 					} else {
