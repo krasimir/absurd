@@ -626,3 +626,298 @@ describe("Fixing bug in array usage", function() {
 	});
 
 });
+describe("Metamorphosis (to html preprocessor)", function() {
+
+	var api = require('../../../index.js')();
+
+	api.morph("html");
+
+	it("should compile nested tags", function(done) {
+		var headTags = [
+			{ title: "page title" },
+			{ style: {} }
+		];
+		api.add({
+			html: {
+				head: headTags,
+				body: {}
+			}
+		}).compile(function(err, html) {
+			expect(err).toBe(null);
+			expect(html).toBeDefined();
+			expect(html).toBe('<html>\n<head>\n<title>\npage title\n</title>\n<style/>\n</head>\n<body/>\n</html>');
+			done();
+		});
+	});
+
+});
+describe("Metamorphosis (to html preprocessor)", function() {
+
+	var api = require('../../../index.js')();
+
+	api.morph("html");
+
+	it("complex html", function(done) {
+		api.add({
+			_:'<!DOCTYPE html>',
+			html: {
+				head: {
+					title: "html page",
+					meta: {
+						_attrs: {
+							httpEquiv: "Content-Type",
+							content: "text/html; charset=utf-8"
+						}
+					}
+				},
+				body: {
+					_attrs: { class: "home-page" },
+					section: {
+						h1: "that's html page"
+					}
+				}
+			}
+		}).compile(function(err, html) {
+			expect(err).toBe(null);
+			expect(html).toBeDefined();
+			expect(html).toBe('<!DOCTYPE html>\n\
+<html>\n\
+<head>\n\
+<title>\n\
+html page\n\
+</title>\n\
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>\n\
+</head>\n\
+<body class="home-page">\n\
+<section>\n\
+<h1>\n\
+that\'s html page\n\
+</h1>\n\
+</section>\n\
+</body>\n\
+</html>');
+			done();
+		});
+	});
+
+});
+describe("Metamorphosis (to html preprocessor)", function() {
+
+	var api = require('../../../index.js')();
+
+	api.morph("html");
+
+	it("complex html", function(done) {
+		var inputField = function(name, defaultValue) {
+			return {
+				input: {
+					_attrs: {
+						type: "text",
+						placeholder: defaultValue,
+						name: name
+					}
+				}
+			}
+		}
+		var submit = function(value) {
+			return {
+				input: {
+					_attrs: {
+						type: "submit",
+						value: value || "submit the data"
+					}
+				}
+			}
+		}
+		api.add({
+			html: {
+				head: {
+					title: "html page"
+				},
+				body: {
+					form: [
+						{ _: "<label>Please fill the form</label>"},
+						inputField("username", "Please type your username"),
+						inputField("email", "Please type your email"),
+						submit
+					]
+				}
+			}
+		}).compile(function(err, html) {
+			expect(err).toBe(null);
+			expect(html).toBeDefined();
+			expect(html).toBe('<html>\n\
+<head>\n\
+<title>\n\
+html page\n\
+</title>\n\
+</head>\n\
+<body>\n\
+<form>\n\
+<label>Please fill the form</label>\n\
+<input type="text" placeholder="Please type your username" name="username"/>\n\
+<input type="text" placeholder="Please type your email" name="email"/>\n\
+<input type="submit" value="submit the data"/>\n\
+</form>\n\
+</body>\n\
+</html>');
+			done();
+		});
+	});
+
+});
+describe("Metamorphosis (to html preprocessor)", function() {
+
+	var api = require('../../../index.js')();
+
+	api.morph("html");
+
+	it("should use function", function(done) {
+		var getTitleTag = function(value) {
+			return {
+				title: value
+			}
+		}
+		var bodyContent = function() {
+			return {
+				p: "text"
+			}
+		}
+		api.add({
+			html: {
+				head: getTitleTag("Absurd is awesome"),
+				body: bodyContent
+			}
+		}).compile(function(err, html) {
+			expect(err).toBe(null);
+			expect(html).toBeDefined();
+			expect(html).toBe('<html>\n<head>\n<title>\nAbsurd is awesome\n</title>\n</head>\n<body>\n<p>\ntext\n</p>\n</body>\n</html>');
+			done();
+		});
+	});
+
+});
+describe("Metamorphosis (to html preprocessor)", function() {
+
+	var api = require('../../../index.js')();
+
+	api.morph("html");
+
+	it("should compile an empty tag", function(done) {
+		api.add({
+			body: {}
+		}).compile(function(err, html) {
+			expect(err).toBe(null);
+			expect(html).toBeDefined();
+			expect(html).toBe('<body/>');
+			done();
+		});
+	});
+
+	it("should compile tag with text inside", function(done) {
+		api.add({
+			body: "page text"
+		}).compile(function(err, html) {
+			expect(err).toBe(null);
+			expect(html).toBeDefined();
+			expect(html).toBe('<body>\npage text\n</body>');
+			done();
+		});
+	});
+
+	it("should compile tag with attributes", function(done) {
+		api.add({
+			body: {
+				_attrs: { class: "black" }
+			}
+		}).compile(function(err, html) {
+			expect(err).toBe(null);
+			expect(html).toBeDefined();
+			expect(html).toBe('<body class="black"/>');
+			done();
+		});
+	});
+
+	it("should compile tag with attributes and text inside", function(done) {
+		api.add({
+			body: {
+				_attrs: { class: "black" },
+				_: "page text"
+			}
+		}).compile(function(err, html) {
+			expect(err).toBe(null);
+			expect(html).toBeDefined();
+			expect(html).toBe('<body class="black">\npage text\n</body>');
+			done();
+		});
+	});
+
+	it("should compile tag with attributes, text inside and nested tag", function(done) {
+		api.add({
+			body: {
+				_attrs: { class: "black" },
+				_: "page text",
+				p: "paragraph text"
+			}
+		}).compile(function(err, html) {
+			expect(err).toBe(null);
+			expect(html).toBeDefined();
+			expect(html).toBe('<body class="black">\npage text\n<p>\nparagraph text\n</p>\n</body>');
+			done();
+		});
+	});
+
+	it("should compile raw content", function(done) {
+		api.add({
+			_: '<html></html>'
+		}).compile(function(err, html) {
+			expect(err).toBe(null);
+			expect(html).toBeDefined();
+			expect(html).toBe('<html></html>');
+			done();
+		});
+	});	
+
+	it("should compile nested tags", function(done) {
+		api.add({
+			html: {
+				head: {
+					title: "title"
+				},
+				body: {}
+			}
+		}).compile(function(err, html) {
+			expect(err).toBe(null);
+			expect(html).toBeDefined();
+			expect(html).toBe('<html>\n<head>\n<title>\ntitle\n</title>\n</head>\n<body/>\n</html>');
+			done();
+		});
+	});
+
+	it("should compile raw content + nested tag", function(done) {
+		api.add({
+			body: {
+				p: {
+					_: "That's my text",
+					a: {
+						_: "read more",
+						_attrs: { href: "#"}
+					}
+				}
+			}
+		}).compile(function(err, html) {
+			expect(err).toBe(null);
+			expect(html).toBeDefined();
+			expect(html).toBe('<body>\n\
+<p>\n\
+That\'s my text\n\
+<a href="#">\n\
+read more\n\
+</a>\n\
+</p>\n\
+</body>');
+			done();
+		});
+	});
+
+});

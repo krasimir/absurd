@@ -30,12 +30,16 @@ describe("Metamorphosis (to html preprocessor)", function() {
 			expect(html).toBe('<!DOCTYPE html>\n\
 <html>\n\
 <head>\n\
-<title>html page</title>\n\
+<title>\n\
+html page\n\
+</title>\n\
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>\n\
 </head>\n\
 <body class="home-page">\n\
 <section>\n\
-<h1>that\'s html page</h1>\n\
+<h1>\n\
+that\'s html page\n\
+</h1>\n\
 </section>\n\
 </body>\n\
 </html>');
