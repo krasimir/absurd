@@ -7,12 +7,12 @@
 	<meta name="author" content="Krasimir Tsonev" />
 	<meta name="copyright" content="Krasimir Tsonev" />
 	<meta name="robots" content="follow,index" />
-	<meta name="title" content="AbsurdJS - JavaScript based CSS preprocessor in less then 10Kb" />
-	<meta name="keywords" content="AbsurdJS - JavaScript based CSS preprocessor" lang="en-us" />
-	<meta name="description" content="AbsurdJS - JavaScript based CSS preprocessor" />
+	<meta name="title" content="AbsurdJS - JavaScript based CSS/HTML preprocessor in less then 10Kb" />
+	<meta name="keywords" content="AbsurdJS - JavaScript based CSS/HTML preprocessor" lang="en-us" />
+	<meta name="description" content="AbsurdJS - JavaScript based CSS/HTML preprocessor" />
 	<meta property="og:site_name" content="https://github.com/krasimir/absurd"/>
-	<meta property="og:title" content="AbsurdJS - JavaScript based CSS preprocessor"/> 
-	<meta property="og:description" content="AbsurdJS - JavaScript based CSS preprocessor"/>
+	<meta property="og:title" content="AbsurdJS - JavaScript based CSS/HTML preprocessor"/> 
+	<meta property="og:description" content="AbsurdJS - JavaScript based CSS/HTML preprocessor"/>
 	
 	<title>AbsurdJS - the new CSS preprocessor</title>
 	<link rel="stylesheet" href="./css/styles.css">
@@ -33,7 +33,7 @@
 
 	<header>
 		<h1>AbsurdJS</h1>
-		<h2>JavaScript based CSS preprocessor</h2>
+		<h2>JavaScript based CSS/HTML preprocessor</h2>
 	</header>
 	<div class="content">
 		<div class="demo-selector"></div>
@@ -147,8 +147,9 @@
 				var code = editor.getSession().getValue();
 				try {
 					eval(code);
-					api.compile(function(err, css) {
-						result.html(css);
+					api.compile(function(err, res) {
+						res = res.replace(/\</g, '&lt;');
+						result.html(res);
 					});
 				} catch(err) {
 					result.html((err.stack ? err.stack : err.toString()));

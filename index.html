@@ -7,12 +7,12 @@
 	<meta name="author" content="Krasimir Tsonev" />
 	<meta name="copyright" content="Krasimir Tsonev" />
 	<meta name="robots" content="follow,index" />
-	<meta name="title" content="AbsurdJS - JavaScript based CSS preprocessor in less then 10Kb" />
-	<meta name="keywords" content="AbsurdJS - JavaScript based CSS preprocessor" lang="en-us" />
-	<meta name="description" content="AbsurdJS - JavaScript based CSS preprocessor" />
+	<meta name="title" content="AbsurdJS - JavaScript based CSS/HTML preprocessor in less then 10Kb" />
+	<meta name="keywords" content="AbsurdJS - JavaScript based CSS/HTML preprocessor" lang="en-us" />
+	<meta name="description" content="AbsurdJS - JavaScript based CSS/HTML preprocessor" />
 	<meta property="og:site_name" content="https://github.com/krasimir/absurd"/>
-	<meta property="og:title" content="AbsurdJS - JavaScript based CSS preprocessor"/> 
-	<meta property="og:description" content="AbsurdJS - JavaScript based CSS preprocessor"/>
+	<meta property="og:title" content="AbsurdJS - JavaScript based CSS/HTML preprocessor"/> 
+	<meta property="og:description" content="AbsurdJS - JavaScript based CSS/HTML preprocessor"/>
 	
 	<title>AbsurdJS - the new CSS preprocessor</title>
 	<link rel="stylesheet" href="./css/styles.css">
@@ -33,7 +33,7 @@
 
 	<header>
 		<h1>AbsurdJS</h1>
-		<h2>JavaScript based CSS preprocessor</h2>
+		<h2>JavaScript based CSS/HTML preprocessor</h2>
 	</header>
 	<div class="content">
 		<div class="demo-selector"></div>
@@ -794,6 +794,85 @@ api.add({
 </div>
 	<br class="clear">
 </section>
+<h2><a href="#metamorphosis" name="metamorphosis">&#187;</a>Metamorphosis</h2>
+
+<!-- ----------------------- -->
+<section>
+	<div class="desc">
+		<p>
+			AbsurdJS was made really flexible. It is so flexible that you can use it as HTML preprocessor. I.e. you may write JavaScript, JSON or YAML and receive HTML at the end.
+		</p>
+	</div>
+	<div class="code">
+		<pre><code class="language-javascript">api.morph("html");
+api.add({
+	html: {
+	    head: {
+	    	title: "title"
+	    },
+	    body: {}
+	}
+}).compile(function(err, html) {
+	// use the html here
+});</code></pre>
+The result of the above compilation is:
+<pre><code class="language-markup">&lt;html>
+	&lt;head>
+		&lt;title>
+			title
+		&lt;/title>
+	&lt;/head>
+	&lt;body/>
+&lt;/html></code></pre>
+	</div>
+	<br class="clear">
+</section>
+
+<!-- ----------------------- -->
+<section>
+	<div class="desc">
+		<p>
+			There are three special properties that you may set:<br />
+		</p>
+	</div>
+	<div class="code">
+		<em>_</em> (underscore) is interpreted  as node value.
+		<pre><code class="language-javascript">body: {
+	_: "page text"
+}</code></pre>
+Will be compiled to:
+<pre><code class="language-markup">&lt;body>page text&lt;/body></pre></code>
+<em>_attrs</em> accepts an object, which is used to define node attributes.
+<pre><code class="language-javascript">body: {
+	_attrs: { class: "black" }
+}</code></pre>
+The result is:
+<pre><code class="language-markup">&lt;body class="black"/></pre></code>
+<em>_tpl</em> is used when you have a template defined. During the usage of <em>add</em> method you may pass a template name. For example:
+<pre><code class="language-javascript">api.add({
+	title: "AbsurdJS preprocessor"
+}, "title");
+
+api.add({
+	html: {
+		head: {
+			_tpl: "title"
+		}
+	}
+})</code></pre>The above code is compiled to:
+<pre><code class="language-markup">
+&lt;html>
+	&lt;head>
+		&lt;title>
+			AbsurdJS preprocessor
+		&lt;/title>
+	&lt;/head>
+&lt;/html>
+</pre></code>
+
+	</div>
+	<br class="clear">
+</section>
 <h3><a href="#api" name="api">&#187;</a>API</h3>
 
 <section>
@@ -974,6 +1053,16 @@ api.add({
 	</div>
 	<br class="clear">
 </section>
+
+<section>
+	<div class="desc">
+		<h4>.morph([type])</h4>
+	</div>
+	<div class="code">
+		<pre><code class="language-javascript">api.morph("html");</code></pre>
+	</div>
+	<br class="clear">
+</section>
 <h3><a href="#testing" name="testing">&#187;</a>Testing</h3>
 
 <section>
@@ -1028,8 +1117,9 @@ api.add({
 				var code = editor.getSession().getValue();
 				try {
 					eval(code);
-					api.compile(function(err, css) {
-						result.html(css);
+					api.compile(function(err, res) {
+						res = res.replace(/\</g, '&lt;');
+						result.html(res);
 					});
 				} catch(err) {
 					result.html((err.stack ? err.stack : err.toString()));

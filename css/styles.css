@@ -52,7 +52,7 @@ h2 {
 }
 .editor-wrapper, .result {
   padding: 10px;
-  height: 420px;
+  height: 500px;
   border: dotted 1px #C9C9C9;
   background: solid 1px #C9C9C9;
 }
@@ -201,7 +201,7 @@ h1, h2, .documentation h3, .documentation h4 {
   max-width: 950px;
 }
 .demo {
-  max-width: 1000px;
+  max-width: 1200px;
 }
 .demo-selector, .documentation .documentation-inner section, .documentation h3 {
   padding-bottom: 20px;

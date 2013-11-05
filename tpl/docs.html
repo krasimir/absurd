@@ -689,6 +689,85 @@ api.add({
 </div>
 	<br class="clear">
 </section>
+<h2>Metamorphosis</h2>
+
+<!-- ----------------------- -->
+<section>
+	<div class="desc">
+		<p>
+			AbsurdJS was made really flexible. It is so flexible that you can use it as HTML preprocessor. I.e. you may write JavaScript, JSON or YAML and receive HTML at the end.
+		</p>
+	</div>
+	<div class="code">
+		<pre><code class="language-javascript">api.morph("html");
+api.add({
+	html: {
+	    head: {
+	    	title: "title"
+	    },
+	    body: {}
+	}
+}).compile(function(err, html) {
+	// use the html here
+});</code></pre>
+The result of the above compilation is:
+<pre><code class="language-markup">&lt;html>
+	&lt;head>
+		&lt;title>
+			title
+		&lt;/title>
+	&lt;/head>
+	&lt;body/>
+&lt;/html></code></pre>
+	</div>
+	<br class="clear">
+</section>
+
+<!-- ----------------------- -->
+<section>
+	<div class="desc">
+		<p>
+			There are three special properties that you may set:<br />
+		</p>
+	</div>
+	<div class="code">
+		<em>_</em> (underscore) is interpreted  as node value.
+		<pre><code class="language-javascript">body: {
+	_: "page text"
+}</code></pre>
+Will be compiled to:
+<pre><code class="language-markup">&lt;body>page text&lt;/body></pre></code>
+<em>_attrs</em> accepts an object, which is used to define node attributes.
+<pre><code class="language-javascript">body: {
+	_attrs: { class: "black" }
+}</code></pre>
+The result is:
+<pre><code class="language-markup">&lt;body class="black"/></pre></code>
+<em>_tpl</em> is used when you have a template defined. During the usage of <em>add</em> method you may pass a template name. For example:
+<pre><code class="language-javascript">api.add({
+	title: "AbsurdJS preprocessor"
+}, "title");
+
+api.add({
+	html: {
+		head: {
+			_tpl: "title"
+		}
+	}
+})</code></pre>The above code is compiled to:
+<pre><code class="language-markup">
+&lt;html>
+	&lt;head>
+		&lt;title>
+			AbsurdJS preprocessor
+		&lt;/title>
+	&lt;/head>
+&lt;/html>
+</pre></code>
+
+	</div>
+	<br class="clear">
+</section>
 <h3>API</h3>
 
 <section>
@@ -866,6 +945,16 @@ api.add({
 	// your custom code here
 })
 		</code></pre>
+	</div>
+	<br class="clear">
+</section>
+
+<section>
+	<div class="desc">
+		<h4>.morph([type])</h4>
+	</div>
+	<div class="code">
+		<pre><code class="language-javascript">api.morph("html");</code></pre>
 	</div>
 	<br class="clear">
 </section>

@@ -32,7 +32,7 @@ var title = function(size) {
 var demoBlock = function() {
 	return {
 		width: "50%",
-		height: "420px",
+		height: "500px",
 		padding: "10px",
 		border: "dotted 1px #C9C9C9",
 		background: "solid 1px #C9C9C9",
@@ -102,7 +102,7 @@ var demo = function() {
 var demoStyles = function() {
 	return {
 		".demo": {
-			maxWidth: "1000px",
+			maxWidth: "1200px",
 			margin: "0 auto"
 		},
 		".demo-selector": {
