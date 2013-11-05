@@ -173,7 +173,7 @@ h1, h2, .documentation h3, .documentation h4 {
 .compile, .menu p a, .documentation h2 a, .documentation h3 a, .documentation h4 a, .documentation .menu a:hover {
   text-decoration: none;
 }
-.menu, .menu p a, .documentation, .documentation p a, .documentation .menu a {
+.menu, .menu p a, .documentation, .documentation p a, .documentation .desc a, .documentation .menu a {
   color: #FFF;
 }
 .menu p a small {

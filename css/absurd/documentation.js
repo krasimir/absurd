@@ -78,7 +78,10 @@ module.exports = function(api) {
 			},
 			".desc": {
 				float: "left",
-				width: "30%"
+				width: "30%",
+				a: {
+					color: "#FFF"
+				}
 			},
 			".code": {
 				float: "left",
