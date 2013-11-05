@@ -1,6 +1,6 @@
 describe("Metamorphosis (to html preprocessor)", function() {
 
-	var api = require('../../index.js')();
+	var api = require('../../../index.js')();
 
 	api.morph("html");
 
