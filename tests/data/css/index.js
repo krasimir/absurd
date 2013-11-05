@@ -14,8 +14,8 @@ module.exports = function(A) {
 	});
 	A.add({
 		'header .logo a': {
-			'font-size': '23px',
-			'padding-top': '13.22px',
+			'font-size': '24px',
+			'padding-top': '23px',
 			span: {
 				'font-weight': 'bold'
 			}
