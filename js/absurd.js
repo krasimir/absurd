@@ -1,4 +1,4 @@
-/* version: 0.0.51 */
+/* version: 0.1.1 */
 var Absurd = (function(w) {
 var lib = { 
 	api: {},
@@ -700,6 +700,12 @@ var process = function(tagName, obj) {
 
 	var html = '', attrs = '', childs = '';
 
+	var tagAnalized = analizeProperty(tagName);
+	tagName = tagAnalized.tag;
+	if(tagAnalized.attrs != "") {
+		attrs += " " + tagAnalized.attrs;
+	}
+
 	if(typeof obj === "string") {
 		return packTag(tagName, attrs, obj);
 	}
@@ -707,12 +713,6 @@ var process = function(tagName, obj) {
 	var addToChilds = function(value) {
 		if(childs != '') { childs += newline; }
 		childs += value;
-	}
-
-	var tagAnalized = analizeProperty(tagName);
-	tagName = tagAnalized.tag;
-	if(tagAnalized.attrs != "") {
-		attrs += " " + tagAnalized.attrs;
 	}
 
 	// process directives
@@ -803,10 +803,19 @@ var analizeProperty = function(prop) {
 		attributes = "", readingAttributes = false;
 
 	for(var i=0; c=prop[i]; i++) {
-		if(c === "." && !readingClass) {
+		if(c === "[" && !readingAttributes) {
+			readingAttributes = true;
+		} else if(readingAttributes) {
+			if(c != "]") {
+				attributes += c;
+			} else {
+				readingAttributes = false;
+				i -= 1;
+			}
+		} else if(c === "." && !readingClass) {
 			readingClass = true;
 		} else if(readingClass) {
-			if(c != "." && c != "#" && c != "[") {
+			if(c != "." && c != "#" && c != "[" && c != "]") {
 				className += c;
 			} else {
 				classes.push(className);
@@ -817,19 +826,10 @@ var analizeProperty = function(prop) {
 		} else if(c === "#" && !readingId) {
 			readingId = true;
 		} else if(readingId) {
-			if(c != "." && c != "#" && c != "[") {
+			if(c != "." && c != "#" && c != "[" && c != "]") {
 				idName += c;
 			} else {
 				readingId = false;
-				i -= 1;
-			}
-		} else if(c === "[" && !readingAttributes) {
-			readingAttributes = true;
-		} else if(readingAttributes) {
-			if(c != "." && c != "#" && c != "]") {
-				attributes += c;
-			} else {
-				readingAttributes = false;
 				i -= 1;
 			}
 		} else if(c != "." && c != "#" && c != "[" && c != "]") {

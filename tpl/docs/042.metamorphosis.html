@@ -86,7 +86,38 @@ api.add({
 		</p>
 	</div>
 	<div class="code">
-		<pre><code class="language-javascript"></pre></code>
+		<pre><code class="language-javascript">api.morph("html");
+api.add({
+	html: {
+		head: {
+			title: "AbsurdJS is awesome"
+		},
+		body: {
+			'.content.left#wrapper': {
+				'a[href="http://krasimir.github.io/absurd/"]': "AbsurdJS documentation",
+				'p.text[title="description" data-type="selectable"]': "CSS preprocessor"
+			}
+		}
+	}
+});</pre></code>
+The code produces:
+<pre><code class="language-markup">&lt;html>
+	&lt;head>
+		&lt;title>
+			AbsurdJS is awesome
+		&lt;/title>
+	&lt;/head>
+	&lt;body>
+		&lt;div class="content left" id="wrapper">
+			&lt;a href="http://krasimir.github.io/absurd/">
+				AbsurdJS documentation
+			&lt;/a>
+			&lt;p class="text" title="description" data-type="selectable">
+				CSS preprocessor
+			&lt;/p>
+		&lt;/div>
+	&lt;/body>
+&lt;/html></code></pre>
 	</div>
 	<br class="clear">
 </section>
