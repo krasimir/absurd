@@ -1095,4 +1095,26 @@ describe("Metamorphosis (to html preprocessor)", function() {
 		});
 	});
 
+	it("should pass attributes", function(done) {
+		var tags = {
+			'.content.left#wrapper': {
+				'a[href="http://krasimir.github.io/absurd/"]': "AbsurdJS documentation",
+				'p.text[title="description" data-type="selectable"]': "CSS preprocessor"
+			}
+		}
+		api.add(tags).compile(function(err, html) {
+			expect(err).toBe(null);
+			expect(html).toBeDefined();
+			expect(html).toBe('<div class="content left" id="wrapper">\n\
+<a href="http://krasimir.github.io/absurd/">\n\
+AbsurdJS documentation\n\
+</a>\n\
+<p class="text" title="description" data-type="selectable">\n\
+CSS preprocessor\n\
+</p>\n\
+</div>');
+			done();
+		});
+	});
+
 });
