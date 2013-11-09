@@ -1,0 +1,9 @@
+---
+_: <!DOCTYPE html>
+head:
+  title: AbsurdJS is awesome
+body:
+  div:
+    p: text here
+    _attrs:
+      class: container
