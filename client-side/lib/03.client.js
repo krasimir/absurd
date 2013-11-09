@@ -12,16 +12,11 @@ var client = function() {
 			return destination;
 		};
 
-		var _api = {},
+		var _api = { defaultProcessor: lib.processors.css.CSS() },
 			_rules = {},
 			_storage = {},
 			_plugins = {},
-			_hooks = {},
-			_defaultOptions = {
-				combineSelectors: true,
-				minify: false,
-				processor: lib.processors.css.CSS()
-			};
+			_hooks = {};
 
 		_api.getRules = function(stylesheet) {
 			if(typeof stylesheet === 'undefined') {
@@ -76,12 +71,18 @@ var client = function() {
 		// client side specific methods 
 		_api.compile = function(callback, options) {
 			if(_api.callHooks("compile", arguments)) return _api;
-			options = extend(_defaultOptions, options || {});
+			var defaultOptions = {
+				combineSelectors: true,
+				minify: false,
+				processor: _api.defaultProcessor
+			};
+			options = extend(defaultOptions, options || {});
 			options.processor(
 				_api.getRules(),
 				callback || function() {},
 				{combineSelectors: true}
 			);
+			_api.flush();
 		}
 
 		// registering api methods
