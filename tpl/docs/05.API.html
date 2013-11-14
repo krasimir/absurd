@@ -1,5 +1,6 @@
 <h3>API</h3>
 
+<a name="api.add"></a>
 <section>
 	<div class="desc">
 		<h4>.add([object])</h4>
@@ -16,6 +17,7 @@
 	<br class="clear">
 </section>
 
+<a name="api.import"></a>
 <section>
 	<div class="desc">
 		<h4>.import([string] | [[string, string, ...]])</h4>
@@ -33,6 +35,7 @@
 	<br class="clear">
 </section>
 
+<a name="api.storage"></a>
 <section>
 	<div class="desc">
 		<h4>.storage([key], [value])</h4>
@@ -58,6 +61,7 @@
 	<br class="clear">
 </section>
 
+<a name="api.plugin"></a>
 <section>
 	<div class="desc">
 		<h4>.plugin([name of property], [function])</h4>
@@ -73,6 +77,7 @@
 	<br class="clear">
 </section>
 
+<a name="api.darken"></a>
 <section>
 	<div class="desc">
 		<h4>.darken([color], [percents])</h4>
@@ -89,6 +94,7 @@
 	<br class="clear">
 </section>
 
+<a name="api.lighten"></a>
 <section>
 	<div class="desc">
 		<h4>.lighten([color], [percents])</h4>
@@ -105,6 +111,7 @@
 	<br class="clear">
 </section>
 
+<a name="api.raw"></a>
 <section>
 	<div class="desc">
 		<h4>.raw([string])</h4>
@@ -117,6 +124,7 @@
 	<br class="clear">
 </section>
 
+<a name="api.compile"></a>
 <section>
 	<div class="desc">
 		<h4>.compile([function], [options])</h4>
@@ -130,13 +138,15 @@
 	<pre><code class="language-javascript">{
 	combineSelectors: true,
 	minify: false,
-	processor: [internal CSS preprocessor]
+	processor: [internal CSS preprocessor],
+	keepCamelCase: false
 }
 		</code></pre>
 	</div>
 	<br class="clear">
 </section>
 
+<a name="api.compileFile"></a>
 <section>
 	<div class="desc">
 		<h4>.compileFile([path], [function], [options])</h4>
@@ -151,6 +161,7 @@
 	<br class="clear">
 </section>
 
+<a name="api.hook"></a>
 <section>
 	<div class="desc">
 		<h4>.hook([method], [function])</h4>
@@ -166,6 +177,7 @@
 	<br class="clear">
 </section>
 
+<a name="api.register"></a>
 <section>
 	<div class="desc">
 		<h4>.register([method], [function])</h4>
@@ -179,6 +191,7 @@
 	<br class="clear">
 </section>
 
+<a name="api.morph"></a>
 <section>
 	<div class="desc">
 		<h4>.morph([type])</h4>
