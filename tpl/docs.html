@@ -369,6 +369,30 @@ a:before {
 	<br class="clear">
 </section>
 
+<a name="syntax.ampersand"></a>
+<section>
+    <div class="desc">
+        <h4>Using ampersand (<strong>&amp;</strong>) operator</h4>
+        <p>It has the same meaning like in LESS.</p>
+    </div>
+    <div class="code">
+        <pre><code class="language-javascript">a: {
+    color: '#000',
+    '&.sky': {
+        color: "blue"
+    }
+}</code></pre>
+        <p>Is compiled to:</p>
+        <pre><code class="language-css">a {
+  color: #000;
+}
+a.sky {
+  color: blue;
+}</code></pre>
+    </div>
+    <br class="clear">
+</section>
+
 <section>
 	<div class="desc">
 		<h4>Importing</h4>
