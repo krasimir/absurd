@@ -1,4 +1,4 @@
-/* version: 0.1.3 */
+/* version: 0.1.4 */
 var Absurd = (function(w) {
 var lib = { 
 	api: {},
@@ -171,6 +171,9 @@ lib.api.add = function(API) {
 				// check for pseudo classes
 				if(prop.charAt(0) === ":") {
 					addRule(selector + prop, props[prop], stylesheet);
+				// check for ampersand operator
+				} else if(prop.charAt(0) === "&") {
+					addRule(selector + prop.substr(1, prop.length-1), props[prop], stylesheet);
 				// check for media query
 				} else if(prop.indexOf("@media") === 0 || prop.indexOf("@supports") === 0) {
 					addRule(selector, props[prop], prop);

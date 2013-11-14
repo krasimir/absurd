@@ -1,6 +1,6 @@
 describe("Shoud prevent camel case transformation", function() {
 
-	it("should import files", function(done) {
+	it("keep camel case", function(done) {
 		var api = require("../../index.js")();
 		api.add({
 			body: {
