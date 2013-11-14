@@ -74,13 +74,14 @@ var client = function() {
 			var defaultOptions = {
 				combineSelectors: true,
 				minify: false,
-				processor: _api.defaultProcessor
+				processor: _api.defaultProcessor,
+				keepCamelCase: false
 			};
 			options = extend(defaultOptions, options || {});
 			options.processor(
 				_api.getRules(),
 				callback || function() {},
-				{combineSelectors: true}
+				options
 			);
 			_api.flush();
 		}

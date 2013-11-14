@@ -122,6 +122,7 @@ lib.api.compile = function(api) {
 		var _defaultOptions = {
 			combineSelectors: true,
 			minify: false,
+			keepCamelCase: false,
 			processor: api.defaultProcessor
 		};
 		options = extend(_defaultOptions, options || {});
@@ -290,10 +291,11 @@ var cleanCSS = require('clean-css'),
 	newline = '\n',
 	defaultOptions = {
 		combineSelectors: true,
-		minify: false
+		minify: false,
+		keepCamelCase: false
 	};
 
-var toCSS = function(rules) {
+var toCSS = function(rules, options) {
 	var css = '';
 	for(var selector in rules) {
 		// handling raw content
@@ -307,7 +309,7 @@ var toCSS = function(rules) {
 				if(value === "") {
 					value = '""';
 				}
-				entity += '  ' + transformUppercase(prop) + ': ' + value + ';' + newline;
+				entity += '  ' + (options.keepCamelCase == false ? transformUppercase(prop) : prop) + ': ' + value + ';' + newline;
 			}
 			entity += '}' + newline;
 			css += entity;
@@ -384,9 +386,9 @@ lib.processors.css.CSS = function() {
 			var r = filterRules(rules[stylesheet]);
 			r = options.combineSelectors ? combineSelectors(r) : r;
 			if(stylesheet === "mainstream") {
-				css += toCSS(r);
+				css += toCSS(r, options);
 			} else {
-				css += stylesheet + " {" + newline + toCSS(r) + "}" + newline;
+				css += stylesheet + " {" + newline + toCSS(r, options) + "}" + newline;
 			}		
 		}
 		// Minification
