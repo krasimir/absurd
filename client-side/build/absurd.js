@@ -1,4 +1,4 @@
-/* version: 0.1.5 */
+/* version: 0.1.6 */
 var Absurd = (function(w) {
 var lib = { 
 	api: {},
@@ -148,7 +148,6 @@ lib.api.add = function(API) {
 		}
 	}
 	var clearing = function(props) {
-
 		// plugins
 		var plugins = API.getPlugins();
 		for(var prop in props) {
@@ -156,14 +155,18 @@ lib.api.add = function(API) {
 				props[prop] = false;
 			}
 		}
-
 		// pseudo classes
 		for(var prop in props) {
 			if(prop.charAt(0) === ":") {
 				props[prop] = false;
 			}
 		}
-
+		// ampersand 
+		for(var prop in props) {
+			if(prop.charAt(0) === "&") {
+				props[prop] = false;
+			}
+		}
 	}
 	var checkForNesting = function(selector, props, stylesheet) {
 		for(var prop in props) {
