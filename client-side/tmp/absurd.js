@@ -27,7 +27,7 @@ lib.api.add = function(API) {
 		}
 		// ampersand 
 		for(var prop in props) {
-			if(prop.charAt(0) === "&") {
+			if(/&/g.test(prop)) {
 				props[prop] = false;
 			}
 		}

@@ -631,6 +631,9 @@ describe("Fixing bug with ampersand inside a plugin", function() {
 		            ".ie8 &": {
 		            	color: "blue"
 		            }
+		        },
+		        ".ie8 &": {
+		            color: "#eee"
 		        }
 		    };
 		});
@@ -652,6 +655,9 @@ a:hover {\n\
 }\n\
 .ie8 a:hover {\n\
   color: blue;\n\
+}\n\
+.ie8 a {\n\
+  color: #eee;\n\
 }\n");
 			done();
 		});		

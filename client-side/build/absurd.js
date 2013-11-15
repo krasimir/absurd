@@ -1,4 +1,4 @@
-/* version: 0.1.6 */
+/* version: 0.1.7 */
 var Absurd = (function(w) {
 var lib = { 
 	api: {},
@@ -163,7 +163,7 @@ lib.api.add = function(API) {
 		}
 		// ampersand 
 		for(var prop in props) {
-			if(prop.charAt(0) === "&") {
+			if(/&/g.test(prop)) {
 				props[prop] = false;
 			}
 		}
