@@ -618,11 +618,11 @@ describe("Fixing allow empty values - ", function() {
 	});
 
 });
-describe("Fixing bug in array usage", function() {
+describe("Fixing bug with ampersand inside a plugin", function() {
 
 	var api = require('../../index.js')();
 
-	it("should use array", function(done) {
+	it("should use remove the ampersand prop", function(done) {
 		api.plugin("hoverEffect", function(api, color) {
 		    return {
 		        "&:hover": {
