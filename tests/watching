@@ -2,4 +2,8 @@
 node ./index.js -s ./tests/data/css/index.js -o ./tests/data/result/res.css -w ./tests/data/**/*.js -m true
 
 # as html parser
-node ./index.js -s ./tests/data/html.json -o ./tests/data/result/code.html -w ./tests/data/**/*.json -m true -t html
+node ./index.js -s ./tests/data/html.json -o ./tests/data/result/code.html -w ./tests/data/**/*.json -t html
+node ./index.js -s ./tests/data/html.json -t html
+
+# keep camel case
+node ./index.js -s ./tests/data/css/keepcamelcase.json -k true
