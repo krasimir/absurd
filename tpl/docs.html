@@ -116,16 +116,17 @@ absurd -s [source file] -o [output file] -w [directory]
 absurd -s [source file] -m true
 
 // Preprocessing html
-absurd -s [source file] -t html</code></pre>
+absurd -s [source file] -t html
+
+// keep the camel case of the properties
+absurd -s [source file] -k true</code></pre>
+
 Here are two examples uses all the options:
 <pre><code class="language-javascript"># as css parser
 node ./index.js -s ./tests/data/css/index.js -o ./tests/data/result/res.css -w ./tests/data/**/*.js -m true
 
-// as html parser
+# as html parser
 node ./index.js -s ./tests/data/html.json -o ./tests/data/result/code.html -w ./tests/data/**/*.json -m true -t html</code></pre>
-
-// keep the camel case of the properties
-absurd -s [source file] -k true
 	</div>
 	<br class="clear">
 </section>
