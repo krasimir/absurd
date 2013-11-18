@@ -258,7 +258,13 @@ lib.api.storage = function(API) {
 	var storage = function(name, value) {
 		if(typeof value != "undefined") {
 			_s[name] = value;
-		} else {
+		} else if(typeof value === "undefined" && typeof name === "object") {
+			for(var _name in name) {
+				if(Object.prototype.hasOwnProperty.call(name, _name)) {
+					storage(_name, name[_name]);
+				}
+			}
+    } else {
 			if(_s[name]) {
 				return _s[name];
 			} else {
