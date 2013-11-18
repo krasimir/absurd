@@ -1,4 +1,4 @@
-/* version: 0.1.6 */
+/* version: 0.1.8 */
 var Absurd = (function(w) {
 var lib = { 
 	api: {},
@@ -163,7 +163,7 @@ lib.api.add = function(API) {
 		}
 		// ampersand 
 		for(var prop in props) {
-			if(prop.charAt(0) === "&") {
+			if(/&/g.test(prop)) {
 				props[prop] = false;
 			}
 		}
@@ -394,7 +394,13 @@ lib.api.storage = function(API) {
 	var storage = function(name, value) {
 		if(typeof value != "undefined") {
 			_s[name] = value;
-		} else {
+		} else if(typeof value === "undefined" && typeof name === "object") {
+			for(var _name in name) {
+				if(Object.prototype.hasOwnProperty.call(name, _name)) {
+					storage(_name, name[_name]);
+				}
+			}
+    } else {
 			if(_s[name]) {
 				return _s[name];
 			} else {

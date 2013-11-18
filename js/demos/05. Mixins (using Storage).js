@@ -1,18 +1,22 @@
-api.storage("theme", function(color) {
-	return {
-		color: color,
-		background: api.lighten(color, 50)
+// single value
+api.storage("fontsize", "16px");
+// multiple values
+api.storage({
+	color: "red",
+	theme: function(color) {
+		return {
+			color: color,
+			background: api.lighten(color, 50)
+		}
 	}
 });
 api.add({
 	body: {
-		width: "100%",
-		height: "100%",
+		background: api.storage("color"),
 		section: [
 			api.storage("theme")("#999"),
-			{
-				marginTop: "20px"
-			}
+			{ marginTop: "20px" },
+			{ fontSize: api.storage("fontsize") }
 		]
 	}
 });
