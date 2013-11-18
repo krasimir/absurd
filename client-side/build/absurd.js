@@ -392,9 +392,9 @@ lib.api.register = function(api) {
 lib.api.storage = function(API) {
 	var _s = API.getStorage();
 	var storage = function(name, value) {
-		if(typeof value != "undefined") {
+		if(typeof value !== "undefined") {
 			_s[name] = value;
-		} else if(typeof value === "undefined" && typeof name === "object") {
+		} else if(typeof name === "object") {
 			for(var _name in name) {
 				if(Object.prototype.hasOwnProperty.call(name, _name)) {
 					storage(_name, name[_name]);
