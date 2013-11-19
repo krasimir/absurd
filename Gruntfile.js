@@ -30,6 +30,7 @@ module.exports = function(grunt) {
 					'tests/common/*.js',
 					'tests/bugs/*.js',
 					'tests/metamorphosis/**/*.js',
+					'tests/componenting/**/*.js',
 					'!tests/common/api.import.spec.js',
 					'!tests/common/compile-and-save.spec.js',
 					'!tests/common/minify.spec.js',

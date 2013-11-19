@@ -37,6 +37,9 @@ var client = function() {
 		_api.flush = function() {
 			_rules = {};
 			_storage = [];
+			_hooks = {};
+			_api.defaultProcessor = lib.processors.css.CSS();
+			return _api;
 		}
 		_api.import = function() { 
 			if(_api.callHooks("import", arguments)) return _api;

@@ -1,4 +1,4 @@
-/* version: 0.1.8 */
+/* version: 0.1.9 */
 var Absurd = (function(w) {
 var lib = { 
 	api: {},
@@ -57,6 +57,9 @@ var client = function() {
 		_api.flush = function() {
 			_rules = {};
 			_storage = [];
+			_hooks = {};
+			_api.defaultProcessor = lib.processors.css.CSS();
+			return _api;
 		}
 		_api.import = function() { 
 			if(_api.callHooks("import", arguments)) return _api;
@@ -291,13 +294,86 @@ lib.api.compile = function(api) {
 		
 	}
 }
+lib.api.compileComponent = function(api) {
+	return function(input, callback, options) {
+
+		var css = "", html = "", all = [];
+
+		var processCSS = function(clb) {
+			api.flush();
+			for(var i=0; i<all.length, component=all[i]; i++) {
+				if(typeof component === "function") { component = component(); }
+				api.add(component.css ? component.css : {});
+			}
+			api.compile(function(err, result) {
+				css += result;
+				clb(err);
+			}, options)
+		}
+		var processHTML = function(clb) {
+			var index = 0;
+			var error = null;
+			var processComponent = function() {
+				if(index > input.length-1) {
+					clb(error);
+					return;
+				}
+				var c = input[index];
+				if(typeof c === "function") { c = c(); }
+				api.flush().morph("html").add(c.html ? c.html : {}).compile(function(err, result) {
+					html += result;
+					index += 1;
+					error = err;
+					processComponent();
+				}, options);
+			}
+			processComponent();
+		}
+		var checkForNesting = function(o) {
+			for(var key in o) {
+				if(key === "_include") {
+					if(o[key] instanceof Array) {
+						for(var i=0; i<o[key].length, c=o[key][i]; i++) {
+							if(typeof c === "function") { c = c(); }
+							all.push(c);
+							checkForNesting(c);
+						}
+					} else {
+						if(typeof o[key] === "function") { o[key] = o[key](); }
+						all.push(o[key]);
+						checkForNesting(o[key]);
+					}
+				} else if(typeof o[key] === "object") {
+					checkForNesting(o[key]);
+				}
+			}
+		}
+
+		// Convert the passed argument to an array.
+		if(!(input instanceof Array)) {
+			input = [input];
+		}
+		// Checking for nesting. I.e. collecting the css and html.
+		for(var i=0; i<input.length, c=input[i]; i++) {
+			if(typeof c === "function") { c = c(); }
+			all.push(c);
+			checkForNesting(c);
+		}
+
+		processCSS(function(errCSS) {
+			processHTML(function(errHTML) {
+				callback(
+					errCSS || errHTML ? {error: {css: errCSS, html: errHTML }} : null,
+					css,
+					html
+				)
+			});
+		});
+		
+	}
+}
 lib.api.compileFile = function(api) {
 	return api.compile;
-}
-lib.api.component = function(api) {
-	return function(name, done) {
-		api.getComponents()[name] = {};
-	}
 }
 var ColorLuminance = function (hex, lum) {
 
@@ -756,7 +832,7 @@ var process = function(tagName, obj) {
 			case "_tpl": 
 				if(typeof value == "string") {
 					addToChilds(processTemplate(value));
-				} else if(typeof value == "object" && value.length && value.length > 0) {
+				} else if(value instanceof Array) {
 					var tmp = '';
 					for(var i=0; tpl=value[i]; i++) {
 						tmp += processTemplate(tpl)
@@ -764,6 +840,23 @@ var process = function(tagName, obj) {
 					}
 					addToChilds(tmp);
 				}
+				obj[directiveName] = false;
+			break;
+			case "_include":
+				var tmp = '';
+				var add = function(o) {
+					if(typeof o === "function") { o = o(); }
+					if(o.css && o.html) { o = o.html; } // catching a component
+					tmp += process('', o);
+				}
+				if(value instanceof Array) {
+					for(var i=0; i<value.length, o=value[i]; i++) {
+						add(o);
+					}
+				} else if(typeof value === "object"){
+					add(value);
+				}
+				addToChilds(tmp);
 				obj[directiveName] = false;
 			break;
 		}

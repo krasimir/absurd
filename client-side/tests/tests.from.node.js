@@ -762,14 +762,12 @@ describe("Metamorphosis (to html preprocessor)", function() {
 
 	var api = require('../../../index.js')();
 
-	api.morph("html");
-
 	it("should compile nested tags", function(done) {
 		var headTags = [
 			{ title: "page title" },
 			{ style: {} }
 		];
-		api.add({
+		api.morph("html").add({
 			html: {
 				head: headTags,
 				body: {}
@@ -790,7 +788,7 @@ describe("Metamorphosis (to html preprocessor)", function() {
 			}
 			return list;
 		}
-		api.add({
+		api.morph("html").add({
 			html: {
 				body: getList(["A", "B", "C", "D"])
 			}
@@ -807,10 +805,8 @@ describe("Metamorphosis (to html preprocessor)", function() {
 
 	var api = require('../../../index.js')();
 
-	api.morph("html");
-
 	it("complex html", function(done) {
-		api.add({
+		api.morph("html").add({
 			_:'<!DOCTYPE html>',
 			html: {
 				head: {
@@ -857,8 +853,6 @@ describe("Metamorphosis (to html preprocessor)", function() {
 
 	var api = require('../../../index.js')();
 
-	api.morph("html");
-
 	it("complex html", function(done) {
 		var inputField = function(name, defaultValue) {
 			return {
@@ -881,7 +875,7 @@ describe("Metamorphosis (to html preprocessor)", function() {
 				}
 			}
 		}
-		api.add({
+		api.morph("html").add({
 			html: {
 				head: {
 					title: "html page"
@@ -922,8 +916,6 @@ describe("Metamorphosis (to html preprocessor)", function() {
 
 	var api = require('../../../index.js')();
 
-	api.morph("html");
-
 	it("should use function", function(done) {
 		var getTitleTag = function(value) {
 			return {
@@ -935,7 +927,7 @@ describe("Metamorphosis (to html preprocessor)", function() {
 				p: "text"
 			}
 		}
-		api.add({
+		api.morph("html").add({
 			html: {
 				head: getTitleTag("Absurd is awesome"),
 				body: bodyContent
@@ -953,10 +945,75 @@ describe("Metamorphosis (to html preprocessor)", function() {
 
 	var api = require('../../../index.js')();
 
-	api.morph("html");
+	it("should use _include", function(done) {
+		var profile = function() {
+			return {
+				".profile": {
+					"span.name": "John Doe"
+				}
+			}
+		}
+		var logo = {
+			".logo": {
+				'img[src="#"]': {}
+			}
+		}
+		var nav = {
+			nav: [
+				{ 'a[href="#"]': "Home" },
+				{ 'a[href="#"]': "Products" },
+				{ 'a[href="#"]': "Contacts" }
+			]
+		}
+		var header = {
+			header: {
+				_include: [logo, nav, profile]
+			}
+		}
+		var page = {
+			html: {
+				body: {
+					_include: header
+				}
+			}
+		}
+		api.morph("html").add(page).compile(function(err, html) {
+			expect(err).toBe(null);
+			expect(html).toBeDefined();
+			expect(html).toBe('<html>\n\
+<body>\n\
+<header>\n\
+<div class="logo">\n\
+<img src="#"/>\n\
+</div><nav>\n\
+<a href="#">\n\
+Home\n\
+</a>\n\
+<a href="#">\n\
+Products\n\
+</a>\n\
+<a href="#">\n\
+Contacts\n\
+</a>\n\
+</nav><div class="profile">\n\
+<span class="name">\n\
+John Doe\n\
+</span>\n\
+</div>\n\
+</header>\n\
+</body>\n\
+</html>');
+			done();
+		});
+	});
+
+});
+describe("Metamorphosis (to html preprocessor)", function() {
+
+	var api = require('../../../index.js')();
 
 	it("should compile an empty tag", function(done) {
-		api.add({
+		api.morph("html").add({
 			body: {}
 		}).compile(function(err, html) {
 			expect(err).toBe(null);
@@ -967,7 +1024,7 @@ describe("Metamorphosis (to html preprocessor)", function() {
 	});
 
 	it("should compile tag with text inside", function(done) {
-		api.add({
+		api.morph("html").add({
 			body: "page text"
 		}).compile(function(err, html) {
 			expect(err).toBe(null);
@@ -978,7 +1035,7 @@ describe("Metamorphosis (to html preprocessor)", function() {
 	});
 
 	it("should compile tag with attributes", function(done) {
-		api.add({
+		api.morph("html").add({
 			body: {
 				_attrs: { class: "black" }
 			}
@@ -991,7 +1048,7 @@ describe("Metamorphosis (to html preprocessor)", function() {
 	});
 
 	it("should compile tag with attributes and text inside", function(done) {
-		api.add({
+		api.morph("html").add({
 			body: {
 				_attrs: { class: "black" },
 				_: "page text"
@@ -1005,7 +1062,7 @@ describe("Metamorphosis (to html preprocessor)", function() {
 	});
 
 	it("should compile tag with attributes, text inside and nested tag", function(done) {
-		api.add({
+		api.morph("html").add({
 			body: {
 				_attrs: { class: "black" },
 				_: "page text",
@@ -1020,7 +1077,7 @@ describe("Metamorphosis (to html preprocessor)", function() {
 	});
 
 	it("should compile raw content", function(done) {
-		api.add({
+		api.morph("html").add({
 			_: '<html></html>'
 		}).compile(function(err, html) {
 			expect(err).toBe(null);
@@ -1031,7 +1088,7 @@ describe("Metamorphosis (to html preprocessor)", function() {
 	});	
 
 	it("should compile nested tags", function(done) {
-		api.add({
+		api.morph("html").add({
 			html: {
 				head: {
 					title: "title"
@@ -1047,7 +1104,7 @@ describe("Metamorphosis (to html preprocessor)", function() {
 	});
 
 	it("should compile raw content + nested tag", function(done) {
-		api.add({
+		api.morph("html").add({
 			body: {
 				p: {
 					_: "That's my text",
@@ -1077,11 +1134,9 @@ describe("Metamorphosis (to html preprocessor)", function() {
 
 	var api = require('../../../index.js')();
 
-	api.morph("html");
-
 	it("should use templates", function(done) {
 
-		api.add({
+		api.morph("html").add({
 			title: "AbsurdJS preprocessor"
 		}, "title");
 
@@ -1141,15 +1196,13 @@ describe("Metamorphosis (to html preprocessor)", function() {
 
 	var api = require('../../../index.js')();
 
-	api.morph("html");
-
 	it("should use classes", function(done) {
 		var tags = {
 			"div.content": {
 				p: "text"
 			}
 		}
-		api.add(tags).compile(function(err, html) {
+		api.morph("html").add(tags).compile(function(err, html) {
 			expect(err).toBe(null);
 			expect(html).toBeDefined();
 			expect(html).toBe('<div class="content">\n<p>\ntext\n</p>\n</div>');
@@ -1163,7 +1216,7 @@ describe("Metamorphosis (to html preprocessor)", function() {
 				p: "text"
 			}
 		}
-		api.add(tags).compile(function(err, html) {
+		api.morph("html").add(tags).compile(function(err, html) {
 			expect(err).toBe(null);
 			expect(html).toBeDefined();
 			expect(html).toBe('<div class="content left">\n<p>\ntext\n</p>\n</div>');
@@ -1177,7 +1230,7 @@ describe("Metamorphosis (to html preprocessor)", function() {
 				p: "text"
 			}
 		}
-		api.add(tags).compile(function(err, html) {
+		api.morph("html").add(tags).compile(function(err, html) {
 			expect(err).toBe(null);
 			expect(html).toBeDefined();
 			expect(html).toBe('<div id="content">\n<p>\ntext\n</p>\n</div>');
@@ -1191,7 +1244,7 @@ describe("Metamorphosis (to html preprocessor)", function() {
 				p: "text"
 			}
 		}
-		api.add(tags).compile(function(err, html) {
+		api.morph("html").add(tags).compile(function(err, html) {
 			expect(err).toBe(null);
 			expect(html).toBeDefined();
 			expect(html).toBe('<div class="content left" id="home">\n<p>\ntext\n</p>\n</div>');
@@ -1205,7 +1258,7 @@ describe("Metamorphosis (to html preprocessor)", function() {
 				p: "text"
 			}
 		}
-		api.add(tags).compile(function(err, html) {
+		api.morph("html").add(tags).compile(function(err, html) {
 			expect(err).toBe(null);
 			expect(html).toBeDefined();
 			expect(html).toBe('<div class="content left" id="home">\n<p>\ntext\n</p>\n</div>');
@@ -1219,7 +1272,7 @@ describe("Metamorphosis (to html preprocessor)", function() {
 				'img[alt="that\'s my image" some__data="1"]': {}
 			}
 		}
-		api.add(tags).compile(function(err, html) {
+		api.morph("html").add(tags).compile(function(err, html) {
 			expect(err).toBe(null);
 			expect(html).toBeDefined();
 			expect(html).toBe('<div class="content" id="home" data-behaviour="clickable" title="test" style="position: absolute; top: 20px; left: 30px;">\n<img alt="that\'s my image" some__data="1"/>\n</div>');
@@ -1234,7 +1287,7 @@ describe("Metamorphosis (to html preprocessor)", function() {
 				'p.text[title="description" data-type="selectable"]': "CSS preprocessor"
 			}
 		}
-		api.add(tags).compile(function(err, html) {
+		api.morph("html").add(tags).compile(function(err, html) {
 			expect(err).toBe(null);
 			expect(html).toBeDefined();
 			expect(html).toBe('<div class="content left" id="wrapper">\n\
@@ -1247,6 +1300,226 @@ CSS preprocessor\n\
 </div>');
 			done();
 		});
+	});
+
+});
+describe("Componenting", function() {
+
+	var api = require('../../index.js')();
+
+	it("should define component and compile it", function(done) {
+		var component = {
+			css: {
+				"#widget": {
+					width: "200px",
+					padding: "30px 10px",
+					background: "#aaa",
+					a: {
+						fontSize: "20px",
+						textDecoration: "none"
+					}
+				}
+			},
+			html: {
+				"div[id=\"widget\"]": {
+					p: {
+						"a[href=\"http://bla.com\"]": "share"
+					}
+				}
+			}
+		};
+		api.compileComponent(component, function(err, css, html) {
+			expect(err).toBe(null);
+			expect(css).toBeDefined();
+			expect(html).toBeDefined();
+			expect(css).toBe('#widget {\n\
+  width: 200px;\n\
+  padding: 30px 10px;\n\
+  background: #aaa;\n\
+}\n\
+#widget a {\n\
+  font-size: 20px;\n\
+  text-decoration: none;\n\
+}\n')
+			expect(html).toBe('<div id="widget">\n\
+<p>\n\
+<a href="http://bla.com">\n\
+share\n\
+</a>\n\
+</p>\n\
+</div>')
+			done();
+		});
+	});
+
+	it("should use a function instead of object", function(done) {
+		var component = function() {
+			return {
+				css: {
+					".login-link": { color: "red"}
+				},
+				html: {
+					'a.login-link': "Please login"
+				}
+			}
+		}
+		api.compileComponent(component, function(err, css, html) {
+			expect(err).toBe(null);
+			expect(css).toBeDefined();
+			expect(html).toBeDefined();
+			expect(css).toBe(".login-link {\n  color: red;\n}\n");
+			expect(html).toBe('<a class="login-link">\nPlease login\n</a>');
+			done();
+		})
+	});
+
+	it("should compile several components", function(done) {
+		var componentA = function() {
+			return {
+				css: {
+					".login-link": { color: "red", fontSize: "16px" }
+				},
+				html: {
+					'a.login-link': "Please login"
+				}
+			}
+		}
+		var componentB = function() {
+			return {
+				css: {
+					".logout-link": { color: "red", fontSize: "11px" }
+				},
+				html: {
+					'a.logout-link': "Logout"
+				}
+			}
+		}
+		api.compileComponent([componentA, componentB], function(err, css, html) {
+			expect(err).toBe(null);
+			expect(css).toBeDefined();
+			expect(html).toBeDefined();
+			expect(css).toBe(".login-link, .logout-link {\n\
+  color: red;\n\
+}\n\
+.login-link {\n\
+  font-size: 16px;\n\
+}\n\
+.logout-link {\n\
+  font-size: 11px;\n\
+}\n");
+			expect(html).toBe('<a class="login-link">\n\
+Please login\n\
+</a><a class="logout-link">\n\
+Logout\n\
+</a>');
+			done();
+		})
+	});
+
+});
+describe("Nested components", function() {
+
+	var api = require('../../index.js')();
+
+	it("should use a nested components", function(done) {
+		var head = function() {
+			return {
+				css: {
+					body: {
+						width: "100%",
+						height: "100%",
+						margin: "10px",
+						padding: "0px"
+					}
+				},
+				html: {
+					head: {
+						title: "That's my page"
+					}
+				}
+			};
+		}
+		var title = {
+			css: {
+				".title": {
+					fontSize: "24px"
+				}
+			},
+			html: {
+				"h1.title": "Hello world"
+			}
+		}
+		var body = function() {
+			return {
+				css: {
+					h1: { fontWeight: "normal" },
+					p: { fontSize: "24px", lineHeight: "28px" }
+				},
+				html: {
+					body: {
+						_include: title,
+						p: "Text of the <b>page</b>."
+					}
+				}
+			}
+		}
+		var page = function() {
+			return {
+				css: {
+					body: {
+						margin: "0px",
+						section: {
+							marginTop: "20px"
+						}
+					}
+				},
+				html: {
+					_: "<!DOCTYPE html>",
+					html: {
+						_include: [head, body]
+					}
+				}
+			}
+		}
+		api.compileComponent(page, function(err, css, html) {
+			expect(err).toBe(null);
+			expect(css).toBeDefined();
+			expect(html).toBeDefined();
+			expect(css).toBe("body {\n\
+  margin: 10px;\n\
+  width: 100%;\n\
+  height: 100%;\n\
+  padding: 0px;\n\
+}\n\
+body section {\n\
+  margin-top: 20px;\n\
+}\n\
+h1 {\n\
+  font-weight: normal;\n\
+}\n\
+p, .title {\n\
+  font-size: 24px;\n\
+}\n\
+p {\n\
+  line-height: 28px;\n\
+}\n");
+			expect(html).toBe('<!DOCTYPE html>\n\
+<html>\n\
+<head>\n\
+<title>\n\
+That\'s my page\n\
+</title>\n\
+</head><body>\n\
+<h1 class="title">\n\
+Hello world\n\
+</h1>\n\
+<p>\n\
+Text of the <b>page</b>.\n\
+</p>\n\
+</body>\n\
+</html>');
+			done();
+		})
 	});
 
 });
