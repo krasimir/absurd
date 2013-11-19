@@ -2,8 +2,6 @@ describe("Metamorphosis (to html preprocessor)", function() {
 
 	var api = require('../../../index.js')();
 
-	api.morph("html");
-
 	it("complex html", function(done) {
 		var inputField = function(name, defaultValue) {
 			return {
@@ -26,7 +24,7 @@ describe("Metamorphosis (to html preprocessor)", function() {
 				}
 			}
 		}
-		api.add({
+		api.morph("html").add({
 			html: {
 				head: {
 					title: "html page"

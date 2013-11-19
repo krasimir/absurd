@@ -2,10 +2,8 @@ describe("Metamorphosis (to html preprocessor)", function() {
 
 	var api = require('../../../index.js')();
 
-	api.morph("html");
-
 	it("complex html", function(done) {
-		api.add({
+		api.morph("html").add({
 			_:'<!DOCTYPE html>',
 			html: {
 				head: {

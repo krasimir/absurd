@@ -2,14 +2,12 @@ describe("Metamorphosis (to html preprocessor)", function() {
 
 	var api = require('../../../index.js')();
 
-	api.morph("html");
-
 	it("should compile nested tags", function(done) {
 		var headTags = [
 			{ title: "page title" },
 			{ style: {} }
 		];
-		api.add({
+		api.morph("html").add({
 			html: {
 				head: headTags,
 				body: {}
@@ -30,7 +28,7 @@ describe("Metamorphosis (to html preprocessor)", function() {
 			}
 			return list;
 		}
-		api.add({
+		api.morph("html").add({
 			html: {
 				body: getList(["A", "B", "C", "D"])
 			}

@@ -2,8 +2,6 @@ describe("Metamorphosis (to html preprocessor)", function() {
 
 	var api = require('../../../index.js')();
 
-	api.morph("html");
-
 	it("should use function", function(done) {
 		var getTitleTag = function(value) {
 			return {
@@ -15,7 +13,7 @@ describe("Metamorphosis (to html preprocessor)", function() {
 				p: "text"
 			}
 		}
-		api.add({
+		api.morph("html").add({
 			html: {
 				head: getTitleTag("Absurd is awesome"),
 				body: bodyContent

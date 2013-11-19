@@ -2,11 +2,9 @@ describe("Metamorphosis (to html preprocessor)", function() {
 
 	var api = require('../../../index.js')();
 
-	api.morph("html");
-
 	it("should use templates", function(done) {
 
-		api.add({
+		api.morph("html").add({
 			title: "AbsurdJS preprocessor"
 		}, "title");
 

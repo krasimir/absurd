@@ -158,6 +158,11 @@ lib.api.compile = function(api) {
 lib.api.compileFile = function(api) {
 	return api.compile;
 }
+lib.api.component = function(api) {
+	return function(name, done) {
+		api.getComponents()[name] = {};
+	}
+}
 var ColorLuminance = function (hex, lum) {
 
 	// validate hex string

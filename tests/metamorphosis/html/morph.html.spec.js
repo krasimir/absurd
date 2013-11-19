@@ -2,10 +2,8 @@ describe("Metamorphosis (to html preprocessor)", function() {
 
 	var api = require('../../../index.js')();
 
-	api.morph("html");
-
 	it("should compile an empty tag", function(done) {
-		api.add({
+		api.morph("html").add({
 			body: {}
 		}).compile(function(err, html) {
 			expect(err).toBe(null);
@@ -16,7 +14,7 @@ describe("Metamorphosis (to html preprocessor)", function() {
 	});
 
 	it("should compile tag with text inside", function(done) {
-		api.add({
+		api.morph("html").add({
 			body: "page text"
 		}).compile(function(err, html) {
 			expect(err).toBe(null);
@@ -27,7 +25,7 @@ describe("Metamorphosis (to html preprocessor)", function() {
 	});
 
 	it("should compile tag with attributes", function(done) {
-		api.add({
+		api.morph("html").add({
 			body: {
 				_attrs: { class: "black" }
 			}
@@ -40,7 +38,7 @@ describe("Metamorphosis (to html preprocessor)", function() {
 	});
 
 	it("should compile tag with attributes and text inside", function(done) {
-		api.add({
+		api.morph("html").add({
 			body: {
 				_attrs: { class: "black" },
 				_: "page text"
@@ -54,7 +52,7 @@ describe("Metamorphosis (to html preprocessor)", function() {
 	});
 
 	it("should compile tag with attributes, text inside and nested tag", function(done) {
-		api.add({
+		api.morph("html").add({
 			body: {
 				_attrs: { class: "black" },
 				_: "page text",
@@ -69,7 +67,7 @@ describe("Metamorphosis (to html preprocessor)", function() {
 	});
 
 	it("should compile raw content", function(done) {
-		api.add({
+		api.morph("html").add({
 			_: '<html></html>'
 		}).compile(function(err, html) {
 			expect(err).toBe(null);
@@ -80,7 +78,7 @@ describe("Metamorphosis (to html preprocessor)", function() {
 	});	
 
 	it("should compile nested tags", function(done) {
-		api.add({
+		api.morph("html").add({
 			html: {
 				head: {
 					title: "title"
@@ -96,7 +94,7 @@ describe("Metamorphosis (to html preprocessor)", function() {
 	});
 
 	it("should compile raw content + nested tag", function(done) {
-		api.add({
+		api.morph("html").add({
 			body: {
 				p: {
 					_: "That's my text",

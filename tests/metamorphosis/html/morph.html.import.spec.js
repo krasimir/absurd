@@ -15,10 +15,8 @@ text here\n\
 </div>\n\
 </body>';
 
-	api.morph("html");
-
 	it("should use the import method", function(done) {
-		api.import(__dirname + "/../../data/html.json").compile(function(err, html) {
+		api.morph("html").import(__dirname + "/../../data/html.json").compile(function(err, html) {
 			expect(err).toBe(null);
 			expect(html).toBeDefined();
             expect(html).toBe(expectedResult);
@@ -27,7 +25,7 @@ text here\n\
 	});
 	
 	it("should use the import method", function(done) {
-		api.import(__dirname + "/../../data/html.yml").compile(function(err, html) {
+		api.morph("html").import(__dirname + "/../../data/html.yml").compile(function(err, html) {
 			expect(err).toBe(null);
 			expect(html).toBeDefined();
             expect(html).toBe(expectedResult);
