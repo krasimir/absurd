@@ -1,8 +1,9 @@
 describe("Componenting", function() {
 
-	var api = require('../../index.js')();
+	var api = require('../../../index.js')(),
+		absurd = require('../../../index.js')();
 
-	it("should define component and compile it", function(done) {
+	xit("should define component and compile it", function(done) {
 		var component = {
 			css: {
 				"#widget": {
@@ -23,7 +24,7 @@ describe("Componenting", function() {
 				}
 			}
 		};
-		api.compileComponent(component, function(err, css, html) {
+		api.morph("component").add(component).compile(function(err, css, html) {
 			expect(err).toBe(null);
 			expect(css).toBeDefined();
 			expect(html).toBeDefined();
@@ -47,7 +48,7 @@ share\n\
 		});
 	});
 
-	it("should use a function instead of object", function(done) {
+	xit("should use a function instead of object", function(done) {
 		var component = function() {
 			return {
 				css: {
@@ -58,7 +59,7 @@ share\n\
 				}
 			}
 		}
-		api.compileComponent(component, function(err, css, html) {
+		api.morph("component").add(component).compile(function(err, css, html) {
 			expect(err).toBe(null);
 			expect(css).toBeDefined();
 			expect(html).toBeDefined();
@@ -89,7 +90,7 @@ share\n\
 				}
 			}
 		}
-		api.compileComponent([componentA, componentB], function(err, css, html) {
+		api.morph("component").add([componentA, componentB]).compile(function(err, css, html) {
 			expect(err).toBe(null);
 			expect(css).toBeDefined();
 			expect(html).toBeDefined();

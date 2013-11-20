@@ -1,8 +1,8 @@
 describe("Nested components", function() {
 
-	var api = require('../../index.js')();
+	var api = require('../../../index.js')();
 
-	it("should use a nested components", function(done) {
+	xit("should use a nested components", function(done) {
 		var head = function() {
 			return {
 				css: {
