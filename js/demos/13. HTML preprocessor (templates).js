@@ -1,12 +1,10 @@
 api.morph("html");
-api.add({ p: "text here" }, "paragraph");
 api.add({ 
-	div: {
-		_: "footer",
-		_attrs: { 
-			class: "footer", 
-			dataBehaviour: "clickable" 
-		}
+	p: "text here"
+}, "paragraph");
+api.add({ 
+	\'div[class="footer" data-behaviour="clickable"]\': {
+		_: "footer"
 	}
 }, "footer");
 api.add({
