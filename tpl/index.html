@@ -149,9 +149,13 @@
 				var code = editor.getSession().getValue();
 				try {
 					eval(code);
-					api.compile(function(err, res) {
+					api.compile(function(err, res, res2) {
 						res = res.replace(/\</g, '&lt;');
-						result.html(res);
+						if(res2) {
+							res2 = res2.replace(/</g, '&lt;');
+							res = '---- CSS ----\n' + res;
+						}
+						result.html(res + (res2 ? '\n---- HTML ----\n' + res2 : ''));
 					});
 				} catch(err) {
 					result.html((err.stack ? err.stack : err.toString()));

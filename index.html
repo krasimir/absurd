@@ -876,18 +876,21 @@ The result of the above compilation is:
 		</p>
 	</div>
 	<div class="code">
+
 		<em>_</em> (underscore) is interpreted  as node value.
 		<pre><code class="language-javascript">body: {
 	_: "page text"
 }</code></pre>
 Will be compiled to:
 <pre><code class="language-markup">&lt;body>page text&lt;/body></pre></code>
+
 <em>_attrs</em> accepts an object, which is used to define node attributes.
 <pre><code class="language-javascript">body: {
 	_attrs: { class: "black" }
 }</code></pre>
 The result is:
 <pre><code class="language-markup">&lt;body class="black"/></pre></code>
+
 <em>_tpl</em> is used when you have a template defined. During the usage of <em>add</em> method you may pass a template name. For example:
 <pre><code class="language-javascript">api.add({
 	title: "AbsurdJS preprocessor"
@@ -900,8 +903,7 @@ api.add({
 		}
 	}
 })</code></pre>The above code is compiled to:
-<pre><code class="language-markup">
-&lt;html>
+<pre><code class="language-markup">&lt;html>
 	&lt;head>
 		&lt;title>
 			AbsurdJS preprocessor
@@ -909,6 +911,34 @@ api.add({
 	&lt;/head>
 &lt;/html>
 </pre></code>
+
+<em>_include</em> accepts an object or array of objects. It acts as templates. Just compiles the included objects.
+<pre><code class="language-javascript">var paragraph = { p: "Paragraph text." };
+var footer = { footer: "Footer text." };
+var body = {
+	_include: [
+		{ h1: "Title here" },
+		paragraph, 
+		footer
+	]
+}
+api.morph("html");
+api.add({
+	html: {
+		_include: body
+	}
+});</code></pre>The result is:
+<pre><code class="language-markup">&lt;html>
+	&lt;h1>
+		Title here
+	&lt;/h1>
+	&lt;p>
+		Paragraph text.
+	&lt;/p>
+	&lt;footer>
+		Footer text.
+	&lt;/footer>
+&lt;/html></pre></code>
 
 	</div>
 	<br class="clear">
@@ -1157,6 +1187,7 @@ The code produces:
 	</div>
 	<div class="code">
 		<pre><code class="language-javascript">api.morph("html");</code></pre>
+		<pre><code class="language-javascript">api.morph("component");</code></pre>
 	</div>
 	<br class="clear">
 </section>
@@ -1214,9 +1245,13 @@ The code produces:
 				var code = editor.getSession().getValue();
 				try {
 					eval(code);
-					api.compile(function(err, res) {
+					api.compile(function(err, res, res2) {
 						res = res.replace(/\</g, '&lt;');
-						result.html(res);
+						if(res2) {
+							res2 = res2.replace(/</g, '&lt;');
+							res = '---- CSS ----\n' + res;
+						}
+						result.html(res + (res2 ? '\n---- HTML ----\n' + res2 : ''));
 					});
 				} catch(err) {
 					result.html((err.stack ? err.stack : err.toString()));
