@@ -78,7 +78,8 @@ var client = function() {
 				combineSelectors: true,
 				minify: false,
 				processor: _api.defaultProcessor,
-				keepCamelCase: false
+				keepCamelCase: false,
+				api: _api
 			};
 			options = extend(defaultOptions, options || {});
 			options.processor(

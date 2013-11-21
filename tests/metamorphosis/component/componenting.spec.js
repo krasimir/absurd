@@ -3,7 +3,7 @@ describe("Componenting", function() {
 	var api = require('../../../index.js')(),
 		absurd = require('../../../index.js')();
 
-	xit("should define component and compile it", function(done) {
+	it("should define component and compile it", function(done) {
 		var component = {
 			css: {
 				"#widget": {
@@ -48,7 +48,7 @@ share\n\
 		});
 	});
 
-	xit("should use a function instead of object", function(done) {
+	it("should use a function instead of object", function(done) {
 		var component = function() {
 			return {
 				css: {

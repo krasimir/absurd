@@ -6,16 +6,21 @@ var lib = {
 	plugins: {},
 	processors: { 
 		css: { plugins: {}},
-		html: { plugins: {}}
+		html: { plugins: {}},
+		component: { plugins: {}}
 	}
 };
 var require = function(v) {
-	switch(v) {
-		case "/../processors/html/HTML.js":
-			return lib.processors.html.HTML;
-		break;
+	// css preprocessor
+	if(v.indexOf('css/CSS.js') > 0) {
+		return lib.processors.css.CSS;
+	} else if(v.indexOf('html/HTML.js') > 0) {
+		return lib.processors.html.HTML;
+	} else if(v.indexOf('component/Component.js') > 0) {
+		return lib.processors.component.Component;
+	} else {
+		return function() {}
 	}
-	return function() {}
 };
 var __dirname = "";
 var client = function() {
@@ -98,7 +103,8 @@ var client = function() {
 				combineSelectors: true,
 				minify: false,
 				processor: _api.defaultProcessor,
-				keepCamelCase: false
+				keepCamelCase: false,
+				api: _api
 			};
 			options = extend(defaultOptions, options || {});
 			options.processor(
@@ -268,7 +274,8 @@ lib.api.compile = function(api) {
 			combineSelectors: true,
 			minify: false,
 			keepCamelCase: false,
-			processor: api.defaultProcessor
+			processor: api.defaultProcessor,
+			api: api
 		};
 		options = extend(_defaultOptions, options || {});
 
@@ -279,96 +286,17 @@ lib.api.compile = function(api) {
 					try {
 						fs.writeFile(path, result, function (err) {
 							callback(err, result);
-
 						});
 					} catch(err) {
-						callback(err);
+						callback.apply({}, arguments);
 					}
 				} else {
-					callback(err, result);
+					callback.apply({}, arguments);
 				}
 				api.flush();
 			},
 			options
 		);
-		
-	}
-}
-lib.api.compileComponent = function(api) {
-	return function(input, callback, options) {
-
-		var css = "", html = "", all = [];
-
-		var processCSS = function(clb) {
-			api.flush();
-			for(var i=0; i<all.length, component=all[i]; i++) {
-				if(typeof component === "function") { component = component(); }
-				api.add(component.css ? component.css : {});
-			}
-			api.compile(function(err, result) {
-				css += result;
-				clb(err);
-			}, options)
-		}
-		var processHTML = function(clb) {
-			var index = 0;
-			var error = null;
-			var processComponent = function() {
-				if(index > input.length-1) {
-					clb(error);
-					return;
-				}
-				var c = input[index];
-				if(typeof c === "function") { c = c(); }
-				api.flush().morph("html").add(c.html ? c.html : {}).compile(function(err, result) {
-					html += result;
-					index += 1;
-					error = err;
-					processComponent();
-				}, options);
-			}
-			processComponent();
-		}
-		var checkForNesting = function(o) {
-			for(var key in o) {
-				if(key === "_include") {
-					if(o[key] instanceof Array) {
-						for(var i=0; i<o[key].length, c=o[key][i]; i++) {
-							if(typeof c === "function") { c = c(); }
-							all.push(c);
-							checkForNesting(c);
-						}
-					} else {
-						if(typeof o[key] === "function") { o[key] = o[key](); }
-						all.push(o[key]);
-						checkForNesting(o[key]);
-					}
-				} else if(typeof o[key] === "object") {
-					checkForNesting(o[key]);
-				}
-			}
-		}
-
-		// Convert the passed argument to an array.
-		if(!(input instanceof Array)) {
-			input = [input];
-		}
-		// Checking for nesting. I.e. collecting the css and html.
-		for(var i=0; i<input.length, c=input[i]; i++) {
-			if(typeof c === "function") { c = c(); }
-			all.push(c);
-			checkForNesting(c);
-		}
-
-		processCSS(function(errCSS) {
-			processHTML(function(errHTML) {
-				callback(
-					errCSS || errHTML ? {error: {css: errCSS, html: errHTML }} : null,
-					css,
-					html
-				)
-			});
-		});
 		
 	}
 }
@@ -436,6 +364,16 @@ var metamorphosis = {
 			api.getRules(template || "mainstream").push(tags);
 			return true;
 		});
+	},
+	component: function(api) {
+		api.defaultProcessor = require(__dirname + "/../processors/component/Component.js")();
+		api.hook("add", function(component) {
+			if(!(component instanceof Array)) component = [component];
+			for(var i=0; i<component.length, c = component[i]; i++) {
+				api.getRules("mainstream").push(c);
+			}
+			return true;
+		});	
 	}
 }
 lib.api.morph = function(api) {
@@ -515,6 +453,92 @@ lib.helpers.ColorLuminance = function (hex, lum) {
 lib.helpers.RequireUncached = function(module) {
 	delete require.cache[require.resolve(module)]
     return require(module);
+}
+var compileComponent = function(input, callback, options) {
+
+	var css = "", 
+		html = "", 
+		all = [],
+		api = options.api;
+		cssPreprocessor = require(__dirname + "/../css/CSS.js")(),
+		htmlPreprocessor = require(__dirname + "/../html/HTML.js")();
+
+	var processCSS = function(clb) {
+		for(var i=0; i<all.length, component=all[i]; i++) {
+			if(typeof component === "function") { component = component(); }
+			api.add(component.css ? component.css : {});
+		}
+		cssPreprocessor(api.getRules(), function(err, result) {
+			css += result;
+			clb(err);
+		}, options);
+	}
+	var processHTML = function(clb) {
+		var index = 0;
+		var error = null;
+		var processComponent = function() {
+			if(index > input.length-1) {
+				clb(error);
+				return;
+			}
+			var c = input[index];
+			if(typeof c === "function") { c = c(); }
+			api.morph("html").add(c.html ? c.html : {});
+			htmlPreprocessor(api.getRules(), function(err, result) {
+				html += result;
+				index += 1;
+				error = err;
+				processComponent();
+			}, options);
+		}
+		processComponent();
+	}
+	var checkForNesting = function(o) {
+		for(var key in o) {
+			if(key === "_include") {
+				if(o[key] instanceof Array) {
+					for(var i=0; i<o[key].length, c=o[key][i]; i++) {
+						if(typeof c === "function") { c = c(); }
+						all.push(c);
+						checkForNesting(c);
+					}
+				} else {
+					if(typeof o[key] === "function") { o[key] = o[key](); }
+					all.push(o[key]);
+					checkForNesting(o[key]);
+				}
+			} else if(typeof o[key] === "object") {
+				checkForNesting(o[key]);
+			}
+		}
+	}
+
+	// Checking for nesting. I.e. collecting the css and html.
+	for(var i=0; i<input.length, c=input[i]; i++) {
+		if(typeof c === "function") { c = c(); }
+		all.push(c);
+		checkForNesting(c);
+	}
+
+	api.flush();
+	processCSS(function(errCSS) {
+		api.morph("html");
+		processHTML(function(errHTML) {
+			callback(
+				errCSS || errHTML ? {error: {css: errCSS, html: errHTML }} : null,
+				css,
+				html
+			)
+		});
+	});
+	
+}
+lib.processors.component.Component = function() {
+	var processor = function(rules, callback, options) {
+		compileComponent(rules.mainstream, callback, options);
+	}
+	processor.type = "component";
+	return processor;
 }
 var cleanCSS = require('clean-css'),
 	newline = '\n',
@@ -608,7 +632,7 @@ var transformUppercase = function(prop) {
 }
 
 lib.processors.css.CSS = function() {
-	return function(rules, callback, options) {
+	var processor = function(rules, callback, options) {
 		options = options || defaultOptions;
 		var css = '';
 		for(var stylesheet in rules) {
@@ -629,6 +653,8 @@ lib.processors.css.CSS = function() {
 		}
 		return css;
 	}
+	processor.type = "css";
+	return processor;
 }
 lib.processors.css.plugins.charset = function() {	
 	return function(api, charsetValue) {
@@ -760,7 +786,6 @@ lib.processors.css.plugins.supports = function() {
 		}
 	}
 }
-
 var data = null,
 	newline = '\n',
 	defaultOptions = {},
@@ -977,7 +1002,7 @@ var analizeProperty = function(prop) {
 }
 
 lib.processors.html.HTML = function() {
-	return function(rules, callback, options) {
+	var processor = function(rules, callback, options) {
 		data = rules;
 		callback = callback || function() {};
 		options = options || defaultOptions;
@@ -985,6 +1010,8 @@ lib.processors.html.HTML = function() {
 		callback(null, html);
 		return html;
 	}
+	processor.type = "html";
+	return processor;
 };
 return client();
 })(window);

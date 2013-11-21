@@ -4,6 +4,7 @@ var lib = {
 	plugins: {},
 	processors: { 
 		css: { plugins: {}},
-		html: { plugins: {}}
+		html: { plugins: {}},
+		component: { plugins: {}}
 	}
 };

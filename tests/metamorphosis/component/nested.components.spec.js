@@ -2,7 +2,7 @@ describe("Nested components", function() {
 
 	var api = require('../../../index.js')();
 
-	xit("should use a nested components", function(done) {
+	it("should use a nested components", function(done) {
 		var head = function() {
 			return {
 				css: {
@@ -50,7 +50,10 @@ describe("Nested components", function() {
 					body: {
 						margin: "0px",
 						section: {
-							marginTop: "20px"
+							marginTop: "20px",
+							"@media all and (max-width: 640px)": {
+								marginTop: "10px"
+							}
 						}
 					}
 				},
@@ -62,7 +65,7 @@ describe("Nested components", function() {
 				}
 			}
 		}
-		api.compileComponent(page, function(err, css, html) {
+		api.morph("component").add(page).compile(function(err, css, html) {
 			expect(err).toBe(null);
 			expect(css).toBeDefined();
 			expect(html).toBeDefined();
@@ -83,6 +86,11 @@ p, .title {\n\
 }\n\
 p {\n\
   line-height: 28px;\n\
+}\n\
+@media all and (max-width: 640px) {\n\
+body section {\n\
+  margin-top: 10px;\n\
+}\n\
 }\n");
 			expect(html).toBe('<!DOCTYPE html>\n\
 <html>\n\

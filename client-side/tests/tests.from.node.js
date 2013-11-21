@@ -730,6 +730,44 @@ describe("Fixing bug in array usage", function() {
 	});
 
 });
+describe("Morph, flush usage /", function() {
+
+	var api = require('../../index.js')();
+
+	it("should compile to css", function(done) {
+		api.add({
+			body: { margin: "20px" }
+		}).compile(function(err, css) {
+			expect(err).toBe(null);
+			expect(css).toBeDefined();
+			expect(css).toBe("body {\n  margin: 20px;\n}\n");
+			done();
+		});		
+	});
+
+	it("should compile to html", function(done) {
+		api.morph("html").add({
+			body: { p: "text" }
+		}).compile(function(err, html) {
+			expect(err).toBe(null);
+			expect(html).toBeDefined();
+			expect(html).toBe("<body>\n<p>\ntext\n</p>\n</body>");
+			done();
+		});		
+	});
+
+	it("should compile to css again", function(done) {
+		api.add({
+			body: { padding: "20px" }
+		}).compile(function(err, css) {
+			expect(err).toBe(null);
+			expect(css).toBeDefined();
+			expect(css).toBe("body {\n  padding: 20px;\n}\n");
+			done();
+		});		
+	});
+
+});
 describe("Fixing bug in array usage", function() {
 
 	var Absurd = require('../../index.js');
@@ -755,6 +793,235 @@ describe("Fixing bug in array usage", function() {
 			expect(css).toBe("a {\n  color: #000;\n}\na:hover {\n  color: #999;\n}\n");
 			done();
 		});		
+	});
+
+});
+describe("Componenting", function() {
+
+	var api = require('../../../index.js')(),
+		absurd = require('../../../index.js')();
+
+	it("should define component and compile it", function(done) {
+		var component = {
+			css: {
+				"#widget": {
+					width: "200px",
+					padding: "30px 10px",
+					background: "#aaa",
+					a: {
+						fontSize: "20px",
+						textDecoration: "none"
+					}
+				}
+			},
+			html: {
+				"div[id=\"widget\"]": {
+					p: {
+						"a[href=\"http://bla.com\"]": "share"
+					}
+				}
+			}
+		};
+		api.morph("component").add(component).compile(function(err, css, html) {
+			expect(err).toBe(null);
+			expect(css).toBeDefined();
+			expect(html).toBeDefined();
+			expect(css).toBe('#widget {\n\
+  width: 200px;\n\
+  padding: 30px 10px;\n\
+  background: #aaa;\n\
+}\n\
+#widget a {\n\
+  font-size: 20px;\n\
+  text-decoration: none;\n\
+}\n')
+			expect(html).toBe('<div id="widget">\n\
+<p>\n\
+<a href="http://bla.com">\n\
+share\n\
+</a>\n\
+</p>\n\
+</div>')
+			done();
+		});
+	});
+
+	it("should use a function instead of object", function(done) {
+		var component = function() {
+			return {
+				css: {
+					".login-link": { color: "red"}
+				},
+				html: {
+					'a.login-link': "Please login"
+				}
+			}
+		}
+		api.morph("component").add(component).compile(function(err, css, html) {
+			expect(err).toBe(null);
+			expect(css).toBeDefined();
+			expect(html).toBeDefined();
+			expect(css).toBe(".login-link {\n  color: red;\n}\n");
+			expect(html).toBe('<a class="login-link">\nPlease login\n</a>');
+			done();
+		})
+	});
+
+	it("should compile several components", function(done) {
+		var componentA = function() {
+			return {
+				css: {
+					".login-link": { color: "red", fontSize: "16px" }
+				},
+				html: {
+					'a.login-link': "Please login"
+				}
+			}
+		}
+		var componentB = function() {
+			return {
+				css: {
+					".logout-link": { color: "red", fontSize: "11px" }
+				},
+				html: {
+					'a.logout-link': "Logout"
+				}
+			}
+		}
+		api.morph("component").add([componentA, componentB]).compile(function(err, css, html) {
+			expect(err).toBe(null);
+			expect(css).toBeDefined();
+			expect(html).toBeDefined();
+			expect(css).toBe(".login-link, .logout-link {\n\
+  color: red;\n\
+}\n\
+.login-link {\n\
+  font-size: 16px;\n\
+}\n\
+.logout-link {\n\
+  font-size: 11px;\n\
+}\n");
+			expect(html).toBe('<a class="login-link">\n\
+Please login\n\
+</a><a class="logout-link">\n\
+Logout\n\
+</a>');
+			done();
+		})
+	});
+
+});
+describe("Nested components", function() {
+
+	var api = require('../../../index.js')();
+
+	it("should use a nested components", function(done) {
+		var head = function() {
+			return {
+				css: {
+					body: {
+						width: "100%",
+						height: "100%",
+						margin: "10px",
+						padding: "0px"
+					}
+				},
+				html: {
+					head: {
+						title: "That's my page"
+					}
+				}
+			};
+		}
+		var title = {
+			css: {
+				".title": {
+					fontSize: "24px"
+				}
+			},
+			html: {
+				"h1.title": "Hello world"
+			}
+		}
+		var body = function() {
+			return {
+				css: {
+					h1: { fontWeight: "normal" },
+					p: { fontSize: "24px", lineHeight: "28px" }
+				},
+				html: {
+					body: {
+						_include: title,
+						p: "Text of the <b>page</b>."
+					}
+				}
+			}
+		}
+		var page = function() {
+			return {
+				css: {
+					body: {
+						margin: "0px",
+						section: {
+							marginTop: "20px",
+							"@media all and (max-width: 640px)": {
+								marginTop: "10px"
+							}
+						}
+					}
+				},
+				html: {
+					_: "<!DOCTYPE html>",
+					html: {
+						_include: [head, body]
+					}
+				}
+			}
+		}
+		api.morph("component").add(page).compile(function(err, css, html) {
+			expect(err).toBe(null);
+			expect(css).toBeDefined();
+			expect(html).toBeDefined();
+			expect(css).toBe("body {\n\
+  margin: 10px;\n\
+  width: 100%;\n\
+  height: 100%;\n\
+  padding: 0px;\n\
+}\n\
+body section {\n\
+  margin-top: 20px;\n\
+}\n\
+h1 {\n\
+  font-weight: normal;\n\
+}\n\
+p, .title {\n\
+  font-size: 24px;\n\
+}\n\
+p {\n\
+  line-height: 28px;\n\
+}\n\
+@media all and (max-width: 640px) {\n\
+body section {\n\
+  margin-top: 10px;\n\
+}\n\
+}\n");
+			expect(html).toBe('<!DOCTYPE html>\n\
+<html>\n\
+<head>\n\
+<title>\n\
+That\'s my page\n\
+</title>\n\
+</head><body>\n\
+<h1 class="title">\n\
+Hello world\n\
+</h1>\n\
+<p>\n\
+Text of the <b>page</b>.\n\
+</p>\n\
+</body>\n\
+</html>');
+			done();
+		})
 	});
 
 });
@@ -1300,226 +1567,6 @@ CSS preprocessor\n\
 </div>');
 			done();
 		});
-	});
-
-});
-describe("Componenting", function() {
-
-	var api = require('../../index.js')();
-
-	it("should define component and compile it", function(done) {
-		var component = {
-			css: {
-				"#widget": {
-					width: "200px",
-					padding: "30px 10px",
-					background: "#aaa",
-					a: {
-						fontSize: "20px",
-						textDecoration: "none"
-					}
-				}
-			},
-			html: {
-				"div[id=\"widget\"]": {
-					p: {
-						"a[href=\"http://bla.com\"]": "share"
-					}
-				}
-			}
-		};
-		api.compileComponent(component, function(err, css, html) {
-			expect(err).toBe(null);
-			expect(css).toBeDefined();
-			expect(html).toBeDefined();
-			expect(css).toBe('#widget {\n\
-  width: 200px;\n\
-  padding: 30px 10px;\n\
-  background: #aaa;\n\
-}\n\
-#widget a {\n\
-  font-size: 20px;\n\
-  text-decoration: none;\n\
-}\n')
-			expect(html).toBe('<div id="widget">\n\
-<p>\n\
-<a href="http://bla.com">\n\
-share\n\
-</a>\n\
-</p>\n\
-</div>')
-			done();
-		});
-	});
-
-	it("should use a function instead of object", function(done) {
-		var component = function() {
-			return {
-				css: {
-					".login-link": { color: "red"}
-				},
-				html: {
-					'a.login-link': "Please login"
-				}
-			}
-		}
-		api.compileComponent(component, function(err, css, html) {
-			expect(err).toBe(null);
-			expect(css).toBeDefined();
-			expect(html).toBeDefined();
-			expect(css).toBe(".login-link {\n  color: red;\n}\n");
-			expect(html).toBe('<a class="login-link">\nPlease login\n</a>');
-			done();
-		})
-	});
-
-	it("should compile several components", function(done) {
-		var componentA = function() {
-			return {
-				css: {
-					".login-link": { color: "red", fontSize: "16px" }
-				},
-				html: {
-					'a.login-link': "Please login"
-				}
-			}
-		}
-		var componentB = function() {
-			return {
-				css: {
-					".logout-link": { color: "red", fontSize: "11px" }
-				},
-				html: {
-					'a.logout-link': "Logout"
-				}
-			}
-		}
-		api.compileComponent([componentA, componentB], function(err, css, html) {
-			expect(err).toBe(null);
-			expect(css).toBeDefined();
-			expect(html).toBeDefined();
-			expect(css).toBe(".login-link, .logout-link {\n\
-  color: red;\n\
-}\n\
-.login-link {\n\
-  font-size: 16px;\n\
-}\n\
-.logout-link {\n\
-  font-size: 11px;\n\
-}\n");
-			expect(html).toBe('<a class="login-link">\n\
-Please login\n\
-</a><a class="logout-link">\n\
-Logout\n\
-</a>');
-			done();
-		})
-	});
-
-});
-describe("Nested components", function() {
-
-	var api = require('../../index.js')();
-
-	it("should use a nested components", function(done) {
-		var head = function() {
-			return {
-				css: {
-					body: {
-						width: "100%",
-						height: "100%",
-						margin: "10px",
-						padding: "0px"
-					}
-				},
-				html: {
-					head: {
-						title: "That's my page"
-					}
-				}
-			};
-		}
-		var title = {
-			css: {
-				".title": {
-					fontSize: "24px"
-				}
-			},
-			html: {
-				"h1.title": "Hello world"
-			}
-		}
-		var body = function() {
-			return {
-				css: {
-					h1: { fontWeight: "normal" },
-					p: { fontSize: "24px", lineHeight: "28px" }
-				},
-				html: {
-					body: {
-						_include: title,
-						p: "Text of the <b>page</b>."
-					}
-				}
-			}
-		}
-		var page = function() {
-			return {
-				css: {
-					body: {
-						margin: "0px",
-						section: {
-							marginTop: "20px"
-						}
-					}
-				},
-				html: {
-					_: "<!DOCTYPE html>",
-					html: {
-						_include: [head, body]
-					}
-				}
-			}
-		}
-		api.compileComponent(page, function(err, css, html) {
-			expect(err).toBe(null);
-			expect(css).toBeDefined();
-			expect(html).toBeDefined();
-			expect(css).toBe("body {\n\
-  margin: 10px;\n\
-  width: 100%;\n\
-  height: 100%;\n\
-  padding: 0px;\n\
-}\n\
-body section {\n\
-  margin-top: 20px;\n\
-}\n\
-h1 {\n\
-  font-weight: normal;\n\
-}\n\
-p, .title {\n\
-  font-size: 24px;\n\
-}\n\
-p {\n\
-  line-height: 28px;\n\
-}\n");
-			expect(html).toBe('<!DOCTYPE html>\n\
-<html>\n\
-<head>\n\
-<title>\n\
-That\'s my page\n\
-</title>\n\
-</head><body>\n\
-<h1 class="title">\n\
-Hello world\n\
-</h1>\n\
-<p>\n\
-Text of the <b>page</b>.\n\
-</p>\n\
-</body>\n\
-</html>');
-			done();
-		})
 	});
 
 });
