@@ -727,7 +727,7 @@ api.add({
 </div>
 	<br class="clear">
 </section>
-<h2>Metamorphosis</h2>
+<h2>Metamorphosis / HTML</h2>
 
 <!-- ----------------------- -->
 <section>
@@ -885,7 +885,9 @@ The code produces:
 <a name="api.add"></a>
 <section>
 	<div class="desc">
-		<h4>.add([object])</h4>
+		<h4>.add</h4>
+		<p>Parameters:<br />
+			[object]</p>
 	</div>
 	<div class="code">
 		<pre><code class="language-javascript">module.exports = function(api) {
@@ -902,7 +904,9 @@ The code produces:
 <a name="api.import"></a>
 <section>
 	<div class="desc">
-		<h4>.import([string] | [[string, string, ...]])</h4>
+		<h4>.import</h4>
+		<p>Parameters:<br />
+			[string] | [[string, string, ...]]</p>
 	</div>
 	<div class="code">
 		<pre><code class="language-javascript">module.exports = function(A) {
@@ -920,7 +924,9 @@ The code produces:
 <a name="api.storage"></a>
 <section>
 	<div class="desc">
-		<h4>.storage([key], [value])</h4>
+		<h4>.storage</h4>
+		<p>Parameters:<br />
+			[key], [value]</p>
 	</div>
 	<div class="code">
 		<p>Setting value:</p>
@@ -946,7 +952,9 @@ The code produces:
 <a name="api.plugin"></a>
 <section>
 	<div class="desc">
-		<h4>.plugin([name of property], [function])</h4>
+		<h4>.plugin</h4>
+		<p>Parameters:<br />
+			[name of property], [function]</p>
 	</div>
 	<div class="code">
 		<pre><code class="language-javascript">api.plugin('my-custom-gradient', function(api, colors) {
@@ -962,7 +970,9 @@ The code produces:
 <a name="api.darken"></a>
 <section>
 	<div class="desc">
-		<h4>.darken([color], [percents])</h4>
+		<h4>.darken</h4>
+		<p>Parameters:<br />
+			[color], [percents]</p>
 	</div>
 	<div class="code">
 		<pre><code class="language-javascript">module.exports = function(api) {
@@ -979,7 +989,9 @@ The code produces:
 <a name="api.lighten"></a>
 <section>
 	<div class="desc">
-		<h4>.lighten([color], [percents])</h4>
+		<h4>.lighten</h4>
+		<p>Parameters:<br />
+			[color], [percents]</p>
 	</div>
 	<div class="code">
 		<pre><code class="language-javascript">module.exports = function(api) {
@@ -996,7 +1008,9 @@ The code produces:
 <a name="api.raw"></a>
 <section>
 	<div class="desc">
-		<h4>.raw([string])</h4>
+		<h4>.raw</h4>
+		<p>Parameters:<br />
+			[string]</p>
 	</div>
 	<div class="code">
 		<pre><code class="language-javascript">module.exports = function(api) {
@@ -1009,7 +1023,9 @@ The code produces:
 <a name="api.compile"></a>
 <section>
 	<div class="desc">
-		<h4>.compile([function], [options])</h4>
+		<h4>.compile</h4>
+		<p>Parameters:<br />
+			[function], [options]</p>
 	</div>
 	<div class="code">
 		<pre><code class="language-javascript">api.compile(function(err, css) {
@@ -1031,7 +1047,9 @@ The code produces:
 <a name="api.compileFile"></a>
 <section>
 	<div class="desc">
-		<h4>.compileFile([path], [function], [options])</h4>
+		<h4>.compileFile</h4>
+		<p>Parameters:<br />
+			[path], [function], [options]</p>
 	</div>
 	<div class="code">
 		<pre><code class="language-javascript">api.compileFile("css/styles.css", function(err, css) {
@@ -1046,7 +1064,9 @@ The code produces:
 <a name="api.hook"></a>
 <section>
 	<div class="desc">
-		<h4>.hook([method], [function])</h4>
+		<h4>.hook</h4>
+		<p>Parameters:<br />
+			[method], [function]</p>
 	</div>
 	<div class="code">
 		<pre><code class="language-javascript">api.hook("add", function(rules, stylesheet) {
@@ -1062,7 +1082,9 @@ The code produces:
 <a name="api.register"></a>
 <section>
 	<div class="desc">
-		<h4>.register([method], [function])</h4>
+		<h4>.register</h4>
+		<p>Parameters:<br />
+			[method], [function]</p>
 	</div>
 	<div class="code">
 		<pre><code class="language-javascript">api.register("toJSON", function(callback) {
@@ -1076,7 +1098,9 @@ The code produces:
 <a name="api.morph"></a>
 <section>
 	<div class="desc">
-		<h4>.morph([type])</h4>
+		<h4>.morph</h4>
+		<p>Parameters:<br />
+			[type]</p>
 	</div>
 	<div class="code">
 		<pre><code class="language-javascript">api.morph("html");</code></pre>
