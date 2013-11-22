@@ -89,7 +89,7 @@
 						<a href="#syntax"><small>Syntax</small></a>
 						<a href="#extending"><small>Extending</small></a>
 						<a href="#metamorphosis-/-html"><small>Metamorphosis / HTML</small></a>
-						<a href="#metamorphosis-/-components"><small>Metamorphosis / Components</small></a>
+						<a href="#metamorphosis-/-component"><small>Metamorphosis / Components</small></a>
 						<a href="#api"><small>API</small></a>
 						<a href="#testing"><small>Testing</small></a>
 					</p>
@@ -985,6 +985,130 @@ The code produces:
 		&lt;/div>
 	&lt;/body>
 &lt;/html></code></pre>
+	</div>
+	<br class="clear">
+</section>
+<h2><a href="#metamorphosis-/-component" name="metamorphosis-/-component">&#187;</a>Metamorphosis / Component</h2>
+
+<!-- ----------------------- -->
+<section>
+	<div class="desc">
+		<p>
+			AbsurdJS process CSS and HTML. So, why not doing both at the same time.
+		</p>
+	</div>
+	<div class="code">
+		<pre><code class="language-javascript">var page = {
+	css: {
+		".page": {
+			marginTop: "20px",
+			h2: {
+				fontSize: "40px"
+			}
+		}
+	},
+	html: {
+		'section.page': {
+			h2: "That's a page"
+		}
+	}
+}
+api
+.morph("component")
+.add(page)
+.compile(function(err, css, html) {
+	// ...
+});</code></pre>
+The result of the above compilation is:
+<pre><code class="language-markup">---- CSS ----
+.page {
+  margin-top: 20px;
+}
+.page h2 {
+  font-size: 40px;
+}
+
+---- HTML ----
+&lt;section class="page">
+	&lt;h2>
+		That's a page
+	&lt;/h2>
+&lt;/section></code></pre>
+	</div>
+	<br class="clear">
+</section>
+
+<!-- ----------------------- -->
+<section>
+	<div class="desc">
+		<p>
+			You can even nest components.
+		</p>
+	</div>
+	<div class="code">
+<pre><code class="language-javascript">var title = {
+    css: {
+        ".title": { fontSize: "30px" }
+    },
+    html: {
+        "h1.title": "Title here"
+    }
+}
+var header = function() {
+    return {
+        css: {
+            header: { marginTop: "20px" }
+        },
+        html: {
+            header: {
+                span: "Header text"
+            }
+        }
+    }
+}
+var page = {
+	css: {
+		".page": {
+			marginTop: "20px",
+			h2: {
+				fontSize: "40px"
+			}
+		}
+	},
+	html: {
+        _include: [header, title],
+		'section.page': {
+			h2: "That's a page"
+		}
+	}
+}
+api.morph("component").add(page);</code></pre>
+The result is:
+<pre><code class="language-markup">---- CSS ----
+.page, header {
+  margin-top: 20px;
+}
+.page h2 {
+  font-size: 40px;
+}
+.title {
+  font-size: 30px;
+}
+
+---- HTML ----
+&lt;header>
+	&lt;span>
+		Header text
+	&lt;/span>
+&lt;/header>
+&lt;h1 class="title">
+	Title here
+&lt;/h1>
+&lt;section class="page">
+	&lt;h2>
+		That's a page
+	&lt;/h2>
+&lt;/section></code></pre>
 	</div>
 	<br class="clear">
 </section>
