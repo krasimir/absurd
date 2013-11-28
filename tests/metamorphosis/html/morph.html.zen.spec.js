@@ -108,4 +108,16 @@ CSS preprocessor\n\
 		});
 	});
 
+	it("should create a div by default", function(done) {
+		var tags = {
+			'[class="content"]': "test"
+		}
+		api.morph("html").add(tags).compile(function(err, html) {
+			expect(err).toBe(null);
+			expect(html).toBeDefined();
+			expect(html).toBe('<div class="content">\ntest\n</div>');
+			done();
+		});
+	});
+
 });
