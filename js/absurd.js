@@ -1,4 +1,4 @@
-/* version: 0.1.10 */
+/* version: 0.1.11 */
 var Absurd = (function(w) {
 var lib = { 
 	api: {},
@@ -18,6 +18,12 @@ var require = function(v) {
 		return lib.processors.html.HTML;
 	} else if(v.indexOf('component/Component.js') > 0) {
 		return lib.processors.component.Component;
+	} else if(v == 'js-beautify') {
+		return { 
+			html: function(html) {
+				return html;
+			}
+		}
 	} else {
 		return function() {}
 	}
@@ -789,7 +795,8 @@ lib.processors.css.plugins.supports = function() {
 var data = null,
 	newline = '\n',
 	defaultOptions = {},
-	tags = [];
+	tags = [],
+	beautifyHTML = require('js-beautify').html;
 
 var transformUppercase = function(prop) {
 	var transformed = "";
@@ -921,12 +928,23 @@ var process = function(tagName, obj) {
 
 var packTag = function(tagName, attrs, childs) {
 	var html = '';
+	tagName = tagName == '' ? 'div' : tagName;
 	if(childs !== '') {
 		html += '<' + transformUppercase(tagName) + attrs + '>' + newline + childs + newline + '</' + transformUppercase(tagName) + '>';
 	} else {
 		html += '<' + transformUppercase(tagName) + attrs + '/>';
 	}
 	return html;
+}
+
+var prepareHTML = function(html, options) {
+	if(options.minify) {
+		return html.replace(/\n/g, '');
+	}
+	if(options.skipIndentation) {
+		return html;
+	}
+	return beautifyHTML(html, {indent_size: options.indentSize || 4});
 }
 
 var analizeProperty = function(prop) {
@@ -1006,7 +1024,7 @@ lib.processors.html.HTML = function() {
 		data = rules;
 		callback = callback || function() {};
 		options = options || defaultOptions;
-		var html = processTemplate("mainstream");
+		var html = prepareHTML(processTemplate("mainstream"), options);
 		callback(null, html);
 		return html;
 	}
