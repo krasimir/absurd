@@ -57,7 +57,7 @@ html page\n\
 </body>\n\
 </html>');
 			done();
-		});
+		}, { skipIndentation: true });
 	});
 
 });

@@ -40,17 +40,19 @@ body p {\n\
 		shell("-s ./tests/data/html.json -t html", function(err, res) {
 			expect(err).toBe("");
 			expect(res).toBe("<!DOCTYPE html>\n\
+\n\
 <head>\n\
-<title>\n\
-AbsurdJS is awesome\n\
-</title>\n\
+    <title>\n\
+        AbsurdJS is awesome\n\
+    </title>\n\
 </head>\n\
+\n\
 <body>\n\
-<div class=\"container\">\n\
-<p>\n\
-text here\n\
-</p>\n\
-</div>\n\
+    <div class=\"container\">\n\
+        <p>\n\
+            text here\n\
+        </p>\n\
+    </div>\n\
 </body>\n");
 			done();
 		});

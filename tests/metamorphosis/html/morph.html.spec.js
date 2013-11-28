@@ -10,7 +10,7 @@ describe("Metamorphosis (to html preprocessor)", function() {
 			expect(html).toBeDefined();
 			expect(html).toBe('<body/>');
 			done();
-		});
+		}, { skipIndentation: true });
 	});
 
 	it("should compile tag with text inside", function(done) {
@@ -21,7 +21,7 @@ describe("Metamorphosis (to html preprocessor)", function() {
 			expect(html).toBeDefined();
 			expect(html).toBe('<body>\npage text\n</body>');
 			done();
-		});
+		}, { skipIndentation: true });
 	});
 
 	it("should compile tag with attributes", function(done) {
@@ -34,7 +34,7 @@ describe("Metamorphosis (to html preprocessor)", function() {
 			expect(html).toBeDefined();
 			expect(html).toBe('<body class="black"/>');
 			done();
-		});
+		}, { skipIndentation: true });
 	});
 
 	it("should compile tag with attributes and text inside", function(done) {
@@ -48,7 +48,7 @@ describe("Metamorphosis (to html preprocessor)", function() {
 			expect(html).toBeDefined();
 			expect(html).toBe('<body class="black">\npage text\n</body>');
 			done();
-		});
+		}, { skipIndentation: true });
 	});
 
 	it("should compile tag with attributes, text inside and nested tag", function(done) {
@@ -63,7 +63,7 @@ describe("Metamorphosis (to html preprocessor)", function() {
 			expect(html).toBeDefined();
 			expect(html).toBe('<body class="black">\npage text\n<p>\nparagraph text\n</p>\n</body>');
 			done();
-		});
+		}, { skipIndentation: true });
 	});
 
 	it("should compile raw content", function(done) {
@@ -74,7 +74,7 @@ describe("Metamorphosis (to html preprocessor)", function() {
 			expect(html).toBeDefined();
 			expect(html).toBe('<html></html>');
 			done();
-		});
+		}, { skipIndentation: true });
 	});	
 
 	it("should compile nested tags", function(done) {
@@ -90,7 +90,7 @@ describe("Metamorphosis (to html preprocessor)", function() {
 			expect(html).toBeDefined();
 			expect(html).toBe('<html>\n<head>\n<title>\ntitle\n</title>\n</head>\n<body/>\n</html>');
 			done();
-		});
+		}, { skipIndentation: true });
 	});
 
 	it("should compile raw content + nested tag", function(done) {
@@ -116,7 +116,7 @@ read more\n\
 </p>\n\
 </body>');
 			done();
-		});
+		}, { skipIndentation: true });
 	});
 
 });

@@ -21,7 +21,7 @@ text here\n\
 			expect(html).toBeDefined();
             expect(html).toBe(expectedResult);
 			done();
-		});
+		}, { skipIndentation: true });
 	});
 	
 	it("should use the import method", function(done) {
@@ -30,7 +30,7 @@ text here\n\
 			expect(html).toBeDefined();
             expect(html).toBe(expectedResult);
 			done();
-		});
+		}, { skipIndentation: true });
 	});
 
 });

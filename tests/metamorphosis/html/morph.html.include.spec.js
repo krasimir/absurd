@@ -61,7 +61,7 @@ John Doe\n\
 </body>\n\
 </html>');
 			done();
-		});
+		}, { skipIndentation: true });
 	});
 
 });

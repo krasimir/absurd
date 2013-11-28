@@ -56,7 +56,7 @@ footer text\n\
 </body>\n\
 </html>');
 			done();
-		});
+		}, { skipIndentation: true });
 	});
 
 });

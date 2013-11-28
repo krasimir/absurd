@@ -45,7 +45,7 @@ share\n\
 </p>\n\
 </div>')
 			done();
-		});
+		}, { skipIndentation: true });
 	});
 
 	it("should use a function instead of object", function(done) {
@@ -66,7 +66,7 @@ share\n\
 			expect(css).toBe(".login-link {\n  color: red;\n}\n");
 			expect(html).toBe('<a class="login-link">\nPlease login\n</a>');
 			done();
-		})
+		}, { skipIndentation: true })
 	});
 
 	it("should compile several components", function(done) {
@@ -109,7 +109,7 @@ Please login\n\
 Logout\n\
 </a>');
 			done();
-		})
+		}, { skipIndentation: true })
 	});
 
 });

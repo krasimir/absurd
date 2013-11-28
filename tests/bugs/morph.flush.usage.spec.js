@@ -21,7 +21,7 @@ describe("Morph, flush usage /", function() {
 			expect(html).toBeDefined();
 			expect(html).toBe("<body>\n<p>\ntext\n</p>\n</body>");
 			done();
-		});		
+		}, { skipIndentation: true });		
 	});
 
 	it("should compile to css again", function(done) {

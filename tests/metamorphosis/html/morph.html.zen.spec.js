@@ -13,7 +13,7 @@ describe("Metamorphosis (to html preprocessor)", function() {
 			expect(html).toBeDefined();
 			expect(html).toBe('<div class="content">\n<p>\ntext\n</p>\n</div>');
 			done();
-		});
+		}, { skipIndentation: true });
 	});
 
 	it("should use two classes", function(done) {
@@ -27,7 +27,7 @@ describe("Metamorphosis (to html preprocessor)", function() {
 			expect(html).toBeDefined();
 			expect(html).toBe('<div class="content left">\n<p>\ntext\n</p>\n</div>');
 			done();
-		});
+		}, { skipIndentation: true }, { skipIndentation: true });
 	});
 
 	it("should use id", function(done) {
@@ -41,7 +41,7 @@ describe("Metamorphosis (to html preprocessor)", function() {
 			expect(html).toBeDefined();
 			expect(html).toBe('<div id="content">\n<p>\ntext\n</p>\n</div>');
 			done();
-		});
+		}, { skipIndentation: true });
 	});
 
 	it("should use id and class together", function(done) {
@@ -55,7 +55,7 @@ describe("Metamorphosis (to html preprocessor)", function() {
 			expect(html).toBeDefined();
 			expect(html).toBe('<div class="content left" id="home">\n<p>\ntext\n</p>\n</div>');
 			done();
-		});
+		}, { skipIndentation: true });
 	});
 
 	it("should use without tag name", function(done) {
@@ -69,7 +69,7 @@ describe("Metamorphosis (to html preprocessor)", function() {
 			expect(html).toBeDefined();
 			expect(html).toBe('<div class="content left" id="home">\n<p>\ntext\n</p>\n</div>');
 			done();
-		});
+		}, { skipIndentation: true });
 	});
 
 	it("should pass attributes", function(done) {
@@ -83,7 +83,7 @@ describe("Metamorphosis (to html preprocessor)", function() {
 			expect(html).toBeDefined();
 			expect(html).toBe('<div class="content" id="home" data-behaviour="clickable" title="test" style="position: absolute; top: 20px; left: 30px;">\n<img alt="that\'s my image" some__data="1"/>\n</div>');
 			done();
-		});
+		}, { skipIndentation: true });
 	});
 
 	it("should pass attributes", function(done) {
@@ -105,7 +105,7 @@ CSS preprocessor\n\
 </p>\n\
 </div>');
 			done();
-		});
+		}, { skipIndentation: true });
 	});
 
 	it("should create a div by default", function(done) {
@@ -117,7 +117,7 @@ CSS preprocessor\n\
 			expect(html).toBeDefined();
 			expect(html).toBe('<div class="content">\ntest\n</div>');
 			done();
-		});
+		}, { skipIndentation: true });
 	});
 
 });

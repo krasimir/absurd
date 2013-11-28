@@ -1,6 +1,6 @@
 {
   "name": "absurd",
-  "version": "0.1.10",
+  "version": "0.1.11",
   "homepage": "http://krasimir.github.io/absurd",
   "description": "CSS/HTML preprocessor. Check out krasimirtsonev.com/blog/article/AbsurdJS-fundamentals",
   "main": "index.js",
@@ -18,7 +18,8 @@
     "css-parse": "1.5.3",
     "yamljs": "0.1.4",
     "clean-css": "1.1.3",
-    "js-yaml": "~2.1.3"
+    "js-yaml": "~2.1.3",
+    "js-beautify": "1.4.2"
   },
   "devDependencies": {
     "grunt": "0.4.1",

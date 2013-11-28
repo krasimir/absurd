@@ -108,7 +108,7 @@ Text of the <b>page</b>.\n\
 </body>\n\
 </html>');
 			done();
-		})
+		}, { skipIndentation: true })
 	});
 
 });

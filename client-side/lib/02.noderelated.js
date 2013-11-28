@@ -6,6 +6,12 @@ var require = function(v) {
 		return lib.processors.html.HTML;
 	} else if(v.indexOf('component/Component.js') > 0) {
 		return lib.processors.component.Component;
+	} else if(v == 'js-beautify') {
+		return { 
+			html: function(html) {
+				return html;
+			}
+		}
 	} else {
 		return function() {}
 	}

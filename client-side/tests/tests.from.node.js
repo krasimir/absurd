@@ -753,7 +753,7 @@ describe("Morph, flush usage /", function() {
 			expect(html).toBeDefined();
 			expect(html).toBe("<body>\n<p>\ntext\n</p>\n</body>");
 			done();
-		});		
+		}, { skipIndentation: true });		
 	});
 
 	it("should compile to css again", function(done) {
@@ -843,7 +843,7 @@ share\n\
 </p>\n\
 </div>')
 			done();
-		});
+		}, { skipIndentation: true });
 	});
 
 	it("should use a function instead of object", function(done) {
@@ -864,7 +864,7 @@ share\n\
 			expect(css).toBe(".login-link {\n  color: red;\n}\n");
 			expect(html).toBe('<a class="login-link">\nPlease login\n</a>');
 			done();
-		})
+		}, { skipIndentation: true })
 	});
 
 	it("should compile several components", function(done) {
@@ -907,7 +907,7 @@ Please login\n\
 Logout\n\
 </a>');
 			done();
-		})
+		}, { skipIndentation: true })
 	});
 
 });
@@ -1021,7 +1021,7 @@ Text of the <b>page</b>.\n\
 </body>\n\
 </html>');
 			done();
-		})
+		}, { skipIndentation: true })
 	});
 
 });
@@ -1044,7 +1044,7 @@ describe("Metamorphosis (to html preprocessor)", function() {
 			expect(html).toBeDefined();
 			expect(html).toBe('<html>\n<head>\n<title>\npage title\n</title>\n<style/>\n</head>\n<body/>\n</html>');
 			done();
-		});
+		}, { skipIndentation: true });
 	});
 
 	it("should compile list", function(done) {
@@ -1064,7 +1064,7 @@ describe("Metamorphosis (to html preprocessor)", function() {
 			expect(html).toBeDefined();
 			expect(html).toBe('<html>\n<body>\n<ul>\n<li>\nA\n</li>\n<li>\nB\n</li>\n<li>\nC\n</li>\n<li>\nD\n</li>\n</ul>\n</body>\n</html>');
 			done();
-		});
+		}, { skipIndentation: true });
 	});
 
 });
@@ -1112,7 +1112,7 @@ that\'s html page\n\
 </body>\n\
 </html>');
 			done();
-		});
+		}, { skipIndentation: true });
 	});
 
 });
@@ -1175,7 +1175,7 @@ html page\n\
 </body>\n\
 </html>');
 			done();
-		});
+		}, { skipIndentation: true });
 	});
 
 });
@@ -1204,7 +1204,7 @@ describe("Metamorphosis (to html preprocessor)", function() {
 			expect(html).toBeDefined();
 			expect(html).toBe('<html>\n<head>\n<title>\nAbsurd is awesome\n</title>\n</head>\n<body>\n<p>\ntext\n</p>\n</body>\n</html>');
 			done();
-		});
+		}, { skipIndentation: true });
 	});
 
 });
@@ -1271,7 +1271,30 @@ John Doe\n\
 </body>\n\
 </html>');
 			done();
-		});
+		}, { skipIndentation: true });
+	});
+
+});
+describe("Metamorphosis (to html preprocessor)", function() {
+
+	var api = require('../../../index.js')();
+
+	it("should minify html", function(done) {
+		api.morph("html").add({
+			body: {
+				header: "header",
+				section: [
+					{ p: "test" },
+					{ p: "lorem ipsum" },
+					{ img: {} }
+				]
+			}
+		}).compile(function(err, html) {
+			expect(err).toBe(null);
+			expect(html).toBeDefined();
+			expect(html).toBe('<body><header>header</header><section><p>test</p><p>lorem ipsum</p><img/></section></body>');
+			done();
+		}, { minify: true });
 	});
 
 });
@@ -1287,7 +1310,7 @@ describe("Metamorphosis (to html preprocessor)", function() {
 			expect(html).toBeDefined();
 			expect(html).toBe('<body/>');
 			done();
-		});
+		}, { skipIndentation: true });
 	});
 
 	it("should compile tag with text inside", function(done) {
@@ -1298,7 +1321,7 @@ describe("Metamorphosis (to html preprocessor)", function() {
 			expect(html).toBeDefined();
 			expect(html).toBe('<body>\npage text\n</body>');
 			done();
-		});
+		}, { skipIndentation: true });
 	});
 
 	it("should compile tag with attributes", function(done) {
@@ -1311,7 +1334,7 @@ describe("Metamorphosis (to html preprocessor)", function() {
 			expect(html).toBeDefined();
 			expect(html).toBe('<body class="black"/>');
 			done();
-		});
+		}, { skipIndentation: true });
 	});
 
 	it("should compile tag with attributes and text inside", function(done) {
@@ -1325,7 +1348,7 @@ describe("Metamorphosis (to html preprocessor)", function() {
 			expect(html).toBeDefined();
 			expect(html).toBe('<body class="black">\npage text\n</body>');
 			done();
-		});
+		}, { skipIndentation: true });
 	});
 
 	it("should compile tag with attributes, text inside and nested tag", function(done) {
@@ -1340,7 +1363,7 @@ describe("Metamorphosis (to html preprocessor)", function() {
 			expect(html).toBeDefined();
 			expect(html).toBe('<body class="black">\npage text\n<p>\nparagraph text\n</p>\n</body>');
 			done();
-		});
+		}, { skipIndentation: true });
 	});
 
 	it("should compile raw content", function(done) {
@@ -1351,7 +1374,7 @@ describe("Metamorphosis (to html preprocessor)", function() {
 			expect(html).toBeDefined();
 			expect(html).toBe('<html></html>');
 			done();
-		});
+		}, { skipIndentation: true });
 	});	
 
 	it("should compile nested tags", function(done) {
@@ -1367,7 +1390,7 @@ describe("Metamorphosis (to html preprocessor)", function() {
 			expect(html).toBeDefined();
 			expect(html).toBe('<html>\n<head>\n<title>\ntitle\n</title>\n</head>\n<body/>\n</html>');
 			done();
-		});
+		}, { skipIndentation: true });
 	});
 
 	it("should compile raw content + nested tag", function(done) {
@@ -1393,7 +1416,7 @@ read more\n\
 </p>\n\
 </body>');
 			done();
-		});
+		}, { skipIndentation: true });
 	});
 
 });
@@ -1455,7 +1478,7 @@ footer text\n\
 </body>\n\
 </html>');
 			done();
-		});
+		}, { skipIndentation: true });
 	});
 
 });
@@ -1474,7 +1497,7 @@ describe("Metamorphosis (to html preprocessor)", function() {
 			expect(html).toBeDefined();
 			expect(html).toBe('<div class="content">\n<p>\ntext\n</p>\n</div>');
 			done();
-		});
+		}, { skipIndentation: true });
 	});
 
 	it("should use two classes", function(done) {
@@ -1488,7 +1511,7 @@ describe("Metamorphosis (to html preprocessor)", function() {
 			expect(html).toBeDefined();
 			expect(html).toBe('<div class="content left">\n<p>\ntext\n</p>\n</div>');
 			done();
-		});
+		}, { skipIndentation: true }, { skipIndentation: true });
 	});
 
 	it("should use id", function(done) {
@@ -1502,7 +1525,7 @@ describe("Metamorphosis (to html preprocessor)", function() {
 			expect(html).toBeDefined();
 			expect(html).toBe('<div id="content">\n<p>\ntext\n</p>\n</div>');
 			done();
-		});
+		}, { skipIndentation: true });
 	});
 
 	it("should use id and class together", function(done) {
@@ -1516,7 +1539,7 @@ describe("Metamorphosis (to html preprocessor)", function() {
 			expect(html).toBeDefined();
 			expect(html).toBe('<div class="content left" id="home">\n<p>\ntext\n</p>\n</div>');
 			done();
-		});
+		}, { skipIndentation: true });
 	});
 
 	it("should use without tag name", function(done) {
@@ -1530,7 +1553,7 @@ describe("Metamorphosis (to html preprocessor)", function() {
 			expect(html).toBeDefined();
 			expect(html).toBe('<div class="content left" id="home">\n<p>\ntext\n</p>\n</div>');
 			done();
-		});
+		}, { skipIndentation: true });
 	});
 
 	it("should pass attributes", function(done) {
@@ -1544,7 +1567,7 @@ describe("Metamorphosis (to html preprocessor)", function() {
 			expect(html).toBeDefined();
 			expect(html).toBe('<div class="content" id="home" data-behaviour="clickable" title="test" style="position: absolute; top: 20px; left: 30px;">\n<img alt="that\'s my image" some__data="1"/>\n</div>');
 			done();
-		});
+		}, { skipIndentation: true });
 	});
 
 	it("should pass attributes", function(done) {
@@ -1566,7 +1589,19 @@ CSS preprocessor\n\
 </p>\n\
 </div>');
 			done();
-		});
+		}, { skipIndentation: true });
+	});
+
+	it("should create a div by default", function(done) {
+		var tags = {
+			'[class="content"]': "test"
+		}
+		api.morph("html").add(tags).compile(function(err, html) {
+			expect(err).toBe(null);
+			expect(html).toBeDefined();
+			expect(html).toBe('<div class="content">\ntest\n</div>');
+			done();
+		}, { skipIndentation: true });
 	});
 
 });

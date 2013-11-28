@@ -17,7 +17,7 @@ describe("Metamorphosis (to html preprocessor)", function() {
 			expect(html).toBeDefined();
 			expect(html).toBe('<html>\n<head>\n<title>\npage title\n</title>\n<style/>\n</head>\n<body/>\n</html>');
 			done();
-		});
+		}, { skipIndentation: true });
 	});
 
 	it("should compile list", function(done) {
@@ -37,7 +37,7 @@ describe("Metamorphosis (to html preprocessor)", function() {
 			expect(html).toBeDefined();
 			expect(html).toBe('<html>\n<body>\n<ul>\n<li>\nA\n</li>\n<li>\nB\n</li>\n<li>\nC\n</li>\n<li>\nD\n</li>\n</ul>\n</body>\n</html>');
 			done();
-		});
+		}, { skipIndentation: true });
 	});
 
 });

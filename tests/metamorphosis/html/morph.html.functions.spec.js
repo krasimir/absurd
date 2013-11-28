@@ -23,7 +23,7 @@ describe("Metamorphosis (to html preprocessor)", function() {
 			expect(html).toBeDefined();
 			expect(html).toBe('<html>\n<head>\n<title>\nAbsurd is awesome\n</title>\n</head>\n<body>\n<p>\ntext\n</p>\n</body>\n</html>');
 			done();
-		});
+		}, { skipIndentation: true });
 	});
 
 });
