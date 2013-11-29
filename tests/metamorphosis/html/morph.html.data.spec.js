@@ -5,20 +5,19 @@ describe("Metamorphosis (to html preprocessor)", function() {
 	it("should compile html with data", function(done) {
 		api.morph("html").add({
 			body: {
-				p: "Hello, my name is {{name}}!",
-				small: "I'm {{profile.age}} years old",
+				p: "Hello, my name is {{this.data.name}}!",
+				small: "I'm \"{{this.data.profile.age}}\" {years} old",
 				ul: {
-					li: "I write {{skill}}."
+					li: "a"
 				}
 			}
 		}).compile(function(err, html) {
-			console.log(html);
+			console.log("\n\n", html);
 			expect(err).toBe(null);
 			expect(html).toBeDefined();
 			expect(html).toBe('<body><p>Hello, my name is John!</p></body>');
 			done();
-		}, { 
-			minify: true,
+		}, {
 			data: {
 				name: "John",
 				profile: { age: 29 },
