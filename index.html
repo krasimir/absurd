@@ -988,6 +988,49 @@ The code produces:
 	</div>
 	<br class="clear">
 </section>
+
+<!-- ----------------------- -->
+<a href="#" name="template-engine"></a>
+<section>
+	<div class="desc">
+		<p>
+			AbsurdJS could act as a template engine. Use <em>&lt;%</em> and <em>%&gt;</em> as place holders. The data is passed along with the callback in the <em>.compile</em> method.
+		</p>
+	</div>
+	<div class="code"><pre><code class="language-javascript">api.morph("html").add({
+  body: {
+    p: "Hello, my name is <% this.data.name %>!",
+      small: "I'm <% this.data.profile.age %> years old",
+      ul: [        
+        '<% for(var skill in this.data.skills) { %>',
+        { li: {
+          'a[href="#"]': 'I do <% this.data.skills[skill] %>'
+        }},
+        '<% } %>'
+      ]
+    }
+}).compile(function(err, html) {
+	/* html:
+	&lt;body>
+		&lt;p>Hello, my name is John!&lt;/p>
+		&lt;small>I\'m 29 years old&lt;/small>
+		&lt;ul>
+			&lt;li>&lt;a href="#">I do javascript&lt;/a>&lt;/li>
+			&lt;li>&lt;a href="#">I do html&lt;/a>&lt;/li>
+			&lt;li>&lt;a href="#">I do css&lt;/a>&lt;/li>
+		&lt;/ul>
+	&lt;/body>
+	*/
+}, {
+    data: {
+	    name: "John",
+	    profile: { age: 29 },
+        skills: ['javascript', 'html', 'css']
+    }
+});</code></pre>
+	</div>
+	<br class="clear">
+</section>
 <h2><a href="#metamorphosis-/-component" name="metamorphosis-/-component">&#187;</a>Metamorphosis / Component</h2>
 
 <!-- ----------------------- -->
