@@ -406,8 +406,7 @@ lib.processors.component.Component = function() {
 	processor.type = "component";
 	return processor;
 }
-var cleanCSS = require('clean-css'),
-	newline = '\n',
+var newline = '\n',
 	defaultOptions = {
 		combineSelectors: true,
 		minify: false,
