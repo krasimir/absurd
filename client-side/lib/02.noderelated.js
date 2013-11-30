@@ -12,6 +12,12 @@ var require = function(v) {
 				return html;
 			}
 		}
+	} else if(v == './helpers/PropAnalyzer') {
+		return lib.processors.html.helpers.PropAnalyzer;
+	} else if(v == '../../helpers/TransformUppercase') {
+		return lib.helpers.TransformUppercase;
+	} else if(v == './helpers/TemplateEngine') {
+		return lib.processors.html.helpers.TemplateEngine;
 	} else {
 		return function() {}
 	}

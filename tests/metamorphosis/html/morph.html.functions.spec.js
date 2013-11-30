@@ -21,9 +21,9 @@ describe("Metamorphosis (to html preprocessor)", function() {
 		}).compile(function(err, html) {
 			expect(err).toBe(null);
 			expect(html).toBeDefined();
-			expect(html).toBe('<html>\n<head>\n<title>\nAbsurd is awesome\n</title>\n</head>\n<body>\n<p>\ntext\n</p>\n</body>\n</html>');
+			expect(html).toBe('<html><head><title>Absurd is awesome</title></head><body><p>text</p></body></html>');
 			done();
-		}, { skipIndentation: true });
+		}, { minify: true });
 	});
 
 });

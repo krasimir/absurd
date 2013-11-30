@@ -16,7 +16,7 @@ describe("Minification", function() {
 		}).compile(function(err, css) {
 			expect(err).toBe(null);
 			expect(css).toBeDefined();
-			expect(css).toBe("body{margin-top:20px}body p{font-size:5px}");
+			expect(css).toBe("body{margin-top: 20px;}body p{font-size: 5px;}");
 			done();
 		}, {minify: true});		
 	});

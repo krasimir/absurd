@@ -15,9 +15,9 @@ describe("Metamorphosis (to html preprocessor)", function() {
 		}).compile(function(err, html) {
 			expect(err).toBe(null);
 			expect(html).toBeDefined();
-			expect(html).toBe('<html>\n<head>\n<title>\npage title\n</title>\n<style/>\n</head>\n<body/>\n</html>');
+			expect(html).toBe('<html><head><title>page title</title><style/></head><body/></html>');
 			done();
-		}, { skipIndentation: true });
+		}, { minify: true });
 	});
 
 	it("should compile list", function(done) {
@@ -35,9 +35,24 @@ describe("Metamorphosis (to html preprocessor)", function() {
 		}).compile(function(err, html) {
 			expect(err).toBe(null);
 			expect(html).toBeDefined();
-			expect(html).toBe('<html>\n<body>\n<ul>\n<li>\nA\n</li>\n<li>\nB\n</li>\n<li>\nC\n</li>\n<li>\nD\n</li>\n</ul>\n</body>\n</html>');
+			expect(html).toBe('<html><body><ul><li>A</li><li>B</li><li>C</li><li>D</li></ul></body></html>');
 			done();
-		}, { skipIndentation: true });
+		}, { minify: true });
+	});
+
+	it("should compile array of strings", function(done) {
+		api.morph("html").add({
+			html: [
+				'<body>',
+				'<h1>Title</h1>',
+				'</body>'
+			]
+		}).compile(function(err, html) {
+			expect(err).toBe(null);
+			expect(html).toBeDefined();
+			expect(html).toBe('<html><body><h1>Title</h1></body></html>');
+			done();
+		}, { minify: true });
 	});
 
 });

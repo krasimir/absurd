@@ -751,9 +751,9 @@ describe("Morph, flush usage /", function() {
 		}).compile(function(err, html) {
 			expect(err).toBe(null);
 			expect(html).toBeDefined();
-			expect(html).toBe("<body>\n<p>\ntext\n</p>\n</body>");
+			expect(html).toBe("<body><p>text</p></body>");
 			done();
-		}, { skipIndentation: true });		
+		}, { minify: true });		
 	});
 
 	it("should compile to css again", function(done) {
@@ -826,24 +826,10 @@ describe("Componenting", function() {
 			expect(err).toBe(null);
 			expect(css).toBeDefined();
 			expect(html).toBeDefined();
-			expect(css).toBe('#widget {\n\
-  width: 200px;\n\
-  padding: 30px 10px;\n\
-  background: #aaa;\n\
-}\n\
-#widget a {\n\
-  font-size: 20px;\n\
-  text-decoration: none;\n\
-}\n')
-			expect(html).toBe('<div id="widget">\n\
-<p>\n\
-<a href="http://bla.com">\n\
-share\n\
-</a>\n\
-</p>\n\
-</div>')
+			expect(css).toBe('#widget{width: 200px;padding: 30px 10px;background: #aaa;}#widget a{font-size: 20px;text-decoration: none;}')
+			expect(html).toBe('<div id="widget"><p><a href="http://bla.com">share</a></p></div>')
 			done();
-		}, { skipIndentation: true });
+		}, { minify: true });
 	});
 
 	it("should use a function instead of object", function(done) {
@@ -861,10 +847,10 @@ share\n\
 			expect(err).toBe(null);
 			expect(css).toBeDefined();
 			expect(html).toBeDefined();
-			expect(css).toBe(".login-link {\n  color: red;\n}\n");
-			expect(html).toBe('<a class="login-link">\nPlease login\n</a>');
+			expect(css).toBe(".login-link{color: red;}");
+			expect(html).toBe('<a class="login-link">Please login</a>');
 			done();
-		}, { skipIndentation: true })
+		}, { minify: true })
 	});
 
 	it("should compile several components", function(done) {
@@ -892,22 +878,10 @@ share\n\
 			expect(err).toBe(null);
 			expect(css).toBeDefined();
 			expect(html).toBeDefined();
-			expect(css).toBe(".login-link, .logout-link {\n\
-  color: red;\n\
-}\n\
-.login-link {\n\
-  font-size: 16px;\n\
-}\n\
-.logout-link {\n\
-  font-size: 11px;\n\
-}\n");
-			expect(html).toBe('<a class="login-link">\n\
-Please login\n\
-</a><a class="logout-link">\n\
-Logout\n\
-</a>');
+			expect(css).toBe(".login-link,.logout-link{color: red;}.login-link{font-size: 16px;}.logout-link{font-size: 11px;}");
+			expect(html).toBe('<a class="login-link">Please login</a><a class="logout-link">Logout</a>');
 			done();
-		}, { skipIndentation: true })
+		}, { minify: true })
 	});
 
 });
@@ -982,46 +956,10 @@ describe("Nested components", function() {
 			expect(err).toBe(null);
 			expect(css).toBeDefined();
 			expect(html).toBeDefined();
-			expect(css).toBe("body {\n\
-  margin: 10px;\n\
-  width: 100%;\n\
-  height: 100%;\n\
-  padding: 0px;\n\
-}\n\
-body section {\n\
-  margin-top: 20px;\n\
-}\n\
-h1 {\n\
-  font-weight: normal;\n\
-}\n\
-p, .title {\n\
-  font-size: 24px;\n\
-}\n\
-p {\n\
-  line-height: 28px;\n\
-}\n\
-@media all and (max-width: 640px) {\n\
-body section {\n\
-  margin-top: 10px;\n\
-}\n\
-}\n");
-			expect(html).toBe('<!DOCTYPE html>\n\
-<html>\n\
-<head>\n\
-<title>\n\
-That\'s my page\n\
-</title>\n\
-</head><body>\n\
-<h1 class="title">\n\
-Hello world\n\
-</h1>\n\
-<p>\n\
-Text of the <b>page</b>.\n\
-</p>\n\
-</body>\n\
-</html>');
+			expect(css).toBe("body{margin: 10px;width: 100%;height: 100%;padding: 0px;}body section{margin-top: 20px;}h1{font-weight: normal;}p,.title{font-size: 24px;}p{line-height: 28px;}@media all and (max-width: 640px) {body section{margin-top: 10px;}}");
+			expect(html).toBe('<!DOCTYPE html><html><head><title>That\'s my page</title></head><body><h1 class="title">Hello world</h1><p>Text of the <b>page</b>.</p></body></html>');
 			done();
-		}, { skipIndentation: true })
+		}, { minify: true })
 	});
 
 });
@@ -1042,9 +980,9 @@ describe("Metamorphosis (to html preprocessor)", function() {
 		}).compile(function(err, html) {
 			expect(err).toBe(null);
 			expect(html).toBeDefined();
-			expect(html).toBe('<html>\n<head>\n<title>\npage title\n</title>\n<style/>\n</head>\n<body/>\n</html>');
+			expect(html).toBe('<html><head><title>page title</title><style/></head><body/></html>');
 			done();
-		}, { skipIndentation: true });
+		}, { minify: true });
 	});
 
 	it("should compile list", function(done) {
@@ -1062,9 +1000,24 @@ describe("Metamorphosis (to html preprocessor)", function() {
 		}).compile(function(err, html) {
 			expect(err).toBe(null);
 			expect(html).toBeDefined();
-			expect(html).toBe('<html>\n<body>\n<ul>\n<li>\nA\n</li>\n<li>\nB\n</li>\n<li>\nC\n</li>\n<li>\nD\n</li>\n</ul>\n</body>\n</html>');
+			expect(html).toBe('<html><body><ul><li>A</li><li>B</li><li>C</li><li>D</li></ul></body></html>');
 			done();
-		}, { skipIndentation: true });
+		}, { minify: true });
+	});
+
+	it("should compile array of strings", function(done) {
+		api.morph("html").add({
+			html: [
+				'<body>',
+				'<h1>Title</h1>',
+				'</body>'
+			]
+		}).compile(function(err, html) {
+			expect(err).toBe(null);
+			expect(html).toBeDefined();
+			expect(html).toBe('<html><body><h1>Title</h1></body></html>');
+			done();
+		}, { minify: true });
 	});
 
 });
@@ -1095,24 +1048,9 @@ describe("Metamorphosis (to html preprocessor)", function() {
 		}).compile(function(err, html) {
 			expect(err).toBe(null);
 			expect(html).toBeDefined();
-			expect(html).toBe('<!DOCTYPE html>\n\
-<html>\n\
-<head>\n\
-<title>\n\
-html page\n\
-</title>\n\
-<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>\n\
-</head>\n\
-<body class="home-page">\n\
-<section>\n\
-<h1>\n\
-that\'s html page\n\
-</h1>\n\
-</section>\n\
-</body>\n\
-</html>');
+			expect(html).toBe('<!DOCTYPE html><html><head><title>html page</title><meta http-equiv="Content-Type" content="text/html; charset=utf-8"/></head><body class="home-page"><section><h1>that\'s html page</h1></section></body></html>');
 			done();
-		}, { skipIndentation: true });
+		}, { minify: true });
 	});
 
 });
@@ -1159,23 +1097,145 @@ describe("Metamorphosis (to html preprocessor)", function() {
 		}).compile(function(err, html) {
 			expect(err).toBe(null);
 			expect(html).toBeDefined();
-			expect(html).toBe('<html>\n\
-<head>\n\
-<title>\n\
-html page\n\
-</title>\n\
-</head>\n\
-<body>\n\
-<form>\n\
-<label>Please fill the form</label>\n\
-<input type="text" placeholder="Please type your username" name="username"/>\n\
-<input type="text" placeholder="Please type your email" name="email"/>\n\
-<input type="submit" value="submit the data"/>\n\
-</form>\n\
-</body>\n\
-</html>');
+			expect(html).toBe('<html><head><title>html page</title></head><body><form><label>Please fill the form</label><input type="text" placeholder="Please type your username" name="username"/><input type="text" placeholder="Please type your email" name="email"/><input type="submit" value="submit the data"/></form></body></html>');
 			done();
-		}, { skipIndentation: true });
+		}, { minify: true });
+	});
+
+});
+describe("Metamorphosis (to html preprocessor)", function() {
+
+	var api = require('../../../index.js')();
+
+	it("should compile html with data", function(done) {
+		api.morph("html").add({
+			body: {
+				h1: "<% this.name %> <small>(<% this.profile.job %>)</small>"
+			}
+		}).compile(function(err, html) {
+			expect(err).toBe(null);
+			expect(html).toBeDefined();
+			expect(html).toBe('<body><h1>John <small>(Developer)</small></h1></body>');
+			done();
+		}, {
+			minify: true,
+			name: "John", profile: { job: "Developer" }
+		})
+	});
+
+	it("should use 'if' statement", function(done) {
+		api.morph("html").add({
+			body: {
+				h1: [
+					"<% if(this.developer) { %>",
+					{ p: "I'm a developer" },
+					"<% } %>"
+				]
+			}
+		}).compile(function(err, html) {
+			expect(err).toBe(null);
+			expect(html).toBeDefined();
+			expect(html).toBe('<body><h1><p>I\'m a developer</p></h1></body>');
+			done();
+		}, {
+			minify: true,
+			developer: true
+		})
+	});
+
+	it("should use 'if' statement (false)", function(done) {
+		api.morph("html").add({
+			body: {
+				h1: [
+					"<% if(this.developer) { %>",
+					{ p: "I'm a developer" },
+					"<% } %>"
+				]
+			}
+		}).compile(function(err, html) {
+			expect(err).toBe(null);
+			expect(html).toBeDefined();
+			expect(html).toBe('<body><h1></h1></body>');
+			done();
+		}, {
+			minify: true,
+			developer: false
+		})
+	});
+
+	it("should use 'if/else' statement", function(done) {
+		api.morph("html").add({
+			body: {
+				h1: [
+					"<% if(this.developer) { %>",
+					{ p: "I'm a developer" },
+					"<% } else { %>",
+					{ small: "Damn, I can't code!"},
+					"<% } %>"
+				]
+			}
+		}).compile(function(err, html) {
+			expect(err).toBe(null);
+			expect(html).toBeDefined();
+			expect(html).toBe('<body><h1><small>Damn, I can\'t code!</small></h1></body>');
+			done();
+		}, {
+			minify: true,
+			developer: false
+		})
+	});
+
+	it("should use 'switch' statement", function(done) {
+		api.morph("html").add({
+			body: [
+				"<% switch(this.theme) { %>",
+				"<% case 'black': %>",
+				{ h1: "black"},
+				"<% break; %>",
+				"<% case 'blue': %>",
+				{ h1: "blue"},
+				"<% break; %>",
+				"<% } %>"
+			]
+		}).compile(function(err, html) {
+			expect(err).toBe(null);
+			expect(html).toBeDefined();
+			expect(html).toBe('<body><h1>blue</h1></body>');
+			done();
+		}, {
+			minify: true,
+			theme: "blue"
+		})
+	});
+
+	it("should use for loop", function(done) {
+		api.morph("html").add({
+			body: {
+				p: "Hello, my name is <%this.data.name%>!",
+				small: "I'm \"<% this.data.profile.age %>\" {years} old",
+				ul: [	
+					'<% for(var skill in this.data.skills) { %>',
+					{
+						li: {
+							'a[href="#"]': 'I do <% this.data.skills[skill] %>'
+						}
+					},
+					'<% } %>'
+				]
+			}
+		}).compile(function(err, html) {
+			expect(err).toBe(null);
+			expect(html).toBeDefined();
+			expect(html).toBe('<body><p>Hello, my name is John!</p><small>I\'m "29" {years} old</small><ul><li><a href="#">I do javascript</a></li><li><a href="#">I do html</a></li><li><a href="#">I do css</a></li></ul></body>');
+			done();
+		}, {
+			minify: true,
+			data: {
+				name: "John",
+				profile: { age: 29 },
+				skills: ['javascript', 'html', 'css']
+			}
+		});
 	});
 
 });
@@ -1202,9 +1262,9 @@ describe("Metamorphosis (to html preprocessor)", function() {
 		}).compile(function(err, html) {
 			expect(err).toBe(null);
 			expect(html).toBeDefined();
-			expect(html).toBe('<html>\n<head>\n<title>\nAbsurd is awesome\n</title>\n</head>\n<body>\n<p>\ntext\n</p>\n</body>\n</html>');
+			expect(html).toBe('<html><head><title>Absurd is awesome</title></head><body><p>text</p></body></html>');
 			done();
-		}, { skipIndentation: true });
+		}, { minify: true });
 	});
 
 });
@@ -1247,31 +1307,9 @@ describe("Metamorphosis (to html preprocessor)", function() {
 		api.morph("html").add(page).compile(function(err, html) {
 			expect(err).toBe(null);
 			expect(html).toBeDefined();
-			expect(html).toBe('<html>\n\
-<body>\n\
-<header>\n\
-<div class="logo">\n\
-<img src="#"/>\n\
-</div><nav>\n\
-<a href="#">\n\
-Home\n\
-</a>\n\
-<a href="#">\n\
-Products\n\
-</a>\n\
-<a href="#">\n\
-Contacts\n\
-</a>\n\
-</nav><div class="profile">\n\
-<span class="name">\n\
-John Doe\n\
-</span>\n\
-</div>\n\
-</header>\n\
-</body>\n\
-</html>');
+			expect(html).toBe('<html><body><header><div class="logo"><img src="#"/></div><nav><a href="#">Home</a><a href="#">Products</a><a href="#">Contacts</a></nav><div class="profile"><span class="name">John Doe</span></div></header></body></html>');
 			done();
-		}, { skipIndentation: true });
+		}, { minify: true });
 	});
 
 });
@@ -1310,7 +1348,7 @@ describe("Metamorphosis (to html preprocessor)", function() {
 			expect(html).toBeDefined();
 			expect(html).toBe('<body/>');
 			done();
-		}, { skipIndentation: true });
+		}, { minify: true });
 	});
 
 	it("should compile tag with text inside", function(done) {
@@ -1319,9 +1357,9 @@ describe("Metamorphosis (to html preprocessor)", function() {
 		}).compile(function(err, html) {
 			expect(err).toBe(null);
 			expect(html).toBeDefined();
-			expect(html).toBe('<body>\npage text\n</body>');
+			expect(html).toBe('<body>page text</body>');
 			done();
-		}, { skipIndentation: true });
+		}, { minify: true });
 	});
 
 	it("should compile tag with attributes", function(done) {
@@ -1334,7 +1372,7 @@ describe("Metamorphosis (to html preprocessor)", function() {
 			expect(html).toBeDefined();
 			expect(html).toBe('<body class="black"/>');
 			done();
-		}, { skipIndentation: true });
+		}, { minify: true });
 	});
 
 	it("should compile tag with attributes and text inside", function(done) {
@@ -1346,9 +1384,9 @@ describe("Metamorphosis (to html preprocessor)", function() {
 		}).compile(function(err, html) {
 			expect(err).toBe(null);
 			expect(html).toBeDefined();
-			expect(html).toBe('<body class="black">\npage text\n</body>');
+			expect(html).toBe('<body class="black">page text</body>');
 			done();
-		}, { skipIndentation: true });
+		}, { minify: true });
 	});
 
 	it("should compile tag with attributes, text inside and nested tag", function(done) {
@@ -1361,9 +1399,9 @@ describe("Metamorphosis (to html preprocessor)", function() {
 		}).compile(function(err, html) {
 			expect(err).toBe(null);
 			expect(html).toBeDefined();
-			expect(html).toBe('<body class="black">\npage text\n<p>\nparagraph text\n</p>\n</body>');
+			expect(html).toBe('<body class="black">page text<p>paragraph text</p></body>');
 			done();
-		}, { skipIndentation: true });
+		}, { minify: true });
 	});
 
 	it("should compile raw content", function(done) {
@@ -1374,7 +1412,7 @@ describe("Metamorphosis (to html preprocessor)", function() {
 			expect(html).toBeDefined();
 			expect(html).toBe('<html></html>');
 			done();
-		}, { skipIndentation: true });
+		}, { minify: true });
 	});	
 
 	it("should compile nested tags", function(done) {
@@ -1388,9 +1426,9 @@ describe("Metamorphosis (to html preprocessor)", function() {
 		}).compile(function(err, html) {
 			expect(err).toBe(null);
 			expect(html).toBeDefined();
-			expect(html).toBe('<html>\n<head>\n<title>\ntitle\n</title>\n</head>\n<body/>\n</html>');
+			expect(html).toBe('<html><head><title>title</title></head><body/></html>');
 			done();
-		}, { skipIndentation: true });
+		}, { minify: true });
 	});
 
 	it("should compile raw content + nested tag", function(done) {
@@ -1407,16 +1445,9 @@ describe("Metamorphosis (to html preprocessor)", function() {
 		}).compile(function(err, html) {
 			expect(err).toBe(null);
 			expect(html).toBeDefined();
-			expect(html).toBe('<body>\n\
-<p>\n\
-That\'s my text\n\
-<a href="#">\n\
-read more\n\
-</a>\n\
-</p>\n\
-</body>');
+			expect(html).toBe('<body><p>That\'s my text<a href="#">read more</a></p></body>');
 			done();
-		}, { skipIndentation: true });
+		}, { minify: true });
 	});
 
 });
@@ -1461,24 +1492,9 @@ describe("Metamorphosis (to html preprocessor)", function() {
 		api.compile(function(err, html) {
 			expect(err).toBe(null);
 			expect(html).toBeDefined();
-			expect(html).toBe('<html>\n\
-<head>\n\
-<title>\n\
-AbsurdJS preprocessor\n\
-</title>\n\
-</head>\n\
-<body>\n\
-<h1>oh yeah</h1>\n\
-<a href="#" target="_blank">\n\
-link\n\
-</a>\n\
-<footer>\n\
-footer text\n\
-</footer>\n\
-</body>\n\
-</html>');
+			expect(html).toBe('<html><head><title>AbsurdJS preprocessor</title></head><body><h1>oh yeah</h1><a href="#" target="_blank">link</a><footer>footer text</footer></body></html>');
 			done();
-		}, { skipIndentation: true });
+		}, { minify: true });
 	});
 
 });
@@ -1495,9 +1511,9 @@ describe("Metamorphosis (to html preprocessor)", function() {
 		api.morph("html").add(tags).compile(function(err, html) {
 			expect(err).toBe(null);
 			expect(html).toBeDefined();
-			expect(html).toBe('<div class="content">\n<p>\ntext\n</p>\n</div>');
+			expect(html).toBe('<div class="content"><p>text</p></div>');
 			done();
-		}, { skipIndentation: true });
+		}, { minify: true });
 	});
 
 	it("should use two classes", function(done) {
@@ -1509,9 +1525,9 @@ describe("Metamorphosis (to html preprocessor)", function() {
 		api.morph("html").add(tags).compile(function(err, html) {
 			expect(err).toBe(null);
 			expect(html).toBeDefined();
-			expect(html).toBe('<div class="content left">\n<p>\ntext\n</p>\n</div>');
+			expect(html).toBe('<div class="content left"><p>text</p></div>');
 			done();
-		}, { skipIndentation: true }, { skipIndentation: true });
+		}, { minify: true });
 	});
 
 	it("should use id", function(done) {
@@ -1523,9 +1539,9 @@ describe("Metamorphosis (to html preprocessor)", function() {
 		api.morph("html").add(tags).compile(function(err, html) {
 			expect(err).toBe(null);
 			expect(html).toBeDefined();
-			expect(html).toBe('<div id="content">\n<p>\ntext\n</p>\n</div>');
+			expect(html).toBe('<div id="content"><p>text</p></div>');
 			done();
-		}, { skipIndentation: true });
+		}, { minify: true });
 	});
 
 	it("should use id and class together", function(done) {
@@ -1537,9 +1553,9 @@ describe("Metamorphosis (to html preprocessor)", function() {
 		api.morph("html").add(tags).compile(function(err, html) {
 			expect(err).toBe(null);
 			expect(html).toBeDefined();
-			expect(html).toBe('<div class="content left" id="home">\n<p>\ntext\n</p>\n</div>');
+			expect(html).toBe('<div class="content left" id="home"><p>text</p></div>');
 			done();
-		}, { skipIndentation: true });
+		}, { minify: true });
 	});
 
 	it("should use without tag name", function(done) {
@@ -1551,9 +1567,9 @@ describe("Metamorphosis (to html preprocessor)", function() {
 		api.morph("html").add(tags).compile(function(err, html) {
 			expect(err).toBe(null);
 			expect(html).toBeDefined();
-			expect(html).toBe('<div class="content left" id="home">\n<p>\ntext\n</p>\n</div>');
+			expect(html).toBe('<div class="content left" id="home"><p>text</p></div>');
 			done();
-		}, { skipIndentation: true });
+		}, { minify: true });
 	});
 
 	it("should pass attributes", function(done) {
@@ -1565,9 +1581,9 @@ describe("Metamorphosis (to html preprocessor)", function() {
 		api.morph("html").add(tags).compile(function(err, html) {
 			expect(err).toBe(null);
 			expect(html).toBeDefined();
-			expect(html).toBe('<div class="content" id="home" data-behaviour="clickable" title="test" style="position: absolute; top: 20px; left: 30px;">\n<img alt="that\'s my image" some__data="1"/>\n</div>');
+			expect(html).toBe('<div class="content" id="home" data-behaviour="clickable" title="test" style="position: absolute; top: 20px; left: 30px;"><img alt="that\'s my image" some__data="1"/></div>');
 			done();
-		}, { skipIndentation: true });
+		}, { minify: true });
 	});
 
 	it("should pass attributes", function(done) {
@@ -1580,16 +1596,9 @@ describe("Metamorphosis (to html preprocessor)", function() {
 		api.morph("html").add(tags).compile(function(err, html) {
 			expect(err).toBe(null);
 			expect(html).toBeDefined();
-			expect(html).toBe('<div class="content left" id="wrapper">\n\
-<a href="http://krasimir.github.io/absurd/">\n\
-AbsurdJS documentation\n\
-</a>\n\
-<p class="text" title="description" data-type="selectable">\n\
-CSS preprocessor\n\
-</p>\n\
-</div>');
+			expect(html).toBe('<div class="content left" id="wrapper"><a href="http://krasimir.github.io/absurd/">AbsurdJS documentation</a><p class="text" title="description" data-type="selectable">CSS preprocessor</p></div>');
 			done();
-		}, { skipIndentation: true });
+		}, { minify: true });
 	});
 
 	it("should create a div by default", function(done) {
@@ -1599,9 +1608,9 @@ CSS preprocessor\n\
 		api.morph("html").add(tags).compile(function(err, html) {
 			expect(err).toBe(null);
 			expect(html).toBeDefined();
-			expect(html).toBe('<div class="content">\ntest\n</div>');
+			expect(html).toBe('<div class="content">test</div>');
 			done();
-		}, { skipIndentation: true });
+		}, { minify: true });
 	});
 
 });

@@ -28,24 +28,10 @@ describe("Componenting", function() {
 			expect(err).toBe(null);
 			expect(css).toBeDefined();
 			expect(html).toBeDefined();
-			expect(css).toBe('#widget {\n\
-  width: 200px;\n\
-  padding: 30px 10px;\n\
-  background: #aaa;\n\
-}\n\
-#widget a {\n\
-  font-size: 20px;\n\
-  text-decoration: none;\n\
-}\n')
-			expect(html).toBe('<div id="widget">\n\
-<p>\n\
-<a href="http://bla.com">\n\
-share\n\
-</a>\n\
-</p>\n\
-</div>')
+			expect(css).toBe('#widget{width: 200px;padding: 30px 10px;background: #aaa;}#widget a{font-size: 20px;text-decoration: none;}')
+			expect(html).toBe('<div id="widget"><p><a href="http://bla.com">share</a></p></div>')
 			done();
-		}, { skipIndentation: true });
+		}, { minify: true });
 	});
 
 	it("should use a function instead of object", function(done) {
@@ -63,10 +49,10 @@ share\n\
 			expect(err).toBe(null);
 			expect(css).toBeDefined();
 			expect(html).toBeDefined();
-			expect(css).toBe(".login-link {\n  color: red;\n}\n");
-			expect(html).toBe('<a class="login-link">\nPlease login\n</a>');
+			expect(css).toBe(".login-link{color: red;}");
+			expect(html).toBe('<a class="login-link">Please login</a>');
 			done();
-		}, { skipIndentation: true })
+		}, { minify: true })
 	});
 
 	it("should compile several components", function(done) {
@@ -94,22 +80,10 @@ share\n\
 			expect(err).toBe(null);
 			expect(css).toBeDefined();
 			expect(html).toBeDefined();
-			expect(css).toBe(".login-link, .logout-link {\n\
-  color: red;\n\
-}\n\
-.login-link {\n\
-  font-size: 16px;\n\
-}\n\
-.logout-link {\n\
-  font-size: 11px;\n\
-}\n");
-			expect(html).toBe('<a class="login-link">\n\
-Please login\n\
-</a><a class="logout-link">\n\
-Logout\n\
-</a>');
+			expect(css).toBe(".login-link,.logout-link{color: red;}.login-link{font-size: 16px;}.logout-link{font-size: 11px;}");
+			expect(html).toBe('<a class="login-link">Please login</a><a class="logout-link">Logout</a>');
 			done();
-		}, { skipIndentation: true })
+		}, { minify: true })
 	});
 
 });

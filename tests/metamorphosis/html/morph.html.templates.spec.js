@@ -39,24 +39,9 @@ describe("Metamorphosis (to html preprocessor)", function() {
 		api.compile(function(err, html) {
 			expect(err).toBe(null);
 			expect(html).toBeDefined();
-			expect(html).toBe('<html>\n\
-<head>\n\
-<title>\n\
-AbsurdJS preprocessor\n\
-</title>\n\
-</head>\n\
-<body>\n\
-<h1>oh yeah</h1>\n\
-<a href="#" target="_blank">\n\
-link\n\
-</a>\n\
-<footer>\n\
-footer text\n\
-</footer>\n\
-</body>\n\
-</html>');
+			expect(html).toBe('<html><head><title>AbsurdJS preprocessor</title></head><body><h1>oh yeah</h1><a href="#" target="_blank">link</a><footer>footer text</footer></body></html>');
 			done();
-		}, { skipIndentation: true });
+		}, { minify: true });
 	});
 
 });

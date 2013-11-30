@@ -10,7 +10,7 @@ describe("Metamorphosis (to html preprocessor)", function() {
 			expect(html).toBeDefined();
 			expect(html).toBe('<body/>');
 			done();
-		}, { skipIndentation: true });
+		}, { minify: true });
 	});
 
 	it("should compile tag with text inside", function(done) {
@@ -19,9 +19,9 @@ describe("Metamorphosis (to html preprocessor)", function() {
 		}).compile(function(err, html) {
 			expect(err).toBe(null);
 			expect(html).toBeDefined();
-			expect(html).toBe('<body>\npage text\n</body>');
+			expect(html).toBe('<body>page text</body>');
 			done();
-		}, { skipIndentation: true });
+		}, { minify: true });
 	});
 
 	it("should compile tag with attributes", function(done) {
@@ -34,7 +34,7 @@ describe("Metamorphosis (to html preprocessor)", function() {
 			expect(html).toBeDefined();
 			expect(html).toBe('<body class="black"/>');
 			done();
-		}, { skipIndentation: true });
+		}, { minify: true });
 	});
 
 	it("should compile tag with attributes and text inside", function(done) {
@@ -46,9 +46,9 @@ describe("Metamorphosis (to html preprocessor)", function() {
 		}).compile(function(err, html) {
 			expect(err).toBe(null);
 			expect(html).toBeDefined();
-			expect(html).toBe('<body class="black">\npage text\n</body>');
+			expect(html).toBe('<body class="black">page text</body>');
 			done();
-		}, { skipIndentation: true });
+		}, { minify: true });
 	});
 
 	it("should compile tag with attributes, text inside and nested tag", function(done) {
@@ -61,9 +61,9 @@ describe("Metamorphosis (to html preprocessor)", function() {
 		}).compile(function(err, html) {
 			expect(err).toBe(null);
 			expect(html).toBeDefined();
-			expect(html).toBe('<body class="black">\npage text\n<p>\nparagraph text\n</p>\n</body>');
+			expect(html).toBe('<body class="black">page text<p>paragraph text</p></body>');
 			done();
-		}, { skipIndentation: true });
+		}, { minify: true });
 	});
 
 	it("should compile raw content", function(done) {
@@ -74,7 +74,7 @@ describe("Metamorphosis (to html preprocessor)", function() {
 			expect(html).toBeDefined();
 			expect(html).toBe('<html></html>');
 			done();
-		}, { skipIndentation: true });
+		}, { minify: true });
 	});	
 
 	it("should compile nested tags", function(done) {
@@ -88,9 +88,9 @@ describe("Metamorphosis (to html preprocessor)", function() {
 		}).compile(function(err, html) {
 			expect(err).toBe(null);
 			expect(html).toBeDefined();
-			expect(html).toBe('<html>\n<head>\n<title>\ntitle\n</title>\n</head>\n<body/>\n</html>');
+			expect(html).toBe('<html><head><title>title</title></head><body/></html>');
 			done();
-		}, { skipIndentation: true });
+		}, { minify: true });
 	});
 
 	it("should compile raw content + nested tag", function(done) {
@@ -107,16 +107,9 @@ describe("Metamorphosis (to html preprocessor)", function() {
 		}).compile(function(err, html) {
 			expect(err).toBe(null);
 			expect(html).toBeDefined();
-			expect(html).toBe('<body>\n\
-<p>\n\
-That\'s my text\n\
-<a href="#">\n\
-read more\n\
-</a>\n\
-</p>\n\
-</body>');
+			expect(html).toBe('<body><p>That\'s my text<a href="#">read more</a></p></body>');
 			done();
-		}, { skipIndentation: true });
+		}, { minify: true });
 	});
 
 });

@@ -37,31 +37,9 @@ describe("Metamorphosis (to html preprocessor)", function() {
 		api.morph("html").add(page).compile(function(err, html) {
 			expect(err).toBe(null);
 			expect(html).toBeDefined();
-			expect(html).toBe('<html>\n\
-<body>\n\
-<header>\n\
-<div class="logo">\n\
-<img src="#"/>\n\
-</div><nav>\n\
-<a href="#">\n\
-Home\n\
-</a>\n\
-<a href="#">\n\
-Products\n\
-</a>\n\
-<a href="#">\n\
-Contacts\n\
-</a>\n\
-</nav><div class="profile">\n\
-<span class="name">\n\
-John Doe\n\
-</span>\n\
-</div>\n\
-</header>\n\
-</body>\n\
-</html>');
+			expect(html).toBe('<html><body><header><div class="logo"><img src="#"/></div><nav><a href="#">Home</a><a href="#">Products</a><a href="#">Contacts</a></nav><div class="profile"><span class="name">John Doe</span></div></header></body></html>');
 			done();
-		}, { skipIndentation: true });
+		}, { minify: true });
 	});
 
 });

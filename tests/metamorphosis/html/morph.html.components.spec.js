@@ -41,23 +41,9 @@ describe("Metamorphosis (to html preprocessor)", function() {
 		}).compile(function(err, html) {
 			expect(err).toBe(null);
 			expect(html).toBeDefined();
-			expect(html).toBe('<html>\n\
-<head>\n\
-<title>\n\
-html page\n\
-</title>\n\
-</head>\n\
-<body>\n\
-<form>\n\
-<label>Please fill the form</label>\n\
-<input type="text" placeholder="Please type your username" name="username"/>\n\
-<input type="text" placeholder="Please type your email" name="email"/>\n\
-<input type="submit" value="submit the data"/>\n\
-</form>\n\
-</body>\n\
-</html>');
+			expect(html).toBe('<html><head><title>html page</title></head><body><form><label>Please fill the form</label><input type="text" placeholder="Please type your username" name="username"/><input type="text" placeholder="Please type your email" name="email"/><input type="submit" value="submit the data"/></form></body></html>');
 			done();
-		}, { skipIndentation: true });
+		}, { minify: true });
 	});
 
 });

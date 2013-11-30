@@ -25,24 +25,9 @@ describe("Metamorphosis (to html preprocessor)", function() {
 		}).compile(function(err, html) {
 			expect(err).toBe(null);
 			expect(html).toBeDefined();
-			expect(html).toBe('<!DOCTYPE html>\n\
-<html>\n\
-<head>\n\
-<title>\n\
-html page\n\
-</title>\n\
-<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>\n\
-</head>\n\
-<body class="home-page">\n\
-<section>\n\
-<h1>\n\
-that\'s html page\n\
-</h1>\n\
-</section>\n\
-</body>\n\
-</html>');
+			expect(html).toBe('<!DOCTYPE html><html><head><title>html page</title><meta http-equiv="Content-Type" content="text/html; charset=utf-8"/></head><body class="home-page"><section><h1>that\'s html page</h1></section></body></html>');
 			done();
-		}, { skipIndentation: true });
+		}, { minify: true });
 	});
 
 });

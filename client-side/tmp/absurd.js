@@ -309,6 +309,17 @@ lib.helpers.RequireUncached = function(module) {
 	delete require.cache[require.resolve(module)]
     return require(module);
 }
+lib.helpers.TransformUppercase = function(prop) {
+	var transformed = "";
+	for(var i=0; c=prop.charAt(i); i++) {
+		if(c === c.toUpperCase() && c.toLowerCase() !== c.toUpperCase()) {
+			transformed += "-" + c.toLowerCase();
+		} else {
+			transformed += c;
+		}
+	}
+	return transformed;
+}
 var compileComponent = function(input, callback, options) {
 
 	var css = "", 
@@ -401,7 +412,21 @@ var cleanCSS = require('clean-css'),
 		combineSelectors: true,
 		minify: false,
 		keepCamelCase: false
-	};
+	},
+	transformUppercase = require("../../helpers/TransformUppercase");
+
+// transform uppercase to [-lowercase]
+var transformUppercase = function(prop) {
+	var transformed = "";
+	for(var i=0; c=prop.charAt(i); i++) {
+		if(c === c.toUpperCase() && c.toLowerCase() !== c.toUpperCase()) {
+			transformed += "-" + c.toLowerCase();
+		} else {
+			transformed += c;
+		}
+	}
+	return transformed;
+}
 
 var toCSS = function(rules, options) {
 	var css = '';
@@ -473,17 +498,16 @@ var combineSelectors = function(rules) {
 	return arr;
 }
 
-// transform uppercase to [-lowercase]
-var transformUppercase = function(prop) {
-	var transformed = "";
-	for(var i=0; c=prop.charAt(i); i++) {
-		if(c === c.toUpperCase() && c.toLowerCase() !== c.toUpperCase()) {
-			transformed += "-" + c.toLowerCase();
-		} else {
-			transformed += c;
-		}
-	}
-	return transformed;
+var minimize = function(content) {
+    content = content.replace( /\/\*(?:(?!\*\/)[\s\S])*\*\/|[\r\n\t]+/g, '' );
+    // now all comments, newlines and tabs have been removed
+    content = content.replace( / {2,}/g, ' ' );
+    // now there are no more than single adjacent spaces left
+    // now unnecessary: content = content.replace( /(\s)+\./g, ' .' );
+    content = content.replace( / ([{:}]) /g, '$1' );
+    content = content.replace( /([;,]) /g, '$1' );
+    content = content.replace( / !/g, '!' );
+    return content;
 }
 
 lib.processors.css.CSS = function() {
@@ -501,7 +525,7 @@ lib.processors.css.CSS = function() {
 		}
 		// Minification
 		if(options.minify) {
-			css = cleanCSS.process(css);
+			css = minimize(css);
 			if(callback) callback(null, css);
 		} else {
 			if(callback) callback(null, css);
@@ -645,19 +669,8 @@ var data = null,
 	newline = '\n',
 	defaultOptions = {},
 	tags = [],
-	beautifyHTML = require('js-beautify').html;
-
-var transformUppercase = function(prop) {
-	var transformed = "";
-	for(var i=0; c=prop.charAt(i); i++) {
-		if(c === c.toUpperCase() && c.toLowerCase() !== c.toUpperCase()) {
-			transformed += "-" + c.toLowerCase();
-		} else {
-			transformed += c;
-		}
-	}
-	return transformed;
-}
+	beautifyHTML = require('js-beautify').html,
+	transformUppercase = require("../../helpers/TransformUppercase");
 
 var processTemplate = function(templateName) {
 	var html = '';
@@ -671,13 +684,12 @@ var processTemplate = function(templateName) {
 	}
 	return html;
 }
-
 var process = function(tagName, obj) {
 	// console.log("------------------------\n", tagName, ">", obj);
 
 	var html = '', attrs = '', childs = '';
 
-	var tagAnalized = analizeProperty(tagName);
+	var tagAnalized = require("./helpers/PropAnalyzer")(tagName);
 	tagName = tagAnalized.tag;
 	if(tagAnalized.attrs != "") {
 		attrs += " " + tagAnalized.attrs;
@@ -706,7 +718,7 @@ var process = function(tagName, obj) {
 				}
 				obj[directiveName] = false;
 			break;
-			case "_": 
+			case "_":
 				addToChilds(value);
 				obj[directiveName] = false;
 			break;
@@ -774,9 +786,11 @@ var process = function(tagName, obj) {
 
 	return html;
 }
-
 var packTag = function(tagName, attrs, childs) {
 	var html = '';
+	if(tagName == '' && attrs == '' && childs != '') {
+		return childs;
+	}
 	tagName = tagName == '' ? 'div' : tagName;
 	if(childs !== '') {
 		html += '<' + transformUppercase(tagName) + attrs + '>' + newline + childs + newline + '</' + transformUppercase(tagName) + '>';
@@ -785,18 +799,27 @@ var packTag = function(tagName, attrs, childs) {
 	}
 	return html;
 }
-
 var prepareHTML = function(html, options) {
+	html = require("./helpers/TemplateEngine")(html.replace(/[\r\t\n]/g, ''), options);
 	if(options.minify) {
-		return html.replace(/\n/g, '');
+		return html;
+	} else {
+		return beautifyHTML(html, {indent_size: options.indentSize || 4});
 	}
-	if(options.skipIndentation) {
+}
+lib.processors.html.HTML = function() {
+	var processor = function(rules, callback, options) {
+		data = rules;
+		callback = callback || function() {};
+		options = options || defaultOptions;
+		var html = prepareHTML(processTemplate("mainstream"), options);
+		callback(null, html);
 		return html;
 	}
-	return beautifyHTML(html, {indent_size: options.indentSize || 4});
+	processor.type = "html";
+	return processor;
 }
-
-var analizeProperty = function(prop) {
+lib.processors.html.helpers.PropAnalyzer = function(prop) {
 	var res = { 
 			tag: '',
 			attrs: ''
@@ -867,16 +890,23 @@ var analizeProperty = function(prop) {
 
 	return res;
 }
-
-lib.processors.html.HTML = function() {
-	var processor = function(rules, callback, options) {
-		data = rules;
-		callback = callback || function() {};
-		options = options || defaultOptions;
-		var html = prepareHTML(processTemplate("mainstream"), options);
-		callback(null, html);
-		return html;
+lib.processors.html.helpers.TemplateEngine = function(html, options) {
+	var re = /<%([^%>]+)?%>/g, reExp = /(^( )?if|^( )?for|^( )?else|^( )?switch|^( )?case|^( )?break|^( )?{|^( )?})(.*)?/g,
+		matches = [], code = 'var r=[];\n', cursor = 0;
+	var compile = function(code) {
+		return (new Function("data", code.replace(/[\r\t\n]/g, ''))).apply(options);
 	}
-	processor.type = "html";
-	return processor;
+	var add = function(line, js) {
+		js? (code += line.match(reExp) ? line + '\n' : 'r.push(' + line + ');\n') :
+			(code += line != '' ? 'r.push("' + line.replace(/"/g, '\\"') + '");\n' : '');
+		return add;
+	}
+	while(match = re.exec(html)) matches.push(match);
+	for(var i=0; i<matches, m=matches[i]; i++) {
+		add(html.slice(cursor, m.index))(m[1], true);
+		cursor = m.index + m[0].length;
+	}
+	add(html.substr(cursor, html.length - cursor));
+	code += 'return r.join("");';
+	return compile(code);
 }

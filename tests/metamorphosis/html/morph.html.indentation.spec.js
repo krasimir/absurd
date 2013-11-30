@@ -16,16 +16,10 @@ describe("Metamorphosis (to html preprocessor)", function() {
 			expect(err).toBe(null);
 			expect(html).toBeDefined();
 			expect(html).toBe('<body>\n\
-    <header>\n\
-        header\n\
-    </header>\n\
+    <header>header</header>\n\
     <section>\n\
-        <p>\n\
-            test\n\
-        </p>\n\
-        <p>\n\
-            lorem ipsum\n\
-        </p>\n\
+        <p>test</p>\n\
+        <p>lorem ipsum</p>\n\
         <img/>\n\
     </section>\n\
 </body>');

@@ -1,19 +1,7 @@
 describe("Metamorphosis (to html preprocessor)", function() {
 
 	var api = require('../../../index.js')(),
-	    expectedResult = '<!DOCTYPE html>\n\
-<head>\n\
-<title>\n\
-AbsurdJS is awesome\n\
-</title>\n\
-</head>\n\
-<body>\n\
-<div class="container">\n\
-<p>\n\
-text here\n\
-</p>\n\
-</div>\n\
-</body>';
+	    expectedResult = '<!DOCTYPE html><head><title>AbsurdJS is awesome</title></head><body><div class="container"><p>text here</p></div></body>';
 
 	it("should use the import method", function(done) {
 		api.morph("html").import(__dirname + "/../../data/html.json").compile(function(err, html) {
@@ -21,7 +9,7 @@ text here\n\
 			expect(html).toBeDefined();
             expect(html).toBe(expectedResult);
 			done();
-		}, { skipIndentation: true });
+		}, { minify: true });
 	});
 	
 	it("should use the import method", function(done) {
@@ -30,7 +18,7 @@ text here\n\
 			expect(html).toBeDefined();
             expect(html).toBe(expectedResult);
 			done();
-		}, { skipIndentation: true });
+		}, { minify: true });
 	});
 
 });

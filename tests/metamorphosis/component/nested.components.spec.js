@@ -69,46 +69,10 @@ describe("Nested components", function() {
 			expect(err).toBe(null);
 			expect(css).toBeDefined();
 			expect(html).toBeDefined();
-			expect(css).toBe("body {\n\
-  margin: 10px;\n\
-  width: 100%;\n\
-  height: 100%;\n\
-  padding: 0px;\n\
-}\n\
-body section {\n\
-  margin-top: 20px;\n\
-}\n\
-h1 {\n\
-  font-weight: normal;\n\
-}\n\
-p, .title {\n\
-  font-size: 24px;\n\
-}\n\
-p {\n\
-  line-height: 28px;\n\
-}\n\
-@media all and (max-width: 640px) {\n\
-body section {\n\
-  margin-top: 10px;\n\
-}\n\
-}\n");
-			expect(html).toBe('<!DOCTYPE html>\n\
-<html>\n\
-<head>\n\
-<title>\n\
-That\'s my page\n\
-</title>\n\
-</head><body>\n\
-<h1 class="title">\n\
-Hello world\n\
-</h1>\n\
-<p>\n\
-Text of the <b>page</b>.\n\
-</p>\n\
-</body>\n\
-</html>');
+			expect(css).toBe("body{margin: 10px;width: 100%;height: 100%;padding: 0px;}body section{margin-top: 20px;}h1{font-weight: normal;}p,.title{font-size: 24px;}p{line-height: 28px;}@media all and (max-width: 640px) {body section{margin-top: 10px;}}");
+			expect(html).toBe('<!DOCTYPE html><html><head><title>That\'s my page</title></head><body><h1 class="title">Hello world</h1><p>Text of the <b>page</b>.</p></body></html>');
 			done();
-		}, { skipIndentation: true })
+		}, { minify: true })
 	});
 
 });

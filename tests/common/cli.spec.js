@@ -31,7 +31,7 @@ body p {\n\
 	it("should use -m (minify) option", function(done) {
 		shell("-s ./tests/data/styles.json -m true", function(err, res) {
 			expect(err).toBe("");
-			expect(res).toBe("body{margin:0;padding:0;font-size:1em}body p{line-height:30px}\n");
+			expect(res).toBe("body{margin: 0;padding: 0;font-size: 1em;}body p{line-height: 30px;}\n");
 			done();
 		});
 	});
@@ -42,16 +42,12 @@ body p {\n\
 			expect(res).toBe("<!DOCTYPE html>\n\
 \n\
 <head>\n\
-    <title>\n\
-        AbsurdJS is awesome\n\
-    </title>\n\
+    <title>AbsurdJS is awesome</title>\n\
 </head>\n\
 \n\
 <body>\n\
     <div class=\"container\">\n\
-        <p>\n\
-            text here\n\
-        </p>\n\
+        <p>text here</p>\n\
     </div>\n\
 </body>\n");
 			done();
