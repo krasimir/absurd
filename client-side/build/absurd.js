@@ -1050,7 +1050,7 @@ lib.processors.html.helpers.PropAnalyzer = function(prop) {
 	return res;
 }
 lib.processors.html.helpers.TemplateEngine = function(html, options) {
-	var re = /<%([^%>]+)?%>/g, reExp = /(^( )?if|^( )?for|^( )?else|^( )?switch|^( )?case|^( )?break|^( )?{|^( )?})(.*)?/g,
+	var re = /<%([^%>]+)?%>/g, reExp = /(^( )?(if|for|else|switch|case|break|{|}))(.*)?/g,
 		matches = [], code = 'var r=[];\n', cursor = 0;
 	var compile = function(code) {
 		return (new Function("data", code.replace(/[\r\t\n]/g, ''))).apply(options);
