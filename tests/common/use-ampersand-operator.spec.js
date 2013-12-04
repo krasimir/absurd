@@ -30,9 +30,9 @@ describe("Use ampersand operator", function() {
 		}).compile(function(err, css) {
 			expect(err).toBe(null);
 			expect(css).toBeDefined();
-			expect(css).toBe("a {\n  color: red;\n}\na:hover {\n  color: blue;\n}\na.fancy {\n  color: green;\n}\n.ie6 a:hover, .ie7 a:hover {\n  color: orange;\n}\n.ie6 a.fancy {\n  color: yellow;\n}\n.ie7 a.fancy {\n  color: black;\n}\n");
+			expect(css).toBe("a{color: red;}a:hover{color: blue;}a.fancy{color: green;}.ie6 a.fancy{color: yellow;}.ie7 a.fancy{color: black;}.ie6 a:hover,.ie7 a:hover{color: orange;}");
 			done();
-		})
+		}, { minify: true })
 	});
 
 });

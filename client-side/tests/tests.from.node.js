@@ -597,9 +597,9 @@ describe("Use ampersand operator", function() {
 		}).compile(function(err, css) {
 			expect(err).toBe(null);
 			expect(css).toBeDefined();
-			expect(css).toBe("a {\n  color: red;\n}\na:hover {\n  color: blue;\n}\na.fancy {\n  color: green;\n}\n.ie6 a:hover, .ie7 a:hover {\n  color: orange;\n}\n.ie6 a.fancy {\n  color: yellow;\n}\n.ie7 a.fancy {\n  color: black;\n}\n");
+			expect(css).toBe("a{color: red;}a:hover{color: blue;}a.fancy{color: green;}.ie6 a.fancy{color: yellow;}.ie7 a.fancy{color: black;}.ie6 a:hover,.ie7 a:hover{color: orange;}");
 			done();
-		})
+		}, { minify: true })
 	});
 
 });
@@ -840,6 +840,25 @@ describe("Fixing bug in array usage", function() {
 			expect(css).toBe("a {\n  color: #000;\n}\na:hover {\n  color: #999;\n}\n");
 			done();
 		});		
+	});
+
+});
+describe("Support comma separated selectors", function() {
+
+	var api = require('../../index.js')();
+
+	it("Support comma separated selectors", function(done) {
+		api.add({
+			"body, section, h1": {
+				padding: "20px",
+				"b, i": { fontSize: "20px"}
+			}
+		}).compile(function(err, css) {
+			expect(err).toBe(null);
+			expect(css).toBeDefined();
+			expect(css).toBe("body,section,h1{padding: 20px;}body b,body i,section b,section i,h1 b,h1 i{font-size: 20px;}");
+			done();
+		}, {minify: true});
 	});
 
 });

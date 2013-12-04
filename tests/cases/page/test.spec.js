@@ -6,7 +6,7 @@ describe("Test case (page)", function() {
 		Absurd(__dirname + '/code.js').compile(function(err, css) {
 			expect(err).toBe(null);
 			expect(css).toBeDefined();
-			expect(css).toBe('@page toc, index:blank {\n  color: #000;\n}\n@page {\n  font-size: 12px;\n}\n');
+			expect(css).toBe('@page {\n  font-size: 12px;\n}\n@page toc, index:blank {\n  color: #000;\n}\n');
 			done();
 		});
 	});
@@ -15,7 +15,7 @@ describe("Test case (page)", function() {
 		Absurd(__dirname + '/code.json').compile(function(err, css) {
 			expect(err).toBe(null);
 			expect(css).toBeDefined();
-			expect(css).toBe('@page toc, index:blank {\n  color: #000;\n}\n@page {\n  font-size: 12px;\n}\n');
+			expect(css).toBe('@page {\n  font-size: 12px;\n}\n@page toc, index:blank {\n  color: #000;\n}\n');
 			done();
 		});
 	});
