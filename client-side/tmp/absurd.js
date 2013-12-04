@@ -79,7 +79,9 @@ lib.api.add = function(API) {
 			var current = API.getRules(stylesheet || "mainstream")[selector];
 			for(var propNew in props) {
 				// overwrite already added value
-				current[propNew] = props[propNew];
+				if(typeof props[propNew] != 'object') {
+					current[propNew] = props[propNew];
+				}
 			}
 		// no, the selector is still not added
 		} else {
@@ -93,8 +95,8 @@ lib.api.add = function(API) {
 	var add = function(rules, stylesheet) {
 		API.numOfAddedRules += 1;
 		for(var selector in rules) {
-			if(typeof rules[selector].length !== 'undefined' && typeof rules[selector] === "object") {
-				for(var i=0; r=rules[selector][i]; i++) {
+			if(rules[selector] instanceof Array) {
+				for(var i=0; i<rules[selector].length, r=rules[selector][i]; i++) {
 					addRule(selector, r, stylesheet || "mainstream");
 				}
 			} else {
@@ -449,7 +451,7 @@ var filterRules = function(rules) {
 		var props = {};
 		for(var prop in rules[selector]) {
 			var value = rules[selector][prop];
-			if(value !== false) {
+			if(value !== false && typeof value != 'object') {
 				areThereAnyProps = true;
 				props[prop] = value;
 			}
