@@ -309,13 +309,17 @@ lib.helpers.RequireUncached = function(module) {
 	delete require.cache[require.resolve(module)]
     return require(module);
 }
-lib.helpers.TransformUppercase = function(prop) {
+lib.helpers.TransformUppercase = function(prop, options) {
 	var transformed = "";
 	for(var i=0; c=prop.charAt(i); i++) {
-		if(c === c.toUpperCase() && c.toLowerCase() !== c.toUpperCase()) {
-			transformed += "-" + c.toLowerCase();
-		} else {
+		if(options && options.keepCamelCase === true) {
 			transformed += c;
+		} else {
+			if(c === c.toUpperCase() && c.toLowerCase() !== c.toUpperCase()) {
+				transformed += "-" + c.toLowerCase();
+			} else {
+				transformed += c;
+			}
 		}
 	}
 	return transformed;
@@ -414,19 +418,6 @@ var newline = '\n',
 	},
 	transformUppercase = require("../../helpers/TransformUppercase");
 
-// transform uppercase to [-lowercase]
-var transformUppercase = function(prop) {
-	var transformed = "";
-	for(var i=0; c=prop.charAt(i); i++) {
-		if(c === c.toUpperCase() && c.toLowerCase() !== c.toUpperCase()) {
-			transformed += "-" + c.toLowerCase();
-		} else {
-			transformed += c;
-		}
-	}
-	return transformed;
-}
-
 var toCSS = function(rules, options) {
 	var css = '';
 	for(var selector in rules) {
@@ -441,7 +432,7 @@ var toCSS = function(rules, options) {
 				if(value === "") {
 					value = '""';
 				}
-				entity += '  ' + (options.keepCamelCase == false ? transformUppercase(prop) : prop) + ': ' + value + ';' + newline;
+				entity += '  ' + transformUppercase(prop, options) + ': ' + value + ';' + newline;
 			}
 			entity += '}' + newline;
 			css += entity;
@@ -669,7 +660,8 @@ var data = null,
 	defaultOptions = {},
 	tags = [],
 	beautifyHTML = require('js-beautify').html,
-	transformUppercase = require("../../helpers/TransformUppercase");
+	transformUppercase = require("../../helpers/TransformUppercase"),
+	passedOptions = {};
 
 var processTemplate = function(templateName) {
 	var html = '';
@@ -710,9 +702,9 @@ var process = function(tagName, obj) {
 			case "_attrs":
 				for(var attrName in value) {
 					if(typeof value[attrName] === "function") {
-						attrs += " " + transformUppercase(attrName) + "=\"" + value[attrName]() + "\"";
+						attrs += " " + transformUppercase(attrName, passedOptions) + "=\"" + value[attrName]() + "\"";
 					} else {
-						attrs += " " + transformUppercase(attrName) + "=\"" + value[attrName] + "\"";
+						attrs += " " + transformUppercase(attrName, passedOptions) + "=\"" + value[attrName] + "\"";
 					}
 				}
 				obj[directiveName] = false;
@@ -792,26 +784,26 @@ var packTag = function(tagName, attrs, childs) {
 	}
 	tagName = tagName == '' ? 'div' : tagName;
 	if(childs !== '') {
-		html += '<' + transformUppercase(tagName) + attrs + '>' + newline + childs + newline + '</' + transformUppercase(tagName) + '>';
+		html += '<' + transformUppercase(tagName, passedOptions) + attrs + '>' + newline + childs + newline + '</' + transformUppercase(tagName, passedOptions) + '>';
 	} else {
-		html += '<' + transformUppercase(tagName) + attrs + '/>';
+		html += '<' + transformUppercase(tagName, passedOptions) + attrs + '/>';
 	}
 	return html;
 }
-var prepareHTML = function(html, options) {
-	html = require("./helpers/TemplateEngine")(html.replace(/[\r\t\n]/g, ''), options);
-	if(options.minify) {
+var prepareHTML = function(html) {
+	html = require("./helpers/TemplateEngine")(html.replace(/[\r\t\n]/g, ''), passedOptions);
+	if(passedOptions.minify) {
 		return html;
 	} else {
-		return beautifyHTML(html, {indent_size: options.indentSize || 4});
+		return beautifyHTML(html, {indent_size: passedOptions.indentSize || 4});
 	}
 }
 lib.processors.html.HTML = function() {
 	var processor = function(rules, callback, options) {
 		data = rules;
 		callback = callback || function() {};
-		options = options || defaultOptions;
-		var html = prepareHTML(processTemplate("mainstream"), options);
+		options = passedOptions = options || defaultOptions;
+		var html = prepareHTML(processTemplate("mainstream"));
 		callback(null, html);
 		return html;
 	}
