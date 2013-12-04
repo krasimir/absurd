@@ -1,4 +1,4 @@
-/* version: 0.1.14 */
+/* version: 0.1.16 */
 var Absurd = (function(w) {
 var lib = { 
 	api: {},
@@ -239,7 +239,9 @@ lib.api.add = function(API) {
 			var current = API.getRules(stylesheet || "mainstream")[selector];
 			for(var propNew in props) {
 				// overwrite already added value
-				current[propNew] = props[propNew];
+				if(typeof props[propNew] != 'object') {
+					current[propNew] = props[propNew];
+				}
 			}
 		// no, the selector is still not added
 		} else {
@@ -250,11 +252,41 @@ lib.api.add = function(API) {
 		clearing(props);
 		
 	}
+	var extend = function(destination, source) {
+		for (var key in source) {
+			if (hasOwnProperty.call(source, key)) {
+				destination[key] = source[key];
+			}
+		}
+		return destination;
+	};
+	var prepareRules = function(obj) {
+		if(obj instanceof Array) {
+			for(var i=0; i<obj.length; i++) {
+				prepareRules(obj[i]);
+			}
+			return;
+		}
+		for(var prop in obj) {
+			var value = obj[prop];
+			if(typeof value == 'object') {
+				prepareRules(value);
+			}
+			if(/, ?/g.test(prop)) {
+				var parts = prop.replace(/, /g, ',').split(',');
+				for(var i=0; i<parts.length, p=parts[i]; i++) {
+					obj[p] = extend({}, value);
+				}
+				delete obj[prop];
+			}
+		}
+	}
 	var add = function(rules, stylesheet) {
 		API.numOfAddedRules += 1;
+		prepareRules(rules);
 		for(var selector in rules) {
-			if(typeof rules[selector].length !== 'undefined' && typeof rules[selector] === "object") {
-				for(var i=0; r=rules[selector][i]; i++) {
+			if(rules[selector] instanceof Array) {
+				for(var i=0; i<rules[selector].length, r=rules[selector][i]; i++) {
 					addRule(selector, r, stylesheet || "mainstream");
 				}
 			} else {
@@ -609,7 +641,7 @@ var filterRules = function(rules) {
 		var props = {};
 		for(var prop in rules[selector]) {
 			var value = rules[selector][prop];
-			if(value !== false) {
+			if(value !== false && typeof value != 'object') {
 				areThereAnyProps = true;
 				props[prop] = value;
 			}
