@@ -21,16 +21,16 @@ describe("Metamorphosis (to html preprocessor)", function() {
 	});
 
 	it("should compile list", function(done) {
-		var getList = function(data) {
-			var list = { ul: [] };
-			for(var i=0; item=data[i]; i++) {
-				list.ul.push({ li:item });
-			}
-			return list;
-		}
 		api.morph("html").add({
 			html: {
-				body: getList(["A", "B", "C", "D"])
+				body: {
+					ul: [
+						{ li: 'A' },
+						{ li: 'B' },
+						{ li: 'C' },
+						{ li: 'D' }
+					]
+				}
 			}
 		}).compile(function(err, html) {
 			expect(err).toBe(null);

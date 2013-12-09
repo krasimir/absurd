@@ -2,7 +2,7 @@ describe("Metamorphosis (to html preprocessor)", function() {
 
 	var api = require('../../../index.js')();
 
-	it("should compile html with data", function(done) {
+	xit("should compile html with data", function(done) {
 		api.morph("html").add({
 			body: {
 				h1: "<% this.name %> <small>(<% this.profile.job %>)</small>"
@@ -18,7 +18,7 @@ describe("Metamorphosis (to html preprocessor)", function() {
 		})
 	});
 
-	it("should use 'if' statement", function(done) {
+	xit("should use 'if' statement", function(done) {
 		api.morph("html").add({
 			body: {
 				h1: [
@@ -38,7 +38,7 @@ describe("Metamorphosis (to html preprocessor)", function() {
 		})
 	});
 
-	it("should use 'if' statement (false)", function(done) {
+	xit("should use 'if' statement (false)", function(done) {
 		api.morph("html").add({
 			body: {
 				h1: [
@@ -58,7 +58,7 @@ describe("Metamorphosis (to html preprocessor)", function() {
 		})
 	});
 
-	it("should use 'if/else' statement", function(done) {
+	xit("should use 'if/else' statement", function(done) {
 		api.morph("html").add({
 			body: {
 				h1: [
@@ -80,7 +80,7 @@ describe("Metamorphosis (to html preprocessor)", function() {
 		})
 	});
 
-	it("should use 'switch' statement", function(done) {
+	xit("should use 'switch' statement", function(done) {
 		api.morph("html").add({
 			body: [
 				"<% switch(this.theme) { %>",
@@ -109,10 +109,10 @@ describe("Metamorphosis (to html preprocessor)", function() {
 				p: "Hello, my name is <%this.data.name%>!",
 				small: "I'm \"<% this.data.profile.age %>\" {years} old",
 				ul: [	
-					'<% for(var skill in this.data.skills) { %>',
+					'<% for(var i=0; i<this.data.skills.length, skill=this.data.skills[i]; i++) { %>',
 					{
 						li: {
-							'a[href="#"]': 'I do <% this.data.skills[skill] %>'
+							'a[href="#<% skill %>"]': 'I do <% skill %>'
 						}
 					},
 					'<% } %>'
@@ -121,13 +121,28 @@ describe("Metamorphosis (to html preprocessor)", function() {
 		}).compile(function(err, html) {
 			expect(err).toBe(null);
 			expect(html).toBeDefined();
-			expect(html).toBe('<body><p>Hello, my name is John!</p><small>I\'m "29" {years} old</small><ul><li><a href="#">I do javascript</a></li><li><a href="#">I do html</a></li><li><a href="#">I do css</a></li></ul></body>');
+			expect(html).toBe('<body><p>Hello, my name is John!</p><small>I\'m "29" {years} old</small><ul><li><a href="#javascript">I do javascript</a></li><li><a href="#html">I do html</a></li><li><a href="#css">I do css</a></li></ul></body>');
 			done();
 		}, {
 			minify: true,
 			data: {
 				name: "John",
 				profile: { age: 29 },
+				skills: ['javascript', 'html', 'css']
+			}
+		});
+	});
+
+	it("should accept normal html", function(done) {
+		api.morph("html").add('<p><% this.data.name %>: <% this.data.skills.length %></p><ul><% for(var i=0; i<this.data.skills.length, skill=this.data.skills[i]; i++) { %><li><a href="#"><% skill %></a></li><% } %></ul>').compile(function(err, html) {
+			expect(err).toBe(null);
+			expect(html).toBeDefined();
+			expect(html).toBe('<p>John: 3</p><ul><li><a href="#">javascript</a></li><li><a href="#">html</a></li><li><a href="#">css</a></li></ul>');
+			done();
+		}, {
+			minify: true,
+			data: {
+				name: "John",
 				skills: ['javascript', 'html', 'css']
 			}
 		});

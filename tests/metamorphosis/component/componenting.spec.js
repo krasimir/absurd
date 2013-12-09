@@ -1,7 +1,6 @@
 describe("Componenting", function() {
 
-	var api = require('../../../index.js')(),
-		absurd = require('../../../index.js')();
+	var api = require('../../../index.js')();
 
 	it("should define component and compile it", function(done) {
 		var component = {
