@@ -1,4 +1,4 @@
-/* version: 0.1.16 */
+/* version: 0.1.17 */
 var Absurd = (function(w) {
 var lib = { 
 	api: {},
@@ -40,9 +40,7 @@ var require = function(v) {
 var __dirname = "";
 var components = function(absurd) {
 	var api = {},
-		comps = {},
-		cssCache = {},
-		htmlCache = {};
+		comps = {}
 
 	// utils
 	var select = function(selector) {
@@ -79,7 +77,21 @@ var components = function(absurd) {
 	var Component = function(componentName) {
 		var listeners = [];
 		return {
-			name: componentName,
+			_html: null,
+			_css: null,
+			_construct: function() {
+				if(this.html && typeof this.html === 'string') {
+					var element = select(this.html);
+					if(element != null) {
+						this.html = element.outerHTML.replace(/&lt;/g, '<').replace(/&gt;/g, '>');
+						this._html = {
+							html: this.html,
+							element: element
+						}
+					}
+				}
+			},
+			_name: componentName,
 			on: function(eventName, callback) {
 				if(!listeners[eventName]) {
 					listeners[eventName] = [];
@@ -111,35 +123,47 @@ var components = function(absurd) {
 				}
 				return this;
 			},
-			render: function(selector, data) {
-				var self = this,
-					cssC = cssCache,
-					htmlC = htmlCache;
+			el: function() {
+				return this._html && this._html.element ? this._html.element : null;
+			},
+			appendTo: function(selector) {
+				var parent = select(selector);
+				var el = this.el();
+				parent && el ? parent.appendChild(el) : null;
+				return this;
+			},
+			include: function(compName) {				
+				return '<%' + compName + '%>';
+			},
+			populate: function(options) {
+
+				var self = this;
 
 				var handleCSS = function(css) {
-					if(!cssC[self.name]) {
+					if(!self._css) {
 						var style = document.createElement("style");
-					    style.setAttribute("id", self.name + '-css');
+					    style.setAttribute("id", self._name + '-css');
 					    style.setAttribute("type", "text/css");
 					    style.innerHTML = css;
 						select("head").appendChild(style);
-						cssC[self.name] = { css: css };
-					} else if(cssC[self.name].css !== css) {
-						select('#' + self.name + '-css').innerHTML = css;
+						self._css = { css: css };
+					} else if(self._css.css !== css) {
+						select('#' + self._name + '-css').innerHTML = css;
 					}
 				}
 
 				var handleHTML = function(html) {
-					if(!htmlC[self.name]) {
+					if(!self._html) {
 						var el = str2DOMElement(html);
-						select(selector).appendChild(el);
-						htmlC[self.name] = { html: html, element: el };
-					} else if(htmlC[self.name].html !== html) {
+						self._html = { html: html, element: el };
+					} else if(self._html.html !== html) {
 						var newElement = str2DOMElement(html);
-						htmlC[self.name].element.parentNode.replaceChild(newElement, htmlC[self.name].element);
-						htmlC[self.name].element = newElement;
+						if(self._html.element.parentNode) {
+							self._html.element.parentNode.replaceChild(newElement, self._html.element);
+						}
+						self._html.element = newElement;
+						self._html.html = html;
 					}
-					handleDataAttributes(htmlC[self.name].element);
 				}
 
 				var handleDataAttributes = function(element) {
@@ -163,33 +187,52 @@ var components = function(absurd) {
 					handleEventAttribute(element);
 				}
 
-				// prepare HTML if it is already a DOM element
-				if(this.html && typeof this.html === 'string' && !htmlC[this.name]) {
-					var element = select(this.html);
-					if(element != null) {
-						this.html = element.outerHTML.replace(/&lt;/g, '<').replace(/&gt;/g, '>');
-						htmlC[this.name] = {
-							html: this.html,
-							element: element,
-							alreadyAddedDOM: true
-						}
+				var handleComponentInclude = function(html, callback) {
+					var re = /<%(.+?)%>/g, matches = 0;
+					var callComponent = function(match) {
+						var c = api.get(match[1]);
+		                c.populate({callback: function(data) {
+		                	var regexp = new RegExp(match[0], "g");
+		                	html = html.replace(regexp, data.html);
+		                	handleComponentInclude(html, callback);
+		                	c._parent = self;
+		                }, calledFromParent: true });
 					}
+					while(match = re.exec(html)) {
+						matches++;
+		                callComponent(match);
+		                return;
+			        }
+			        callback(html);
 				}
 
 				// css & html
-				absurd.flush().morph("component").add(this).compile(function(err, css, html) {
-					css != '' ? handleCSS(css) : null;
-					html != '' ? handleHTML(html) : null;
+				absurd.flush().morph("component").add({css: this.css, html: this.html}).compile(function(err, css, html) {
+					handleComponentInclude(html, function(html) {
+						css != '' ? handleCSS(css) : null;
+						html != '' ? handleHTML(html) : null;
+						handleDataAttributes(self._html.element);
+						if(options && options.appendTo) {
+							self.appendTo(options.appendTo);
+						}
+						if(options && typeof options.callback === 'function') {
+							options.callback(self._html);
+						}
+						self.dispatch("populated" , self._html);
+					});
 				}, api.extend({minify: true}, this));
 
-				self.dispatch("rendered");
+				return this;
+				
 			}
 		}
 	}
 
 	// components API
 	api.register = function(name, comp) {
-		return comps[name] = api.extend({}, Component(name), comp);
+		var c = comps[name] = api.extend({}, Component(name), comp);
+		c._construct();
+		return c;
 	}
 	api.get = function(name) {
 		if(comps[name]) { return comps[name]; }
@@ -206,6 +249,7 @@ var components = function(absurd) {
 	}
 	api.flush = function() {
 		comps = {};
+		return api;
 	}
 	api.extend = function() {
 		var process = function(destination, source) {	
@@ -221,6 +265,12 @@ var components = function(absurd) {
 			result = process(result, arguments[i]);
 		}
 		return result;
+	}
+	api.broadcast = function(event) {
+		for(var name in comps) {
+			comps[name].dispatch(event);
+		}
+		return api;
 	}
 	
 	return api;
