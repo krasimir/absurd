@@ -1,7 +1,5 @@
 describe("Testing components in complex scenarios", function() {
 
-	var absurd = Absurd();
-
 	xit("should be able to update css and html", function(done) {
 		absurd.components.register("blog-articles", {
 			css: {
@@ -32,7 +30,7 @@ describe("Testing components in complex scenarios", function() {
 					}, 100);
 				}
 			}
-		}).populate({appendTo: "body", bla: 1});
+		}).set("parent", "body").populate();
 	});
 
 	xit("should work with already added DOM element", function(done) {

@@ -137,14 +137,21 @@ lib.api.add = function(API) {
 	}
 	return add;
 }
-var extend = function(destination, source) {
-	for (var key in source) {
-		if (hasOwnProperty.call(source, key)) {
-			destination[key] = source[key];
-		}
+var extend = function() {
+	var process = function(destination, source) {	
+	    for (var key in source) {
+			if (hasOwnProperty.call(source, key)) {
+			    destination[key] = source[key];
+			}
+	    }
+	    return destination;
+	};
+	var result = arguments[0];
+	for(var i=1; i<arguments.length; i++) {
+		result = process(result, arguments[i]);
 	}
-	return destination;
-};
+	return result;
+}
 
 lib.api.compile = function(api) {
 	return function() {
