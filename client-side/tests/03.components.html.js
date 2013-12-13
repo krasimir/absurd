@@ -5,12 +5,14 @@ describe("Testing components (HTML compilation)", function() {
 			html: "#banner-A",
 			text: "awesome",
 			populated: function(data) {
-				expect(data.html.raw).toBe("<div id=\"banner-A\"><p>" + this.text + "</p><small>small text</small></div>");
-				expect(document.querySelector("#banner-A p").innerHTML).toBe(this.text);
+				console.log(data);
 				done();
 			}
-		});
+		}).populate();
 	});
+
+
+	
 
 	xit("should compile html", function(done) {
 		absurd.components.flush().register("class-C", {
