@@ -197,7 +197,7 @@ var Component = function(name, absurd) {
 					}
 
 					if(assert(source.innerText, el.nodeValue)) {
-
+						
 					}
 
 					// childs
