@@ -1,47 +1,12 @@
-h1, h2, .centered, .compile, .social, .demo-selector {
-  text-align: center;
+html, body, h1, h2, .result pre, .documentation p {
+  margin: 0;
 }
-.documentation h2, .documentation h3, .documentation h4 {
-  text-align: left;
-}
-h1, h2, .documentation h3, .documentation h4 {
-  font-weight: normal;
-}
-h1 {
-  font-size: 60px;
-  padding: 60px 0 30px 0;
-}
-h2, .menu p, .documentation h4 {
-  font-size: 30px;
-}
-html, body, .compile {
-  font-size: 20px;
-}
-.result, .menu p a small, .demo-selector select, .documentation p {
-  font-size: 18px;
-}
-.compile small {
-  font-size: 11px;
-  line-height: 11px;
-}
-.documentation h2 {
-  font-size: 50px;
-  line-height: 50px;
-  border-bottom: solid 4px #FFF;
-}
-.documentation h3 {
-  font-size: 40px;
-  border-bottom: dotted 2px #666666;
-}
-html, body, .result pre {
-  padding: 0;
-}
-h2 {
-  padding: 30px 0 15px 0;
+.content {
+  margin: 20px 0 20px 0;
 }
 .compile {
-  padding: 6px 10px;
   margin: 40px auto;
+  padding: 6px 10px;
   width: 140px;
   line-height: 18px;
   border: solid 1px #4FBB4F;
@@ -49,35 +14,6 @@ h2 {
   color: #000;
   border-radius: 6px;
   box-shadow: 0px 0px 6px #888888;
-}
-.social {
-  padding: 20px;
-  background: #ECECEC;
-}
-.menu {
-  padding: 60px 0 60px 0;
-  background: #575757;
-  border-top: solid 1px #FFF;
-  border-bottom: solid 1px #6C6C6C;
-}
-.demo-selector select {
-  padding: 6px 8px 6px 6px;
-  border: solid 2px #C2C2C2;
-  border-radius: 10px;
-  min-width: 240px;
-}
-.documentation h4 {
-  padding: 0 10px 0 0 ;
-  margin: 10px 0 10px 0;
-}
-.documentation p {
-  padding: 0 20px 0 0;
-}
-h1, h2, html, body, .result pre, .documentation p {
-  margin: 0;
-}
-.content {
-  margin: 20px 0 20px 0;
 }
 .menu p, .menu .menu-inner, .demo, .documentation .documentation-inner {
   margin: 0 auto;
@@ -97,11 +33,41 @@ h1, h2, html, body, .result pre, .documentation p {
 .documentation h3 a {
   margin: 0 0 0 -35px;
 }
+.documentation h4 {
+  margin: 10px 0 10px 0;
+  padding: 0 10px 0 0 ;
+}
 .documentation h4 a {
   margin: 0 0 0 -25px;
 }
-.clear, .menu .menu-inner:after {
-  clear: both;
+html, body, .result pre {
+  padding: 0;
+}
+h1 {
+  padding: 60px 0 30px 0;
+  font-size: 60px;
+}
+h2 {
+  padding: 30px 0 15px 0;
+}
+.social {
+  padding: 20px;
+  background: #ECECEC;
+}
+.menu {
+  padding: 60px 0 60px 0;
+  background: #575757;
+  border-top: solid 1px #FFF;
+  border-bottom: solid 1px #6C6C6C;
+}
+.demo-selector select {
+  padding: 6px 8px 6px 6px;
+  border: solid 2px #C2C2C2;
+  border-radius: 10px;
+  min-width: 240px;
+}
+.documentation p {
+  padding: 0 20px 0 0;
 }
 html, body, #editor {
   width: 100%;
@@ -124,6 +90,28 @@ html, body, #editor {
 html, body, .demo-selector select {
   font-family: Georgia;
 }
+html, body, .compile {
+  font-size: 20px;
+}
+h2, .menu p, .documentation h4 {
+  font-size: 30px;
+}
+.result, .menu p a small, .demo-selector select, .documentation p {
+  font-size: 18px;
+}
+.compile small {
+  font-size: 11px;
+  line-height: 11px;
+}
+.documentation h2 {
+  font-size: 50px;
+  line-height: 50px;
+  border-bottom: solid 4px #FFF;
+}
+.documentation h3 {
+  font-size: 40px;
+  border-bottom: dotted 2px #666666;
+}
 html, body, .documentation p {
   line-height: 24px;
 }
@@ -135,6 +123,18 @@ html, body, .documentation p {
 }
 .documentation h3, .documentation h4 {
   line-height: 40px;
+}
+h1, h2, .centered, .compile, .social, .demo-selector {
+  text-align: center;
+}
+.documentation h2, .documentation h3, .documentation h4 {
+  text-align: left;
+}
+h1, h2, .documentation h3, .documentation h4 {
+  font-weight: normal;
+}
+.clear, .menu .menu-inner:after {
+  clear: both;
 }
 .compile:hover {
   background: #74DF68;
@@ -156,6 +156,7 @@ html, body, .documentation p {
 .result {
   overflow: auto;
   padding-left: 10px;
+  pre: [object Object];
 }
 .result pre {
   word-wrap: break-word;
