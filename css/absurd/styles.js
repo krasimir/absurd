@@ -33,7 +33,6 @@ var demoBlock = function() {
 	return {
 		width: "50%",
 		height: "500px",
-		padding: "10px",
 		border: "dotted 1px #C9C9C9",
 		background: "solid 1px #C9C9C9",
 		float: "left",
@@ -61,7 +60,11 @@ var demo = function() {
 		".editor-wrapper": demoBlock(),
 		".result": [
 			demoBlock(), 
-			{fontSize: "18px"},
+			{
+				fontSize: "18px",
+				overflow: "auto",
+				paddingLeft: "10px"
+			},
 			{
 				pre: {
 					margin: 0,
