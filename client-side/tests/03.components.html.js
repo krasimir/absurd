@@ -88,6 +88,9 @@ describe("Testing components (HTML compilation)", function() {
 
 	it("should change the whole node", function(done) {
 		absurd.components.flush().register("class-D", {
+			css: {
+				'#grid': { display: 'none' }
+			},
 			html: {
 				'section[class="grid" id="grid"]': {
 					'p[data-event="click"]': "test"

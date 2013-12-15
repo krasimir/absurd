@@ -232,7 +232,7 @@ var Component = function(name, absurd) {
 		}
 	}
 	return {
-		populate: function() {
+		populate: function(options) {
 			queue([
 				handleCSS,
 				setHTMLSource,
@@ -245,7 +245,9 @@ var Component = function(name, absurd) {
 					next();
 				},
 				function() {
-					this.dispatch("populated", {css: CSS, html: { element: HTMLElement }});
+					var data = {css: CSS, html: { element: HTMLElement }};
+					this.dispatch("populated", data);
+					if(options && typeof options.callback === 'function') { options.callback(data); }
 				}
 			], this);
 		},
