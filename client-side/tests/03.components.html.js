@@ -1,6 +1,6 @@
 describe("Testing components (HTML compilation)", function() {
 
-	it("should initialize component with already added dom element", function(done) {
+	xit("should initialize component with already added dom element", function(done) {
 		absurd.components.flush().register("banner-A", {
 			html: "#banner-A",
 			text: "awesome",
@@ -10,9 +10,6 @@ describe("Testing components (HTML compilation)", function() {
 			}
 		}).populate();
 	});
-
-
-	
 
 	xit("should compile html", function(done) {
 		absurd.components.flush().register("class-C", {

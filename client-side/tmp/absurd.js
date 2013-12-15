@@ -137,21 +137,7 @@ lib.api.add = function(API) {
 	}
 	return add;
 }
-var extend = function() {
-	var process = function(destination, source) {	
-	    for (var key in source) {
-			if (hasOwnProperty.call(source, key)) {
-			    destination[key] = source[key];
-			}
-	    }
-	    return destination;
-	};
-	var result = arguments[0];
-	for(var i=1; i<arguments.length; i++) {
-		result = process(result, arguments[i]);
-	}
-	return result;
-}
+var extend = require("../helpers/Extend");
 
 lib.api.compile = function(api) {
 	return function() {
@@ -343,6 +329,21 @@ lib.helpers.ColorLuminance = function (hex, lum) {
 	}
 
 	return rgb;
+}
+lib.helpers.Extend = function() {
+	var process = function(destination, source) {	
+	    for (var key in source) {
+			if (hasOwnProperty.call(source, key)) {
+			    destination[key] = source[key];
+			}
+	    }
+	    return destination;
+	};
+	var result = arguments[0];
+	for(var i=1; i<arguments.length; i++) {
+		result = process(result, arguments[i]);
+	}
+	return result;
 }
 lib.helpers.RequireUncached = function(module) {
 	delete require.cache[require.resolve(module)]
