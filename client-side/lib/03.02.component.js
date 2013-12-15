@@ -99,6 +99,9 @@ var Component = function(name, absurd) {
 			next();
 		}
 	}
+	var handleEvents = function(next) {
+		next();
+	}
 	return {
 		populate: function(options) {
 			queue([
