@@ -1,20 +1,40 @@
 describe("Testing components (HTML compilation)", function() {
 
-	xit("should initialize component with already added dom element", function(done) {
+	it("should initialize component with already added dom element", function(done) {
 		absurd.components.flush().register("banner-A", {
 			html: "#banner-A",
 			text: "awesome",
+			theme: "black",
 			populated: function(data) {
-				console.log(data);
+				expect(document.querySelector("#banner-A p").innerHTML).toBe(this.text);
+				expect(document.querySelector("#banner-A").getAttribute("class")).toBe(this.theme);
 				done();
 			}
 		}).populate();
 	});
 
-	xit("should compile html", function(done) {
-		absurd.components.flush().register("class-C", {
+	it("should add the html element to the DOM", function(done) {
+		absurd.components.flush().register("class-D", {
+			css: {
+				'.class-D': { display: 'none' }
+			},
 			html: {
-				'ul.class-C': [
+				'.class-D': {
+					h1: 'Class D',
+					'p#classd': 'a dome element'
+				}
+			},
+			populated: function(data) {
+				expect(document.getElementById("classd") !== null).toBe(true);
+				done();
+			}
+		}).set("parent", document.querySelector("body")).populate();
+	});
+
+	it("should compile html", function(done) {
+		absurd.components.flush().register("class-B", {
+			html: {
+				'ul.class-B': [
 					'<% for(var i=0; i<this.links.length, link=this.links[i]; i++) { %>',
 					{ 
 						li: {
@@ -29,30 +49,74 @@ describe("Testing components (HTML compilation)", function() {
 				{ url: "http://yahoo.com", label: "Yahoo" }
 			]
 		}).on("populated", function(data) {
-			expect(data.html.raw).toBe('<ul class="class-C"><li><a href="http://google.com">Google</a></li><li><a href="http://yahoo.com">Yahoo</a></li></ul>');
+			expect(data.html.element.outerHTML).toBe('<ul class="class-B"><li><a href="http://google.com">Google</a></li><li><a href="http://yahoo.com">Yahoo</a></li></ul>');
 			done();
 		}).populate();
 	});
 
-	xit("should add the html element to the DOM", function(done) {
-		absurd.components.flush().register("class-D", {
-			css: {
-				'.class-D': { display: 'none' }
-			},
+	it("should change attributes", function(done) {
+		absurd.components.flush().register("class-C", {
 			html: {
-				'.class-D': {
-					h1: 'Class D',
-					'p#classd': 'test'
+				'section[class="grid" id="grid"]': {
+					'p[data-event="click"]': "test"
 				}
 			},
 			populated: function(data) {
-				expect(document.getElementById("classd")).toBeDefined();
-				done();
+				if(!this.tested) {
+					this.tested = true;
+					expect(
+						data.html.element.outerHTML === '<section class="grid" id="grid"><p data-event="click">test</p></section>' ||
+						data.html.element.outerHTML === '<section id="grid" class="grid"><p data-event="click">test</p></section>'
+					).toBe(true);
+					this.html = {
+						'section[class="grid4" id="grid" data-monitor="300"]': {
+							'p[data-pass="click" class="blue"]': "test"
+						}
+					}
+					this.populate();
+				} else {
+					expect(
+						data.html.element.outerHTML === '<section class="grid4" id="grid" data-monitor="300"><p data-pass="click" class="blue">test</p></section>' || 
+						data.html.element.outerHTML === '<section id="grid" class="grid4" data-monitor="300"><p class="blue" data-pass="click">test</p></section>' ||
+						data.html.element.outerHTML === '<section data-monitor="300" class="grid4" id="grid"><p data-pass="click" class="blue">test</p></section>' ||
+						data.html.element.outerHTML === '<section id="grid" data-monitor="300" class="grid4"><p data-pass="click" class="blue">test</p></section>').toBe(true);
+					done();
+				}
 			}
-		}).set("parent", "body").populate()
+		}).set("parent", document.querySelector("body")).populate();
 	});
 
-	xit("should add the html element to the DOM with delay", function(done) {
+	it("should change the whole node", function(done) {
+		absurd.components.flush().register("class-D", {
+			html: {
+				'section[class="grid" id="grid"]': {
+					'p[data-event="click"]': "test"
+				}
+			},
+			populated: function(data) {
+				if(!this.tested) {
+					this.tested = true;
+					expect(
+						data.html.element.outerHTML === '<section class="grid" id="grid"><p data-event="click">test</p></section>' ||
+						data.html.element.outerHTML === '<section id="grid" class="grid"><p data-event="click">test</p></section>'
+					).toBe(true);
+					this.html = {
+						'section[class="grid" id="grid"]': {
+							'div[data-event="click"]': "test"
+						}
+					}
+					this.populate();
+				} else {
+					expect(
+						data.html.element.outerHTML === '<section class="grid" id="grid"><div data-event="click">test</div></section>' ||
+						data.html.element.outerHTML === '<section id="grid" class="grid"><div data-event="click">test</div></section>').toBe(true);
+					done();
+				}
+			}
+		}).populate();
+	});
+
+	it("should add the html element to the DOM with delay", function(done) {
 		absurd.components.flush().register("class-D2", {
 			css: {
 				'.class-D2': { display: 'none' }
@@ -63,19 +127,16 @@ describe("Testing components (HTML compilation)", function() {
 				}
 			},
 			populated: function(data) {
-				var self = this;
-				if(!this.tested) {
+				if(typeof this.tested === 'undefined') {
 					this.tested = 0;
 				}
 				if(this.tested < 10) {
 					this.tested++;
 					this.html['.class-D2']['h1#class-d2-title'] = "Title " + this.tested;
 					if(this.tested == 5) {
-						this.set("parent", "body");
+						this.set("parent", document.querySelector("#content"));
 					}
-					setTimeout(function() {
-						self.populate();
-					}, 10);
+					this.populate();
 				} else {
 					expect(document.getElementById('class-d2-title').innerHTML).toBe("Title 10");
 					done();
@@ -84,33 +145,7 @@ describe("Testing components (HTML compilation)", function() {
 		}).populate()
 	});
 
-	xit("should create a component based on already added DOM element", function(done) {
-		var alreadyDefined = absurd.components.flush().register("already", {
-			html: "#already-defined-A",
-			populated: function(data) {
-				expect(document.getElementById('already-defined-A')).toBe(data.html.element);
-				done();
-			}
-		}).populate();
-	});
-
-	xit("should update already defined DOM element", function(done) {
-		var alreadyDefined = absurd.components.flush().register("already", {
-			html: "#already-defined-B",
-			fieldValue: "sample text",
-			list: ["A", "B", "C"],
-			populated: function(data) {
-				expect(document.getElementById('already-defined-B')).toBe(data.html.element);
-				if(document.querySelector('#already-defined-B') != null) {
-					expect(document.querySelector('#already-defined-B > input').value).toBe(this.fieldValue);
-					expect(document.querySelectorAll('.already-defined-B-p').length).toBe(this.list.length);
-				}
-				done();
-			}
-		}).populate();
-	});
-
-	xit("the for loop with < should work if it is defined in js", function(done) {
+	it("the for loop with < should work if it is defined in js", function(done) {
 		absurd.components.register("for-loop-test", {
 			html: {
 				section: [
@@ -121,7 +156,7 @@ describe("Testing components (HTML compilation)", function() {
 			},
 			list: ['A', 'B', 'C'],
 			populated: function(data) {
-				expect(data.html.raw).toBe("<section><span>A</span><span>B</span><span>C</span></section>");
+				expect(data.html.element.outerHTML).toBe("<section><span>A</span><span>B</span><span>C</span></section>");
 				done();
 			}
 		}).populate();

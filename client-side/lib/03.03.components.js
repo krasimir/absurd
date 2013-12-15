@@ -1,5 +1,5 @@
 var components = function(absurd) {
-	var api = {}, comps = {};
+	var api = {}, comps = {}, extend = lib.helpers.Extend;
 
 	api.register = function(name, cls) {
 		return  comps[name] = extend({}, Observer(), Component(name, absurd), cls);

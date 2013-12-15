@@ -1,6 +1,6 @@
 describe("Testing components (CSS compilation)", function() {
 
-	xit("should compile css", function(done) {
+	it("should compile css", function(done) {
 		absurd.components.flush().register("class-A", {
 			css: {
 				'.class-A': {
@@ -17,7 +17,7 @@ describe("Testing components (CSS compilation)", function() {
 		}).populate();
 	});
 
-	xit("should compile css after a change", function(done) {
+	it("should compile css after a change", function(done) {
 		absurd.components.flush().register("class-B", {
 			css: {
 				'.class-B': {

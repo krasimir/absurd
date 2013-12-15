@@ -1,6 +1,11 @@
 var Component = function(name, absurd) {
-	var CSS = false, HTML = false;
-	var compileCSS = function(next) {
+	var CSS = false, 
+		HTMLSource = false, 
+		HTMLElement = false,
+		extend = lib.helpers.Extend,
+		storage = {},
+		appended = false;
+	var handleCSS = function(next) {
 		if(this.css) {
 			absurd.flush().add(this.css).compile(function(err, css) {
 				if(!CSS) {
@@ -20,23 +25,27 @@ var Component = function(name, absurd) {
 			next();
 		}
 	}
-	var prepareElement = function(next) {
+	var setHTMLSource = function(next) {
 		if(this.html) {
-			if(HTML === false) {
-				if(typeof this.html === 'string') {
+			if(typeof this.html === 'string') {
+				if(HTMLElement === false) {
 					var element = select(this.html);
 					if(element.length > 0) {
-						HTML = { el : element[0] }
-						next();
-					} else {
-						next();
+						HTMLElement = element[0];
 					}
-				} else if(typeof HTML === 'object') {
-					absurd.flush().morph("html").add({'': this.html}).compile(function(err, html) {
-						HTML = { el: str2DOMElement(html) }
-						next();
-					}, this);
 				}
+				HTMLSource = {'': HTMLElement.outerHTML.replace(/&lt;/g, '<').replace(/&gt;/g, '>') };
+				next();
+			} else if(typeof this.html === 'object') {
+				HTMLSource = extend({}, this.html);
+				if(HTMLElement === false) {
+					absurd.flush().morph("html").add(HTMLSource).compile(function(err, html) {
+						HTMLElement = str2DOMElement(html);
+						next();
+					}, this);		
+				} else {
+					next();
+				}		
 			} else {
 				next();
 			}
@@ -44,32 +53,76 @@ var Component = function(name, absurd) {
 			next();
 		}
 	}
-	var prepareHTMLString = function(next) {
-		if(HTML && HTML.el) {
-			HTML.raw = HTML.el.outerHTML.replace(/&lt;/g, '<').replace(/&gt;/g, '>');
-		}
-		next();
-	}
-	var updateElement = function(next) {
-		if(HTML && HTML.el && HTML.raw) {
-			absurd.flush().morph("html").add({'': HTML.raw}).compile(function(err, html) {
-				// ...
+	var handleHTML = function(next) {
+		if(HTMLSource) {			
+			absurd.flush().morph("html").add(HTMLSource).compile(function(err, html) {
+				(function merge(e1, e2) {
+					// replace the whole node
+					if(e1.nodeName !== e2.nodeName) {
+						if(e1.parentNode) {
+							e1.parentNode.replaceChild(e2, e1);
+						}
+						next(); return;
+					}
+					// nodeValue
+					if(e1.nodeValue !== e2.nodeValue) {
+						e1.nodeValue = e2.nodeValue;
+					}
+					// attributes
+					if(e1.attributes) {
+						var attr1 = e1.attributes, attr2 = e2.attributes, a1, a2, found = {};
+						for(var i=0; i<attr1.length, a1=attr1[i]; i++) {
+							for(var j=0; j<attr2.length, a2=attr2[j]; j++) {
+								if(a1.name === a2.name) {
+									e1.setAttribute(a1.name, a2.value);
+									found[a1.name] = true;
+								}
+							}
+							if(!found[a1.name]) {
+								e1.removeAttribute(a1.name);
+							}
+						}
+						for(var i=0; i<attr2.length, a2=attr2[i]; i++) {
+							if(!found[a2.name]) {
+								e1.setAttribute(a2.name, a2.value);
+							}
+						}
+					}
+					// childs
+					for(var i=0; i<e1.childNodes.length; i++) {
+						merge(e1.childNodes[i], e2.childNodes[i]);
+					}
+				})(removeEmptyTextNodes(HTMLElement), removeEmptyTextNodes(str2DOMElement(html)));
 				next();
 			}, this);
+		} else {
+			next();
 		}
-		next();
 	}
 	return {
 		populate: function() {
 			queue([
-				compileCSS,
-				prepareElement,
-				prepareHTMLString,
-				updateElement,
+				handleCSS,
+				setHTMLSource,
+				handleHTML,
+				function(next) {
+					if(!appended && HTMLElement && this.get("parent")) {
+						appended = true;
+						this.get("parent").appendChild(HTMLElement);
+					}
+					next();
+				},
 				function() {
-					this.dispatch("populated", {css: CSS, html: HTML});
+					this.dispatch("populated", {css: CSS, html: { element: HTMLElement }});
 				}
 			], this);
+		},
+		set: function(key, value) {
+			storage[key] = value;
+			return this;
+		},
+		get: function(key) {
+			return storage[key];
 		}
 	}
 }

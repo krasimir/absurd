@@ -47,3 +47,23 @@ var addEventListener = function(obj, evt, fnc) {
         return obj.attachEvent('on' + evt, fnc);
     }
 }
+var removeEmptyTextNodes = function(elem) {
+    var children = elem.childNodes;
+    var child;
+    var len = children.length;
+    var i = 0;
+    var whitespace = /^\s*$/;
+    for(; i < len; i++){
+        child = children[i];
+        if(child.nodeType == 3){
+            if(whitespace.test(child.nodeValue)){
+                elem.removeChild(child);
+                i--;
+                len--;
+            }
+        }else if(child.nodeType == 1){
+            removeEmptyTextNodes(child);
+        }
+    }
+    return elem;
+}
