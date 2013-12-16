@@ -1,4 +1,4 @@
-/* version: 0.1.18 */
+/* version: 0.1.19 */
 var Absurd = (function(w) {
 var lib = { 
 	api: {},
@@ -49,6 +49,26 @@ var addEventListener = function(obj, evt, fnc) {
         return obj.attachEvent('on' + evt, fnc);
     }
 }
+var removeEmptyTextNodes = function(elem) {
+    var children = elem.childNodes;
+    var child;
+    var len = children.length;
+    var i = 0;
+    var whitespace = /^\s*$/;
+    for(; i < len; i++){
+        child = children[i];
+        if(child.nodeType == 3){
+            if(whitespace.test(child.nodeValue)){
+                elem.removeChild(child);
+                i--;
+                len--;
+            }
+        }else if(child.nodeType == 1){
+            removeEmptyTextNodes(child);
+        }
+    }
+    return elem;
+}
 var require = function(v) {
 	// css preprocessor
 	if(v.indexOf('css/CSS.js') > 0) {
@@ -69,7 +89,9 @@ var require = function(v) {
 		return lib.helpers.TransformUppercase;
 	} else if(v == './helpers/TemplateEngine') {
 		return lib.processors.html.helpers.TemplateEngine;
-	} else {
+	} else if(v == '../helpers/Extend') {
+		return lib.helpers.Extend;
+	}  else {
 		return function() {}
 	}
 };
@@ -111,8 +133,13 @@ var Observer = function() {
 	}
 }
 var Component = function(name, absurd) {
-	var CSS = false, HTML = false;
-	var compileCSS = function(next) {
+	var CSS = false, 
+		HTMLSource = false, 
+		HTMLElement = false,
+		extend = lib.helpers.Extend,
+		storage = {},
+		appended = false;
+	var handleCSS = function(next) {
 		if(this.css) {
 			absurd.flush().add(this.css).compile(function(err, css) {
 				if(!CSS) {
@@ -132,23 +159,27 @@ var Component = function(name, absurd) {
 			next();
 		}
 	}
-	var prepareElement = function(next) {
+	var setHTMLSource = function(next) {
 		if(this.html) {
-			if(HTML === false) {
-				if(typeof this.html === 'string') {
+			if(typeof this.html === 'string') {
+				if(HTMLElement === false) {
 					var element = select(this.html);
 					if(element.length > 0) {
-						HTML = { el : element[0] }
-						next();
-					} else {
-						next();
+						HTMLElement = element[0];
 					}
-				} else if(typeof HTML === 'object') {
-					absurd.flush().morph("html").add({'': this.html}).compile(function(err, html) {
-						HTML = { el: str2DOMElement(html) }
-						next();
-					}, this);
 				}
+				HTMLSource = {'': HTMLElement.outerHTML.replace(/&lt;/g, '<').replace(/&gt;/g, '>') };
+				next();
+			} else if(typeof this.html === 'object') {
+				HTMLSource = extend({}, this.html);
+				if(HTMLElement === false) {
+					absurd.flush().morph("html").add(HTMLSource).compile(function(err, html) {
+						HTMLElement = str2DOMElement(html);
+						next();
+					}, this);		
+				} else {
+					next();
+				}		
 			} else {
 				next();
 			}
@@ -156,37 +187,87 @@ var Component = function(name, absurd) {
 			next();
 		}
 	}
-	var prepareHTMLString = function(next) {
-		if(HTML && HTML.el) {
-			HTML.raw = HTML.el.outerHTML.replace(/&lt;/g, '<').replace(/&gt;/g, '>');
-		}
-		next();
-	}
-	var updateElement = function(next) {
-		if(HTML && HTML.el && HTML.raw) {
-			absurd.flush().morph("html").add({'': HTML.raw}).compile(function(err, html) {
-				// ...
+	var handleHTML = function(next) {
+		if(HTMLSource) {			
+			absurd.flush().morph("html").add(HTMLSource).compile(function(err, html) {
+				(function merge(e1, e2) {
+					// replace the whole node
+					if(e1.nodeName !== e2.nodeName) {
+						if(e1.parentNode) {
+							e1.parentNode.replaceChild(e2, e1);
+						}
+						next(); return;
+					}
+					// nodeValue
+					if(e1.nodeValue !== e2.nodeValue) {
+						e1.nodeValue = e2.nodeValue;
+					}
+					// attributes
+					if(e1.attributes) {
+						var attr1 = e1.attributes, attr2 = e2.attributes, a1, a2, found = {};
+						for(var i=0; i<attr1.length, a1=attr1[i]; i++) {
+							for(var j=0; j<attr2.length, a2=attr2[j]; j++) {
+								if(a1.name === a2.name) {
+									e1.setAttribute(a1.name, a2.value);
+									found[a1.name] = true;
+								}
+							}
+							if(!found[a1.name]) {
+								e1.removeAttribute(a1.name);
+							}
+						}
+						for(var i=0; i<attr2.length, a2=attr2[i]; i++) {
+							if(!found[a2.name]) {
+								e1.setAttribute(a2.name, a2.value);
+							}
+						}
+					}
+					// childs
+					for(var i=0; i<e1.childNodes.length; i++) {
+						merge(e1.childNodes[i], e2.childNodes[i]);
+					}
+				})(removeEmptyTextNodes(HTMLElement), removeEmptyTextNodes(str2DOMElement(html)));
 				next();
 			}, this);
+		} else {
+			next();
 		}
+	}
+	var handleEvents = function(next) {
+		
 		next();
 	}
 	return {
-		populate: function() {
+		populate: function(options) {
 			queue([
-				compileCSS,
-				prepareElement,
-				prepareHTMLString,
-				updateElement,
+				handleCSS,
+				setHTMLSource,
+				handleHTML,
+				function(next) {
+					if(!appended && HTMLElement && this.get("parent")) {
+						appended = true;
+						this.get("parent").appendChild(HTMLElement);
+					}
+					next();
+				},
 				function() {
-					this.dispatch("populated", {css: CSS, html: HTML});
+					var data = {css: CSS, html: { element: HTMLElement }};
+					this.dispatch("populated", data);
+					if(options && typeof options.callback === 'function') { options.callback(data); }
 				}
 			], this);
+		},
+		set: function(key, value) {
+			storage[key] = value;
+			return this;
+		},
+		get: function(key) {
+			return storage[key];
 		}
 	}
 }
 var components = function(absurd) {
-	var api = {}, comps = {};
+	var api = {}, comps = {}, extend = lib.helpers.Extend;
 
 	api.register = function(name, cls) {
 		return  comps[name] = extend({}, Observer(), Component(name, absurd), cls);
@@ -339,6 +420,7 @@ var client = function() {
 	}
 }
 lib.api.add = function(API) {
+	var extend = require("../helpers/Extend");
 	var checkAndExecutePlugin = function(selector, prop, value, stylesheet) {
 		var plugin = API.getPlugins()[prop];
 		if(typeof plugin !== 'undefined') {
@@ -384,6 +466,9 @@ lib.api.add = function(API) {
 				// check for media query
 				} else if(prop.indexOf("@media") === 0 || prop.indexOf("@supports") === 0) {
 					addRule(selector, props[prop], prop);
+				// check for media query
+				} else if(selector.indexOf("@media") === 0 || prop.indexOf("@supports") === 0) {
+					addRule(prop, props[prop], selector);
 				// check for plugins
 				} else if(checkAndExecutePlugin(selector, prop, props[prop], stylesheet) === false) {
 					addRule(selector + " " + prop, props[prop], stylesheet);
@@ -432,14 +517,6 @@ lib.api.add = function(API) {
 		clearing(props);
 		
 	}
-	var extend = function(destination, source) {
-		for (var key in source) {
-			if (hasOwnProperty.call(source, key)) {
-				destination[key] = source[key];
-			}
-		}
-		return destination;
-	};
 	var prepareRules = function(obj) {
 		if(obj instanceof Array) {
 			for(var i=0; i<obj.length; i++) {
@@ -455,7 +532,11 @@ lib.api.add = function(API) {
 			if(/, ?/g.test(prop)) {
 				var parts = prop.replace(/, /g, ',').split(',');
 				for(var i=0; i<parts.length, p=parts[i]; i++) {
-					obj[p] = extend({}, value);
+					if(obj[p]) {
+						obj[p] = extend({}, obj[p], value);
+					} else {
+						obj[p] = extend({}, value);
+					}
 				}
 				delete obj[prop];
 			}
