@@ -18,7 +18,9 @@ var require = function(v) {
 		return lib.helpers.TransformUppercase;
 	} else if(v == './helpers/TemplateEngine') {
 		return lib.processors.html.helpers.TemplateEngine;
-	} else {
+	} else if(v == '../helpers/Extend') {
+		return lib.helpers.Extend;
+	}  else {
 		return function() {}
 	}
 };

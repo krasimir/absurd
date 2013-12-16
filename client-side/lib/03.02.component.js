@@ -100,6 +100,7 @@ var Component = function(name, absurd) {
 		}
 	}
 	var handleEvents = function(next) {
+		
 		next();
 	}
 	return {

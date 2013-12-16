@@ -1,4 +1,4 @@
-/* version: 0.1.18 */
+/* version: 0.1.19 */
 var Absurd = (function(w) {
 var lib = { 
 	api: {},
@@ -89,7 +89,9 @@ var require = function(v) {
 		return lib.helpers.TransformUppercase;
 	} else if(v == './helpers/TemplateEngine') {
 		return lib.processors.html.helpers.TemplateEngine;
-	} else {
+	} else if(v == '../helpers/Extend') {
+		return lib.helpers.Extend;
+	}  else {
 		return function() {}
 	}
 };
@@ -230,6 +232,10 @@ var Component = function(name, absurd) {
 		} else {
 			next();
 		}
+	}
+	var handleEvents = function(next) {
+		
+		next();
 	}
 	return {
 		populate: function(options) {
@@ -414,6 +420,7 @@ var client = function() {
 	}
 }
 lib.api.add = function(API) {
+	var extend = require("../helpers/Extend");
 	var checkAndExecutePlugin = function(selector, prop, value, stylesheet) {
 		var plugin = API.getPlugins()[prop];
 		if(typeof plugin !== 'undefined') {
@@ -459,6 +466,9 @@ lib.api.add = function(API) {
 				// check for media query
 				} else if(prop.indexOf("@media") === 0 || prop.indexOf("@supports") === 0) {
 					addRule(selector, props[prop], prop);
+				// check for media query
+				} else if(selector.indexOf("@media") === 0 || prop.indexOf("@supports") === 0) {
+					addRule(prop, props[prop], selector);
 				// check for plugins
 				} else if(checkAndExecutePlugin(selector, prop, props[prop], stylesheet) === false) {
 					addRule(selector + " " + prop, props[prop], stylesheet);
@@ -507,14 +517,6 @@ lib.api.add = function(API) {
 		clearing(props);
 		
 	}
-	var extend = function(destination, source) {
-		for (var key in source) {
-			if (hasOwnProperty.call(source, key)) {
-				destination[key] = source[key];
-			}
-		}
-		return destination;
-	};
 	var prepareRules = function(obj) {
 		if(obj instanceof Array) {
 			for(var i=0; i<obj.length; i++) {
@@ -530,7 +532,11 @@ lib.api.add = function(API) {
 			if(/, ?/g.test(prop)) {
 				var parts = prop.replace(/, /g, ',').split(',');
 				for(var i=0; i<parts.length, p=parts[i]; i++) {
-					obj[p] = extend({}, value);
+					if(obj[p]) {
+						obj[p] = extend({}, obj[p], value);
+					} else {
+						obj[p] = extend({}, value);
+					}
 				}
 				delete obj[prop];
 			}
