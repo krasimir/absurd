@@ -4,7 +4,8 @@ var Component = function(name, absurd) {
 		HTMLElement = false,
 		extend = lib.helpers.Extend,
 		storage = {},
-		appended = false;
+		appended = false,
+		cache = { events: {} };
 	var handleCSS = function(next) {
 		if(this.css) {
 			absurd.flush().add(this.css).compile(function(err, css) {
@@ -57,6 +58,8 @@ var Component = function(name, absurd) {
 		if(HTMLSource) {			
 			absurd.flush().morph("html").add(HTMLSource).compile(function(err, html) {
 				(function merge(e1, e2) {
+					// console.log(e1, e2);
+					if(typeof e1 === 'undefined' || typeof e2 === 'undefined') return;
 					// replace the whole node
 					if(e1.nodeName !== e2.nodeName) {
 						if(e1.parentNode) {
@@ -64,7 +67,7 @@ var Component = function(name, absurd) {
 						}
 						next(); return;
 					}
-					// nodeValue
+					// nodeValue					
 					if(e1.nodeValue !== e2.nodeValue) {
 						e1.nodeValue = e2.nodeValue;
 					}
@@ -99,8 +102,39 @@ var Component = function(name, absurd) {
 			next();
 		}
 	}
+	var append = function(next) {
+		if(!appended && HTMLElement && this.get("parent")) {
+			appended = true;
+			this.get("parent").appendChild(HTMLElement);
+		}
+		next();
+	}
 	var handleEvents = function(next) {
-		
+		if(HTMLElement) {
+			var self = this;
+			var registerEvent = function(el) {
+				var attrValue = el.getAttribute('data-absurd-event');
+				attrValue = attrValue.split(":");
+				if(attrValue.length >= 2) {
+					if(!cache.events[attrValue[0]] || cache.events[attrValue[0]].indexOf(el) < 0) {
+						if(!cache.events[attrValue[0]]) cache.events[attrValue[0]] = [];
+						cache.events[attrValue[0]].push(el);
+						addEventListener(el, attrValue[0], function(e) {
+							if(typeof self[attrValue[1]] === 'function') {
+								self[attrValue[1]](e);
+							}
+						});
+					}
+				}
+			}
+			if(HTMLElement.hasAttribute('data-absurd-event')) {
+				registerEvent(HTMLElement);
+			}
+			var els = HTMLElement.querySelectorAll ? HTMLElement.querySelectorAll('[data-absurd-event]') : [];
+			for(var i=0; i<els.length; i++) {
+				registerEvent(els[i]);
+			}
+		}
 		next();
 	}
 	return {
@@ -109,13 +143,8 @@ var Component = function(name, absurd) {
 				handleCSS,
 				setHTMLSource,
 				handleHTML,
-				function(next) {
-					if(!appended && HTMLElement && this.get("parent")) {
-						appended = true;
-						this.get("parent").appendChild(HTMLElement);
-					}
-					next();
-				},
+				append, 
+				handleEvents,
 				function() {
 					var data = {css: CSS, html: { element: HTMLElement }};
 					this.dispatch("populated", data);

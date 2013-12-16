@@ -29,15 +29,9 @@ var select = function(selector, parent) {
 	return result;
 }
 var str2DOMElement = function(html) {
-    var frame = document.createElement('iframe');
-    frame.style.display = 'none';
-    document.body.appendChild(frame);             
-    frame.contentDocument.open();
-    frame.contentDocument.write(html);
-    frame.contentDocument.close();
-    var el = frame.contentDocument.body.firstChild;
-    document.body.removeChild(frame);
-    return el;
+    var temp = document.createElement('div');
+    temp.innerHTML = html;
+    return temp.childNodes[0];
 }
 var addEventListener = function(obj, evt, fnc) {
     if (obj.addEventListener) { // W3C model

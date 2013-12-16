@@ -165,4 +165,25 @@ describe("Testing components (HTML compilation)", function() {
 		}).populate();
 	});
 
+	it("should compile with empty data", function(done) {
+		absurd.components.register("EmptyData", {
+			title: '',
+			html: {
+				section: {
+					p: '<% this.title %>'
+				}
+			},
+			populated: function(data) {				
+				if(!this.tested) {
+					this.tested = true;
+					this.title = '42';
+					this.populate();
+				} else {
+					expect(data.html.element.outerHTML).toBe('<section><p>42</p></section>');
+					done();
+				}
+			}
+		}).populate();
+	});
+
 });
