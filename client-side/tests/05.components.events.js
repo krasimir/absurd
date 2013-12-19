@@ -2,17 +2,21 @@ describe("Testing components events", function() {
 
 	var absurd = Absurd();
 
-	xit("should register events", function(done) {
+	it("should register events", function(done) {
 		absurd.components.register("TestingEvents", {
 			title: '',
+			css: {
+				'#testing-events-form': {
+					display: 'none'
+				}
+			},
 			html: {
-				form: {
+				'form#testing-events-form': {
 					p: '<% this.title %>',
-					'input[type="text" data-absurd-event="change:handler"]': ''
+					'input[type="text" data-absurd-event="keyup:handler"]': ''
 				}
 			},
 			handler: function(e) {
-				console.log("change");
 				this.title = e.target.value;
 				this.populate();
 			},
@@ -21,9 +25,10 @@ describe("Testing components events", function() {
 					var input = data.html.element.querySelector("input");
 					input.value = "42";
 					this.tested = true;
-					fireEvent(input, "change");	
+					fireEvent(input, "keyup");	
 				} else {
-					console.log("end");
+					expect(data.html.element.querySelector("p").innerHTML).toBe("42");
+					done();
 				}				
 			}
 		}).set("parent", document.querySelector("body")).populate();

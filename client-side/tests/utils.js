@@ -31,6 +31,8 @@ function fireEvent(node, eventName) {
     switch (eventName) {
       case "click": // Dispatching of 'click' appears to not work correctly in Safari. Use 'mousedown' or 'mouseup' instead.
       case "mousedown":
+      case "keyup":
+      case "keydown":
       case "mouseup":
         eventClass = "MouseEvents";
         break;
