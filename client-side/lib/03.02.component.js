@@ -58,7 +58,6 @@ var Component = function(name, absurd) {
 		if(HTMLSource) {			
 			absurd.flush().morph("html").add(HTMLSource).compile(function(err, html) {
 				(function merge(e1, e2) {
-					// console.log(e1, e2);
 					if(typeof e1 === 'undefined' || typeof e2 === 'undefined') return;
 					// replace the whole node
 					if(e1.nodeName !== e2.nodeName) {
@@ -67,7 +66,7 @@ var Component = function(name, absurd) {
 						}
 						next(); return;
 					}
-					// nodeValue					
+					// nodeValue
 					if(e1.nodeValue !== e2.nodeValue) {
 						e1.nodeValue = e2.nodeValue;
 					}
@@ -92,8 +91,15 @@ var Component = function(name, absurd) {
 						}
 					}
 					// childs
-					for(var i=0; i<e1.childNodes.length; i++) {
-						merge(e1.childNodes[i], e2.childNodes[i]);
+					if(e1.childNodes.length >= e2.childNodes.length) {
+						for(var i=0; i<e1.childNodes.length; i++) {
+							merge(e1.childNodes[i], e2.childNodes[i]);
+						}
+					} else {
+						for(var i=0; i<e2.childNodes.length; i++) {
+							e1.appendChild(document.createTextNode(""));						
+							merge(e1.childNodes[i], e2.childNodes[i]);
+						}
 					}
 				})(removeEmptyTextNodes(HTMLElement), removeEmptyTextNodes(str2DOMElement(html)));
 				next();
