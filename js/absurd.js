@@ -1,4 +1,4 @@
-/* version: 0.1.19 */
+/* version: 0.1.21 */
 var Absurd = (function(w) {
 var lib = { 
 	api: {},
@@ -31,15 +31,9 @@ var select = function(selector, parent) {
 	return result;
 }
 var str2DOMElement = function(html) {
-    var frame = document.createElement('iframe');
-    frame.style.display = 'none';
-    document.body.appendChild(frame);             
-    frame.contentDocument.open();
-    frame.contentDocument.write(html);
-    frame.contentDocument.close();
-    var el = frame.contentDocument.body.firstChild;
-    document.body.removeChild(frame);
-    return el;
+    var temp = document.createElement('div');
+    temp.innerHTML = html;
+    return temp.childNodes[0];
 }
 var addEventListener = function(obj, evt, fnc) {
     if (obj.addEventListener) { // W3C model
@@ -138,7 +132,8 @@ var Component = function(name, absurd) {
 		HTMLElement = false,
 		extend = lib.helpers.Extend,
 		storage = {},
-		appended = false;
+		appended = false,
+		cache = { events: {} };
 	var handleCSS = function(next) {
 		if(this.css) {
 			absurd.flush().add(this.css).compile(function(err, css) {
@@ -191,6 +186,7 @@ var Component = function(name, absurd) {
 		if(HTMLSource) {			
 			absurd.flush().morph("html").add(HTMLSource).compile(function(err, html) {
 				(function merge(e1, e2) {
+					if(typeof e1 === 'undefined' || typeof e2 === 'undefined') return;
 					// replace the whole node
 					if(e1.nodeName !== e2.nodeName) {
 						if(e1.parentNode) {
@@ -223,8 +219,15 @@ var Component = function(name, absurd) {
 						}
 					}
 					// childs
-					for(var i=0; i<e1.childNodes.length; i++) {
-						merge(e1.childNodes[i], e2.childNodes[i]);
+					if(e1.childNodes.length >= e2.childNodes.length) {
+						for(var i=0; i<e1.childNodes.length; i++) {
+							merge(e1.childNodes[i], e2.childNodes[i]);
+						}
+					} else {
+						for(var i=0; i<e2.childNodes.length; i++) {
+							e1.appendChild(document.createTextNode(""));						
+							merge(e1.childNodes[i], e2.childNodes[i]);
+						}
 					}
 				})(removeEmptyTextNodes(HTMLElement), removeEmptyTextNodes(str2DOMElement(html)));
 				next();
@@ -233,8 +236,39 @@ var Component = function(name, absurd) {
 			next();
 		}
 	}
+	var append = function(next) {
+		if(!appended && HTMLElement && this.get("parent")) {
+			appended = true;
+			this.get("parent").appendChild(HTMLElement);
+		}
+		next();
+	}
 	var handleEvents = function(next) {
-		
+		if(HTMLElement) {
+			var self = this;
+			var registerEvent = function(el) {
+				var attrValue = el.getAttribute('data-absurd-event');
+				attrValue = attrValue.split(":");
+				if(attrValue.length >= 2) {
+					if(!cache.events[attrValue[0]] || cache.events[attrValue[0]].indexOf(el) < 0) {
+						if(!cache.events[attrValue[0]]) cache.events[attrValue[0]] = [];
+						cache.events[attrValue[0]].push(el);
+						addEventListener(el, attrValue[0], function(e) {
+							if(typeof self[attrValue[1]] === 'function') {
+								self[attrValue[1]](e);
+							}
+						});
+					}
+				}
+			}
+			if(HTMLElement.hasAttribute('data-absurd-event')) {
+				registerEvent(HTMLElement);
+			}
+			var els = HTMLElement.querySelectorAll ? HTMLElement.querySelectorAll('[data-absurd-event]') : [];
+			for(var i=0; i<els.length; i++) {
+				registerEvent(els[i]);
+			}
+		}
 		next();
 	}
 	return {
@@ -243,13 +277,8 @@ var Component = function(name, absurd) {
 				handleCSS,
 				setHTMLSource,
 				handleHTML,
-				function(next) {
-					if(!appended && HTMLElement && this.get("parent")) {
-						appended = true;
-						this.get("parent").appendChild(HTMLElement);
-					}
-					next();
-				},
+				append, 
+				handleEvents,
 				function() {
 					var data = {css: CSS, html: { element: HTMLElement }};
 					this.dispatch("populated", data);
@@ -703,6 +732,30 @@ lib.api.raw = function(api) {
 		return api;
 	}
 }
+var fs = require("fs"),
+	path = require("path");
+
+lib.api.rawImport = function(API) {
+	
+	var importFile = function(path) {
+		var fileContent = fs.readFileSync(path, {encoding: "utf8"});
+		API.raw(fileContent);
+	}
+	
+	return function(path) {
+		var p, _i, _len;
+		if (typeof path === 'string') {
+			importFile(path);
+		} else {
+			for (_i = 0, _len = path.length; _i < _len; _i++) {
+				p = path[_i];
+				importFile(p);
+			}
+		}
+		return API;
+    };
+}
+
 lib.api.register = function(api) {
 	return function(method, func) {
 		api[method] = func;
