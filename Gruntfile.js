@@ -40,6 +40,7 @@ module.exports = function(grunt) {
 					'!tests/common/basics-and-compilation.spec.js',
 					'!tests/common/cli.spec.js',
 					'!tests/common/variables-and-functions.spec.js',
+					'!tests/common/adding-raw-external-data.spec.js',
 					'!tests/metamorphosis/html/morph.html.import.spec.js',
 					'!tests/metamorphosis/html/morph.html.indentation.spec.js',
 					'!tests/bugs/css.import.multiple.classes.spec.js',
