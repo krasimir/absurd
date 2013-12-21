@@ -20,7 +20,9 @@ var require = function(v) {
 		return lib.processors.html.helpers.TemplateEngine;
 	} else if(v == '../helpers/Extend') {
 		return lib.helpers.Extend;
-	}  else {
+	} else if(v == '../helpers/Clone') {
+		return lib.helpers.Clone;
+	} else {
 		return function() {}
 	}
 };

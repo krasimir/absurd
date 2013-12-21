@@ -2,7 +2,7 @@ var components = function(absurd) {
 	var api = {}, comps = {}, extend = lib.helpers.Extend;
 
 	api.register = function(name, cls) {
-		return  comps[name] = extend({}, Observer(), Component(name, absurd), cls);
+		return comps[name] = extend({}, Observer(), Component(name, absurd), cls);
 	}
 	api.get = function(name) {
 		if(comps[name]) { return comps[name]; }

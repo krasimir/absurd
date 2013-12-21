@@ -16,7 +16,7 @@ var Component = function(name, absurd) {
 				    style.innerHTML = css;
 					(select("head") || select("body"))[0].appendChild(style);
 					CSS = { raw: css, element: style };
-				} else {
+				} else if(CSS.raw !== css) {
 					CSS.raw = css;
 					CSS.element.innerHTML = css;
 				}
@@ -34,8 +34,8 @@ var Component = function(name, absurd) {
 					if(element.length > 0) {
 						HTMLElement = element[0];
 					}
+					HTMLSource = {'': HTMLElement.outerHTML.replace(/&lt;/g, '<').replace(/&gt;/g, '>') };
 				}
-				HTMLSource = {'': HTMLElement.outerHTML.replace(/&lt;/g, '<').replace(/&gt;/g, '>') };
 				next();
 			} else if(typeof this.html === 'object') {
 				HTMLSource = extend({}, this.html);
@@ -55,10 +55,10 @@ var Component = function(name, absurd) {
 		}
 	}
 	var handleHTML = function(next) {
-		if(HTMLSource) {			
+		if(HTMLSource) {
 			absurd.flush().morph("html").add(HTMLSource).compile(function(err, html) {
 				(function merge(e1, e2) {
-					if(typeof e1 === 'undefined' || typeof e2 === 'undefined') return;
+					if(typeof e1 === 'undefined' || typeof e2 === 'undefined' || e1.isEqualNode(e2)) return;
 					// replace the whole node
 					if(e1.nodeName !== e2.nodeName) {
 						if(e1.parentNode) {
@@ -93,6 +93,7 @@ var Component = function(name, absurd) {
 					// childs
 					if(e1.childNodes.length >= e2.childNodes.length) {
 						for(var i=0; i<e1.childNodes.length; i++) {
+							if(!e2.childNodes[i]) { e2.appendChild(document.createTextNode("")); }
 							merge(e1.childNodes[i], e2.childNodes[i]);
 						}
 					} else {
@@ -143,7 +144,7 @@ var Component = function(name, absurd) {
 		}
 		next();
 	}
-	return {
+	var component = {
 		populate: function(options) {
 			queue([
 				handleCSS,
@@ -166,4 +167,5 @@ var Component = function(name, absurd) {
 			return storage[key];
 		}
 	}
+	return component;
 }
