@@ -1,9 +1,9 @@
 describe("Absurd acting in code:", function() {
 
 	var Absurd, absurd;
+	Absurd = require("../../index.js");
 
 	it("shoud create an instance of absurd", function(done) {
-		Absurd = require("../../index.js");
 		expect(Absurd).toBeDefined();
 		done();
 	});

@@ -11,7 +11,7 @@ describe("Support comma separated selectors", function() {
 		}).compile(function(err, css) {
 			expect(err).toBe(null);
 			expect(css).toBeDefined();
-			expect(css).toBe("body,section,h1{padding: 20px;}body b,body i,section b,section i,h1 b,h1 i{font-size: 20px;}");
+			expect(css).toBe("body b,body i,section b,section i,h1 b,h1 i{font-size: 20px;}body,section,h1{padding: 20px;}");
 			done();
 		}, {minify: true});
 	});

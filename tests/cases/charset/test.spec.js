@@ -6,7 +6,7 @@ describe("Test case (charset)", function() {
 		Absurd(__dirname + '/code.js').compile(function(err, css) {
 			expect(err).toBe(null);
 			expect(css).toBeDefined();
-			expect(css).toBe('body {\n  width: 100%;\n}\n@charset: "UTF-8";\n');
+			expect(css).toBe('@charset: "UTF-8";\nbody {\n  width: 100%;\n}\n');
 			done();
 		});
 	});
@@ -15,7 +15,7 @@ describe("Test case (charset)", function() {
 		Absurd(__dirname + '/code.json').compile(function(err, css) {
 			expect(err).toBe(null);
 			expect(css).toBeDefined();
-			expect(css).toBe('body {\n  width: 100%;\n}\np {\n  margin-top: 20px;\n}\n@charset: "UTF-8";\n');
+			expect(css).toBe('@charset: "UTF-8";\nbody {\n  width: 100%;\n}\np {\n  margin-top: 20px;\n}\n');
 			done();
 		});
 	});

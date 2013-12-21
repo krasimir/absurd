@@ -30,9 +30,9 @@ describe("Media queries", function() {
 		}).compile(function(err, css) {
 			expect(err).toBe(null);
 			expect(css).toBeDefined();
-			expect(css).toContain("body {\n  line-height: 20px;\n}\nbody p {\n  margin: 10px;\n  padding: 4px;\n}\n@media all (max-width: 950px) {\nbody {\n  line-height: 40px;\n  color: #BADA55;\n}\nbody p {\n  color: #9fA;\n  padding: 12px;\n}\n}\n@media all (min-width: 550px) {\nbody {\n  line-height: 32px;\n}\n}\n");
+			expect(css).toContain('body{line-height: 20px;}body p{margin: 10px;padding: 4px;}@media all (max-width: 950px) {body p{padding: 12px;color: #9fA;}body{color: #BADA55;line-height: 40px;}}@media all (min-width: 550px) {body{line-height: 32px;}}');
 			done();
-		});		
+		}, {minify: true});		
 	});
 
 });

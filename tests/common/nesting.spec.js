@@ -10,7 +10,10 @@ describe("Nested selectors", function() {
 						'font-size': '16px',
 						'text-shadow': '2px 2px #00F',
 						a: {
-							'text-decoration': 'none'
+							'text-decoration': 'none',
+							span: {
+								fontSize: '10px'
+							}
 						}
 					}
 				}
@@ -19,10 +22,9 @@ describe("Nested selectors", function() {
 		}).compile(function(err, css) {
 			expect(err).toBe(null);
 			expect(css).toBeDefined();
-			expect(css).toContain('.content p');
-			expect(css).toContain('.content p a');
+			expect(css).toContain('.content p{font-size: 16px;text-shadow: 2px 2px #00F;}.content p a{text-decoration: none;}.content p a span{font-size: 10px;}');
 			done();
-		});
+		}, {minify: true});
 	});
 
 });
