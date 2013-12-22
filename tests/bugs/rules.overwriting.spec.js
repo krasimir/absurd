@@ -10,7 +10,7 @@ describe("Multiple selectors per rule overwrite all individual selectors", funct
 		}).compile(function(err, css) {
 			expect(err).toBe(null);
 			expect(css).toBeDefined();
-			expect(css).toBe("body{background: blue;}html{background: pink;}body,html{color: red;}");
+			expect(css).toBe("html,body{color: red;}html{background: pink;}body{background: blue;}");
 			done();
 		}, { minify: true });
 	});

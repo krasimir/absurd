@@ -202,9 +202,9 @@ describe("Media queries", function() {
 		}).compile(function(err, css) {
 			expect(err).toBe(null);
 			expect(css).toBeDefined();
-			expect(css).toContain("body {\n  line-height: 20px;\n}\nbody p {\n  margin: 10px;\n  padding: 4px;\n}\n@media all (max-width: 950px) {\nbody {\n  line-height: 40px;\n  color: #BADA55;\n}\nbody p {\n  color: #9fA;\n  padding: 12px;\n}\n}\n@media all (min-width: 550px) {\nbody {\n  line-height: 32px;\n}\n}\n");
+			expect(css).toBe('body{line-height: 20px;}body p{margin: 10px;padding: 4px;}@media all (max-width: 950px) {body{line-height: 40px;color: #BADA55;}body p{color: #9fA;padding: 12px;}}@media all (min-width: 550px) {body{line-height: 32px;}}');
 			done();
-		});		
+		}, {minify: true});		
 	});
 
 });
@@ -291,7 +291,10 @@ describe("Nested selectors", function() {
 						'font-size': '16px',
 						'text-shadow': '2px 2px #00F',
 						a: {
-							'text-decoration': 'none'
+							'text-decoration': 'none',
+							span: {
+								fontSize: '10px'
+							}
 						}
 					}
 				}
@@ -300,10 +303,9 @@ describe("Nested selectors", function() {
 		}).compile(function(err, css) {
 			expect(err).toBe(null);
 			expect(css).toBeDefined();
-			expect(css).toContain('.content p');
-			expect(css).toContain('.content p a');
+			expect(css).toContain('.content p{font-size: 16px;text-shadow: 2px 2px #00F;}.content p a{text-decoration: none;}.content p a span{font-size: 10px;}');
 			done();
-		});
+		}, {minify: true});
 	});
 
 });
@@ -595,7 +597,7 @@ describe("Use ampersand operator", function() {
 		}).compile(function(err, css) {
 			expect(err).toBe(null);
 			expect(css).toBeDefined();
-			expect(css).toBe("a{color: red;}a:hover{color: blue;}a.fancy{color: green;}.ie6 a.fancy{color: yellow;}.ie7 a.fancy{color: black;}.ie6 a:hover,.ie7 a:hover{color: orange;}");
+			expect(css).toBe('a{color: red;}a:hover{color: blue;}a.fancy{color: green;}.ie6 a:hover,.ie7 a:hover{color: orange;}.ie6 a.fancy{color: yellow;}.ie7 a.fancy{color: black;}');
 			done();
 		}, { minify: true })
 	});
@@ -904,7 +906,7 @@ describe("Multiple selectors per rule overwrite all individual selectors", funct
 		}).compile(function(err, css) {
 			expect(err).toBe(null);
 			expect(css).toBeDefined();
-			expect(css).toBe("body{background: blue;}html{background: pink;}body,html{color: red;}");
+			expect(css).toBe("html,body{color: red;}html{background: pink;}body{background: blue;}");
 			done();
 		}, { minify: true });
 	});

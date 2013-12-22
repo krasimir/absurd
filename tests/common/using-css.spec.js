@@ -8,7 +8,7 @@ describe("Import CSS", function() {
 		}).compile(function(err, css) {
 			expect(err).toBe(null);
 			expect(css).toBeDefined();
-			expect(css).toBe("body {\n  margin-top: 10px;\n}\nh3, h2, h1 {\n  margin: 0;\n  padding: 0;\n}\n");
+			expect(css).toBe("body {\n  margin-top: 10px;\n}\nh1, h2, h3 {\n  margin: 0;\n  padding: 0;\n}\n");
 			done();
 		});	
 	});
@@ -17,7 +17,7 @@ describe("Import CSS", function() {
 		Absurd(__dirname + "/../data/styles.css").compile(function(err, css) {
 			expect(err).toBe(null);
 			expect(css).toBeDefined();
-			expect(css).toBe("body {\n  margin-top: 10px;\n}\nh3, h2, h1 {\n  margin: 0;\n  padding: 0;\n}\n");
+			expect(css).toBe("body {\n  margin-top: 10px;\n}\nh1, h2, h3 {\n  margin: 0;\n  padding: 0;\n}\n");
 			done();
 		});	
 	});
@@ -36,7 +36,7 @@ describe("Import CSS", function() {
 		}).compile(function(err, css) {
 			expect(err).toBe(null);
 			expect(css).toBeDefined();
-			expect(css).toBe("body {\n  margin-top: 10px;\n  font-size: 12px;\n}\nh3, h2, h1 {\n  margin: 0;\n  padding: 0;\n}\n");
+			expect(css).toBe("body {\n  font-size: 12px;\n  margin-top: 10px;\n}\nh1, h2, h3 {\n  margin: 0;\n  padding: 0;\n}\n");
 			done();
 		});	
 	});
@@ -45,7 +45,7 @@ describe("Import CSS", function() {
 		Absurd(__dirname + "/../data/main.css").compile(function(err, css) {
 			expect(err).toBe(null);
 			expect(css).toBeDefined();
-			expect(css).toBe("body {\n  width: 100%;\n  margin-top: 10px;\n}\nh3, h2, h1 {\n  margin: 0;\n  padding: 0;\n}\n");
+			expect(css).toBe("body {\n  width: 100%;\n  margin-top: 10px;\n}\nh1, h2, h3 {\n  margin: 0;\n  padding: 0;\n}\n");
 			done();
 		});	
 	});
