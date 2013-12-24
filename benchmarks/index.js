@@ -12,8 +12,8 @@ if(fs.existsSync(__dirname + "/scripts")) {
 			s();
 			results.push(new Date().getTime() - startTime);
 		}
-		for(var i=0; i<iterations; i++) {
-			result += results[i];
+		for(var j=0; j<iterations; j++) {
+			result += results[j];
 		}
 		console.log("Result: ", result / iterations, " (iterations: " + iterations + ")");
 		count = 0;

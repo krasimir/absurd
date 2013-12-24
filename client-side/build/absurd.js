@@ -871,14 +871,10 @@ lib.helpers.RequireUncached = function(module) {
 lib.helpers.TransformUppercase = function(prop, options) {
 	var transformed = "";
 	for(var i=0; c=prop.charAt(i); i++) {
-		if(options && options.keepCamelCase === true) {
-			transformed += c;
+		if(c === c.toUpperCase() && c.toLowerCase() !== c.toUpperCase()) {
+			transformed += "-" + c.toLowerCase();
 		} else {
-			if(c === c.toUpperCase() && c.toLowerCase() !== c.toUpperCase()) {
-				transformed += "-" + c.toLowerCase();
-			} else {
-				transformed += c;
-			}
+			transformed += c;
 		}
 	}
 	return transformed;
@@ -991,7 +987,11 @@ var toCSS = function(rules, options) {
 				if(value === "") {
 					value = '""';
 				}
-				entity += '  ' + transformUppercase(prop, options) + ': ' + value + ';' + newline;
+				if(options && options.keepCamelCase === true) {
+					entity += '  ' + prop + ': ' + value + ';' + newline;
+				} else {
+					entity += '  ' + transformUppercase(prop) + ': ' + value + ';' + newline;
+				}
 			}
 			entity += '}' + newline;
 			css += entity;
@@ -1199,7 +1199,7 @@ var data = null,
 	defaultOptions = {},
 	tags = [],
 	beautifyHTML = require('js-beautify').html,
-	transformUppercase = require("../../helpers/TransformUppercase"),
+	tu = require("../../helpers/TransformUppercase"),
 	passedOptions = {};
 
 var processTemplate = function(templateName) {
@@ -1213,6 +1213,13 @@ var processTemplate = function(templateName) {
 		}
 	}
 	return html;
+}
+var prepareProperty = function(prop, options) {
+	if(options && options.keepCamelCase === true) {
+		return prop;
+	} else {
+		return tu(prop, options);
+	}
 }
 var process = function(tagName, obj) {
 	// console.log("------------------------\n", tagName, ">", obj);
@@ -1241,16 +1248,14 @@ var process = function(tagName, obj) {
 			case "_attrs":
 				for(var attrName in value) {
 					if(typeof value[attrName] === "function") {
-						attrs += " " + transformUppercase(attrName, passedOptions) + "=\"" + value[attrName]() + "\"";
+						attrs += " " + prepareProperty(attrName, passedOptions) + "=\"" + value[attrName]() + "\"";
 					} else {
-						attrs += " " + transformUppercase(attrName, passedOptions) + "=\"" + value[attrName] + "\"";
+						attrs += " " + prepareProperty(attrName, passedOptions) + "=\"" + value[attrName] + "\"";
 					}
 				}
-				obj[directiveName] = false;
 			break;
 			case "_":
 				addToChilds(value);
-				obj[directiveName] = false;
 			break;
 			case "_tpl": 
 				if(typeof value == "string") {
@@ -1263,7 +1268,6 @@ var process = function(tagName, obj) {
 					}
 					addToChilds(tmp);
 				}
-				obj[directiveName] = false;
 			break;
 			case "_include":
 				var tmp = '';
@@ -1280,31 +1284,25 @@ var process = function(tagName, obj) {
 					add(value);
 				}
 				addToChilds(tmp);
-				obj[directiveName] = false;
 			break;
-		}
-	}
-
-	for(var prop in obj) {
-		var value = obj[prop];
-		if(value !== false) {
-			var name = prop;
-			switch(typeof value) {
-				case "string": addToChilds(process(name, value)); break;
-				case "object": 
-					if(value.length && value.length > 0) {
-						var tmp = '';
-						for(var i=0; v=value[i]; i++) {
-							tmp += process('', typeof v == "function" ? v() : v);
-							if(i < value.length-1) tmp += newline;
+			default:
+				switch(typeof value) {
+					case "string": addToChilds(process(directiveName, value)); break;
+					case "object": 
+						if(value.length && value.length > 0) {
+							var tmp = '';
+							for(var i=0; v=value[i]; i++) {
+								tmp += process('', typeof v == "function" ? v() : v);
+								if(i < value.length-1) tmp += newline;
+							}
+							addToChilds(process(directiveName, tmp));
+						} else {
+							addToChilds(process(directiveName, value));
 						}
-						addToChilds(process(name, tmp));
-					} else {
-						addToChilds(process(name, value));
-					}
-				break;
-				case "function": addToChilds(process(name, value())); break;
-			}
+					break;
+					case "function": addToChilds(process(directiveName, value())); break;
+				}
+			break;
 		}
 	}
 
@@ -1323,9 +1321,9 @@ var packTag = function(tagName, attrs, childs) {
 	}
 	tagName = tagName == '' ? 'div' : tagName;
 	if(childs !== '') {
-		html += '<' + transformUppercase(tagName, passedOptions) + attrs + '>' + newline + childs + newline + '</' + transformUppercase(tagName, passedOptions) + '>';
+		html += '<' + prepareProperty(tagName, passedOptions) + attrs + '>' + newline + childs + newline + '</' + prepareProperty(tagName, passedOptions) + '>';
 	} else {
-		html += '<' + transformUppercase(tagName, passedOptions) + attrs + '/>';
+		html += '<' + prepareProperty(tagName, passedOptions) + attrs + '/>';
 	}
 	return html;
 }
@@ -1360,7 +1358,14 @@ lib.processors.html.helpers.PropAnalyzer = function(prop) {
 		idName = "", readingId = false, ids = [],
 		attributes = "", readingAttributes = false;
 
-	for(var i=0; c=prop[i]; i++) {
+	if(/(#|\.|\[|\])/gi.test(prop) === false) {
+		return {
+			tag: prop,
+			attrs: ''
+		};
+	}
+
+	for(var i=0; i<prop.length, c=prop[i]; i++) {
 		if(c === "[" && !readingAttributes) {
 			readingAttributes = true;
 		} else if(readingAttributes) {
