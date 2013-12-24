@@ -1,4 +1,12 @@
 var api = require("../../index.js")();
+api.plugin("hoverEffect", function(api, color) {
+	return {
+		":hover": {
+			color: color,
+            background: api.lighten(color, 60)
+		}
+	}
+})
 module.exports = function() {
 	api.add({
 		body: {
@@ -7,7 +15,8 @@ module.exports = function() {
 			},
 			p: {
 				span: {
-					fontSize: "20px"
+					fontSize: "20px",
+					hoverEffect: '#999'
 				}
 			}
 		}
@@ -16,7 +25,8 @@ module.exports = function() {
 			lineHeight: "20px"
 		},
 		header: {
-			marginTop: "20px"
+			marginTop: "20px",
+			hoverEffect: '#999'
 		}
 	}).compile(function(err, css) {
 		

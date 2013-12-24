@@ -546,26 +546,6 @@ var toCSS = function(rules, options) {
 	return css;
 }
 
-// dealing with false values
-var filterRules = function(rules) {
-	var arr = {};
-	for(var selector in rules) {
-		var areThereAnyProps = false;
-		var props = {};
-		for(var prop in rules[selector]) {
-			var value = rules[selector][prop];
-			if(value !== false && typeof value != 'object') {
-				areThereAnyProps = true;
-				props[prop] = value;
-			}
-		}
-		if(areThereAnyProps) {
-			arr[selector] = props;
-		}
-	}
-	return arr;
-}
-
 // combining selectors
 var combineSelectors = function(rules) {
 	var map = {},
@@ -610,7 +590,7 @@ lib.processors.css.CSS = function() {
 		options = options || defaultOptions;
 		var css = '';
 		for(var stylesheet in rules) {
-			var r = filterRules(rules[stylesheet]);
+			var r = rules[stylesheet];
 			r = options.combineSelectors ? combineSelectors(r) : r;
 			if(stylesheet === "mainstream") {
 				css += toCSS(r, options);
