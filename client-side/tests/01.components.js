@@ -2,20 +2,22 @@ describe("Testing components", function() {
 
 	it("should have .components API available", function(done) {
 		expect(absurd.components).toBeDefined();
+		expect(absurd.component).toBeDefined();
 		done();
 	});
 
 	it("should register a component and the answer is 42", function(done) {
-		var widget = absurd.components.register("widget", {
+		var widget = absurd.component("widget", {
 			customMethod: function() {
 				return "custom method";
 			}
-		}).on("custom-event", function(data) {
+		})();
+		widget.on("custom-event", function(data) {
 			expect(data.prop).toBe(42);
 			done();
 		});
 		expect(widget.customMethod()).toBe("custom method");
-		absurd.components.get("widget").dispatch("custom-event", {prop: 42});
+		widget.dispatch("custom-event", {prop: 42});
 	});	
 
 	it("should register and remove a component", function(done) {
@@ -27,15 +29,17 @@ describe("Testing components", function() {
 		done();
 	});
 
-	it("should register two components and broadcast a message", function(done) {
-		var c =0, count = function() {
-			c += 1;
-			if(c == 2) done();
-		}
-		absurd.components.flush();
-		absurd.components.register("c1", { omg: function() { count(); } });
-		absurd.components.register("c2", { omg: function() { count(); } });
-		absurd.components.broadcast("omg");
+	it("should create a component and call its constructor", function(done) {
+		var Component = absurd.component("ComponentCreation", {
+			constructor: function(a, b, c) {
+				expect(this.name).toBe("ComponentCreation");
+				expect(a).toBe(10);
+				expect(b).toBe(20);
+				expect(c).toBe(30);
+				done();
+			}
+		})
+		Component(10, 20, 30);
 	});
 
 });

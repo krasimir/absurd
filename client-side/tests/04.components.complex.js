@@ -28,7 +28,7 @@ describe("Testing components in complex scenarios", function() {
 					}});
 				}
 			}
-		}).set("parent", document.querySelector("body")).populate();
+		})().set("parent", document.querySelector("body")).populate();
 	});
 
 });

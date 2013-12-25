@@ -1,4 +1,4 @@
-describe("Testing nesting of components", function() {
+describe("Testing components (nesting)", function() {
 
 	var absurd = Absurd();
 

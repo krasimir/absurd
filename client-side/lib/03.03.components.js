@@ -1,8 +1,29 @@
+var component = function(api) {
+	return function(name, cls) {
+		if(typeof cls == 'undefined') {
+			return api.components.get(name);
+		} else {
+			return api.components.register(name, cls);
+		}
+	}
+}
 var components = function(absurd) {
-	var api = {}, comps = {}, extend = lib.helpers.Extend;
+	var extend = lib.helpers.Extend,
+		api = {}, 
+		comps = {}, 
+		instances = [];
+
+	api.events = extend({}, Observer());
 
 	api.register = function(name, cls) {
-		return comps[name] = extend({}, Observer(), Component(name, absurd), cls);
+		return comps[name] = function() {
+			var c = extend({}, Observer(api.events), Component(name, absurd), cls);
+			instances.push(c);
+			if(typeof c.constructor === 'function') {
+				c.constructor.apply(c, Array.prototype.slice.call(arguments, 0));
+			}
+			return c;
+		};
 	}
 	api.get = function(name) {
 		if(comps[name]) { return comps[name]; }
@@ -19,11 +40,14 @@ var components = function(absurd) {
 	}
 	api.flush = function() {
 		comps = {};
+		instances = [];
 		return api;
 	}
-	api.broadcast = function(event) {
-		for(var name in comps) {
-			comps[name].dispatch(event);
+	api.broadcast = function(event, data) {
+		for(var i=0; i<instances.length, instance=instances[i]; i++) {
+			if(typeof instance[event] === 'function') {
+				instance[event](data);
+			}
 		}
 		return api;
 	}

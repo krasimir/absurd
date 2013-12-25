@@ -92,14 +92,15 @@ var require = function(v) {
 	}
 };
 var __dirname = "";
-var Observer = function() {
+var Observer = function(eventBus) {
 	var listeners = [];
 	return {
-		on: function(eventName, callback) {
+		listeners: listeners,
+		on: function(eventName, callback, scope) {
 			if(!listeners[eventName]) {
 				listeners[eventName] = [];
 			}
-			listeners[eventName].push(callback);
+			listeners[eventName].push({callback: callback, scope: scope});
 			return this;
 		},
 		off: function(eventName, handler) {
@@ -107,23 +108,29 @@ var Observer = function() {
 			if(!handler) listeners[eventName] = []; return this;
 			var newArr = [];
 			for(var i=0; i<listeners[eventName].length; i++) {
-				if(listeners[eventName][i] !== handler) {
+				if(listeners[eventName][i].callback !== handler) {
 					newArr.push(listeners[eventName][i]);
 				}
 			}
 			listeners[eventName] = newArr;
 			return this;
 		},
-		dispatch: function(eventName, data) {
+		dispatch: function(eventName, data, scope) {
+			if(data && typeof data === 'object' && !(data instanceof Array)) {
+				data.target = this;
+			} else {
+				data = { target: this };
+			}
 			if(listeners[eventName]) {
 				for(var i=0; i<listeners[eventName].length; i++) {
-					var callback = listeners[eventName][i];
-					callback(data);
+					var callback = listeners[eventName][i].callback;
+					callback.apply(scope || listeners[eventName][i].scope || {}, [data]);
 				}
 			}
 			if(this[eventName] && typeof this[eventName] === 'function') {
 				this[eventName](data);
 			}
+			if(eventBus) eventBus.dispatch(eventName, data);
 			return this;
 		}
 	}
@@ -275,6 +282,7 @@ var Component = function(name, absurd) {
 		next();
 	}
 	var component = {
+		name: name,
 		populate: function(options) {
 			queue([
 				handleCSS,
@@ -289,21 +297,48 @@ var Component = function(name, absurd) {
 				}
 			], this);
 		},
+		el: function() {
+			return HTMLElement;
+		},
 		set: function(key, value) {
 			storage[key] = value;
 			return this;
 		},
 		get: function(key) {
 			return storage[key];
+		},
+		wire: function(event) {
+			absurd.components.events.on(event, this[event] || function() {}, this);
 		}
 	}
 	return component;
 }
+var component = function(api) {
+	return function(name, cls) {
+		if(typeof cls == 'undefined') {
+			return api.components.get(name);
+		} else {
+			return api.components.register(name, cls);
+		}
+	}
+}
 var components = function(absurd) {
-	var api = {}, comps = {}, extend = lib.helpers.Extend;
+	var extend = lib.helpers.Extend,
+		api = {}, 
+		comps = {}, 
+		instances = [];
+
+	api.events = extend({}, Observer());
 
 	api.register = function(name, cls) {
-		return comps[name] = extend({}, Observer(), Component(name, absurd), cls);
+		return comps[name] = function() {
+			var c = extend({}, Observer(api.events), Component(name, absurd), cls);
+			instances.push(c);
+			if(typeof c.constructor === 'function') {
+				c.constructor.apply(c, Array.prototype.slice.call(arguments, 0));
+			}
+			return c;
+		};
 	}
 	api.get = function(name) {
 		if(comps[name]) { return comps[name]; }
@@ -320,11 +355,14 @@ var components = function(absurd) {
 	}
 	api.flush = function() {
 		comps = {};
+		instances = [];
 		return api;
 	}
-	api.broadcast = function(event) {
-		for(var name in comps) {
-			comps[name].dispatch(event);
+	api.broadcast = function(event, data) {
+		for(var i=0; i<instances.length, instance=instances[i]; i++) {
+			if(typeof instance[event] === 'function') {
+				instance[event](data);
+			}
 		}
 		return api;
 	}
@@ -402,6 +440,7 @@ var client = function() {
 		// internal variables
 		_api.numOfAddedRules = 0;
 		_api.components = components(_api);
+		_api.component = component(_api);
 
 		/******************************************* Copied directly from /lib/API.js */
 

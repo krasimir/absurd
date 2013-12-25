@@ -145,6 +145,7 @@ var Component = function(name, absurd) {
 		next();
 	}
 	var component = {
+		name: name,
 		populate: function(options) {
 			queue([
 				handleCSS,
@@ -159,12 +160,18 @@ var Component = function(name, absurd) {
 				}
 			], this);
 		},
+		el: function() {
+			return HTMLElement;
+		},
 		set: function(key, value) {
 			storage[key] = value;
 			return this;
 		},
 		get: function(key) {
 			return storage[key];
+		},
+		wire: function(event) {
+			absurd.components.events.on(event, this[event] || function() {}, this);
 		}
 	}
 	return component;

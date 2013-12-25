@@ -10,7 +10,7 @@ describe("Testing components (HTML compilation)", function() {
 				expect(document.querySelector("#banner-A").getAttribute("class")).toBe(this.theme);
 				done();
 			}
-		}).populate();
+		})().populate();
 	});
 
 	it("should add the html element to the DOM", function(done) {
@@ -28,7 +28,7 @@ describe("Testing components (HTML compilation)", function() {
 				expect(document.getElementById("classd") !== null).toBe(true);
 				done();
 			}
-		}).set("parent", document.querySelector("body")).populate();
+		})().set("parent", document.querySelector("body")).populate();
 	});
 
 	it("should compile html", function(done) {
@@ -48,7 +48,7 @@ describe("Testing components (HTML compilation)", function() {
 				{ url: "http://google.com", label: "Google" },
 				{ url: "http://yahoo.com", label: "Yahoo" }
 			]
-		}).on("populated", function(data) {
+		})().on("populated", function(data) {
 			expect(data.html.element.outerHTML).toBe('<ul class="class-B"><li><a href="http://google.com">Google</a></li><li><a href="http://yahoo.com">Yahoo</a></li></ul>');
 			done();
 		}).populate();
@@ -83,7 +83,7 @@ describe("Testing components (HTML compilation)", function() {
 					done();
 				}
 			}
-		}).set("parent", document.querySelector("body")).populate();
+		})().set("parent", document.querySelector("body")).populate();
 	});
 
 	it("should change the whole node", function(done) {
@@ -116,7 +116,7 @@ describe("Testing components (HTML compilation)", function() {
 					done();
 				}
 			}
-		}).populate();
+		})().populate();
 	});
 
 	it("should add the html element to the DOM with delay", function(done) {
@@ -145,7 +145,7 @@ describe("Testing components (HTML compilation)", function() {
 					done();
 				}
 			}
-		}).populate()
+		})().populate()
 	});
 
 	it("the for loop with < should work if it is defined in js", function(done) {
@@ -162,7 +162,7 @@ describe("Testing components (HTML compilation)", function() {
 				expect(data.html.element.outerHTML).toBe("<section><span>A</span><span>B</span><span>C</span></section>");
 				done();
 			}
-		}).populate();
+		})().populate();
 	});
 
 	it("should compile with empty data", function(done) {
@@ -183,7 +183,37 @@ describe("Testing components (HTML compilation)", function() {
 					done();
 				}
 			}
-		}).populate();
+		})().populate();
+	});
+
+	it("should remove dom elements", function(done) {
+		absurd.components.register("RemoveDomElements", {
+			links: [
+				{ label: "A" },
+				{ label: "B" },
+				{ label: "C" }
+			],
+			html: {
+				nav: [
+					'<% for(var i=0; i<this.links.length; i++) { %>',
+					'<a href="#"><% this.links[i].label %></a>',
+					'<% } %>'
+				]
+			},
+			populated: function(data) {				
+				if(!this.tested) {
+					this.tested = true;
+					this.links = [
+						{ label: "A" },
+						{ label: "C" }
+					]
+					this.populate();
+				} else {
+					expect(this.el().outerHTML).toBe('<nav><a href="#">A</a><a href="#">C</a></nav>');
+					done();
+				}
+			}
+		})().populate();
 	});
 
 });

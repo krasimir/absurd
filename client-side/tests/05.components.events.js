@@ -31,7 +31,35 @@ describe("Testing components events", function() {
 					done();
 				}				
 			}
-		}).set("parent", document.querySelector("body")).populate();
+		})().set("parent", document.querySelector("body")).populate();
+	});
+
+	it("should register two components and broadcast a message", function(done) {
+		var c =0, count = function() {
+			c += 1;
+			if(c == 2) done();
+		}
+		absurd.components.flush();
+		absurd.components.register("c1", { omg: function() { count(); } })();
+		absurd.components.register("c2", { omg: function() { count(); } })();
+		absurd.components.broadcast("omg");
+	});
+
+	it("should send a message from one component to another", function(done) {
+		var a = absurd.component("ComponentA", {
+			go: function() {
+				this.dispatch("update", {value: 42})
+			}
+		})();
+		var b = absurd.component("ComponentB", {
+			update: function(data) {
+				expect(data.value).toBe(42);
+				expect(this.name).toBe("ComponentB");
+				done();
+			}
+		})();
+		b.wire("update");
+		a.go();
 	});
 
 });

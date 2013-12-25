@@ -14,7 +14,7 @@ describe("Testing components (CSS compilation)", function() {
 				expect(styleTag.innerHTML).toBe(data.css.raw);
 				done();
 			}
-		}).populate();
+		})().populate();
 	});
 
 	it("should compile css after a change", function(done) {
@@ -38,7 +38,7 @@ describe("Testing components (CSS compilation)", function() {
 					done();
 				}
 			}
-		}).populate();
+		})().populate();
 	});
 
 });

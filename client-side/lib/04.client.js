@@ -69,6 +69,7 @@ var client = function() {
 		// internal variables
 		_api.numOfAddedRules = 0;
 		_api.components = components(_api);
+		_api.component = component(_api);
 
 		/******************************************* Copied directly from /lib/API.js */
 
