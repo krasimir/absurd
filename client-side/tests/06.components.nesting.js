@@ -19,58 +19,41 @@ describe("Testing components (nesting)", function() {
 
 	it("should nest components", function(done) {
 
-		var child = absurd.components.register("child", {
+		var Child = absurd.components.register("child", {
 			text: "Title",
 			html: {
-				h1: "<% this.text %>"
+				'h1[data-absurd-event="click:handler"]': "<% this.text %>"
+			},
+			handler: function(e) {
+				this.text = "Wow!!!";
+				this.populate();
 			}
-		})();
+		});
 		var parent = absurd.components.register("parent", {
 			html: {
 				section: [
-					"<% this.component('title') %>",
-					"<% this.component('title') %>"
+					"<% this.child('title1') %>",
+					"<% this.child('title2') %>"
 				]
 			},
 			populated: function(data) {
-				console.log(data);
-				expect(data.html.element.outerHTML).toBe("<section><h1>Title</h1><h1>Title</h1></section>");
-				done();
+				if(!this.tested) {
+					this.tested = true;
+					expect(data.html.element.outerHTML).toBe('<section><h1 data-absurd-event="click:handler">Title</h1><h1 data-absurd-event="click:handler">Title</h1></section>');
+					this.get("children").title1.text = "New Title!";
+					this.get("children").title2.text = "New Title!";
+					this.populate();
+				} else {
+					expect(data.html.element.outerHTML).toBe('<section><h1 data-absurd-event="click:handler">New Title!</h1><h1 data-absurd-event="click:handler">New Title!</h1></section>');
+					done();
+				}				
 			}
-		})().children({
-			title: child
+		})().set("children", {
+			title1: Child(),
+			title2: Child()
 		});
 
 		parent.populate();
-
-	});
-
-	xit("should nest components and make the child self updated", function(done) {
-
-		var child = absurd.components.register("child", {
-			username: "User",
-			html: {
-				h1: {
-					span: "Hello <% this.username %>!"
-				}
-			},
-			populated: function(data) {
-				console.log("child populated", data.html);
-			}
-		});
-		var parent = absurd.components.register("parent", {
-			html: {
-				section: "<% this.include('child') %>"
-			},
-			populated: function(data) {
-				console.log("parent populated", data.html);
-			}
-		}).populate();
-
-		setTimeout(function() {
-			child.username = "World";
-			parent.populate();
-		}, 500);
 
 	});
 

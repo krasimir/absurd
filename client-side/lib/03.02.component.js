@@ -1,4 +1,4 @@
-var Component = function(name, absurd) {
+var Component = function(componentName, absurd) {
 	var CSS = false, 
 		HTMLSource = false, 
 		HTMLElement = false,
@@ -12,7 +12,7 @@ var Component = function(name, absurd) {
 			absurd.flush().add(this.css).compile(function(err, css) {
 				if(!CSS) {
 					var style = document.createElement("style");
-				    style.setAttribute("id", name + '-css');
+				    style.setAttribute("id", componentName + '-css');
 				    style.setAttribute("type", "text/css");
 				    style.innerHTML = css;
 					(select("head") || select("body"))[0].appendChild(style);
@@ -94,16 +94,20 @@ var Component = function(name, absurd) {
 						}
 					}
 					// childs
+					var newNodesToMerge = [];
 					if(e1.childNodes.length >= e2.childNodes.length) {
 						for(var i=0; i<e1.childNodes.length; i++) {
 							if(!e2.childNodes[i]) { e2.appendChild(document.createTextNode("")); }
-							merge(e1.childNodes[i], e2.childNodes[i]);
+							newNodesToMerge.push([e1.childNodes[i], e2.childNodes[i]]);
 						}
 					} else {
 						for(var i=0; i<e2.childNodes.length; i++) {
 							e1.appendChild(document.createTextNode(""));						
-							merge(e1.childNodes[i], e2.childNodes[i]);
+							newNodesToMerge.push([e1.childNodes[i], e2.childNodes[i]]);
 						}
+					}
+					for(var i=0; i<newNodesToMerge.length; i++) {
+						merge(newNodesToMerge[i][0], newNodesToMerge[i][1]);
 					}
 				})(HTMLElement, str2DOMElement(html));
 				next();
@@ -128,16 +132,23 @@ var Component = function(name, absurd) {
 			} else {
 				var self = this;
 				(function callFuncs() {
-					if(funcs.length === 0) {
+					if(funcs.length === 0) {						
 						next();
 					} else {
 						var el = funcs.shift(),
-							value = el.getAttribute("data-absurd-async");
-						if(typeof self[async.funcs[value].name] === 'function') {							
-							self[async.funcs[value].name].apply(self, [function(content) {
-								el.parentNode.replaceChild(str2DOMElement(content), el);
+							value = el.getAttribute("data-absurd-async"),
+							replaceNodes = function(childElement) {
+								if(typeof childElement === 'string') {
+									el.parentNode.replaceChild(str2DOMElement(childElement), el);
+								} else {
+									el.parentNode.replaceChild(childElement, el);
+								}
 								callFuncs();
-							}].concat(async.funcs[value].args));
+							};
+						if(typeof self[async.funcs[value].name] === 'function') {
+							self[async.funcs[value].name].apply(self, [replaceNodes].concat(async.funcs[value].args));
+						} else if(typeof async.funcs[value].func === 'function') {
+							async.funcs[value].func.apply(self, [replaceNodes].concat(async.funcs[value].args));
 						}
 					}
 				})();
@@ -153,7 +164,7 @@ var Component = function(name, absurd) {
 		}
 		next();
 	}
-	var handleEvents = function(next) {
+	var handleEvents = function(next) {		
 		if(HTMLElement) {
 			var self = this;
 			var registerEvent = function(el) {
@@ -182,15 +193,15 @@ var Component = function(name, absurd) {
 		next();
 	}
 	var component = {
-		name: name,
+		name: componentName,
 		populate: function(options) {
 			queue([
 				handleCSS,
 				setHTMLSource,
 				handleHTML,
-				handleAsyncFunctions,
 				append, 
 				handleEvents,
+				handleAsyncFunctions,
 				function() {
 					async = { funcs: {}, index: 0 }
 					var data = {
@@ -225,9 +236,18 @@ var Component = function(name, absurd) {
 			async.funcs[index] = {args: args, name: func};
 			return '<span data-absurd-async="' + index + '"></span>';
 		},
-		children: function(map) {
-			this.set("children", map);
-		}
+		child: function() {
+			var args = Array.prototype.slice.call(arguments, 0),
+				children = this.get("children"),
+				component = children && children[args.shift()],
+				index = '_' + (async.index++);
+			async.funcs[index] = {args: args, func: function(callback) {
+				component.populate({callback: function(data) {
+					callback(data.html.element);
+				}});
+			}};
+			return '<span data-absurd-async="' + index + '"></span>';
+		} 
 	}
 	return component;
 }
