@@ -1,6 +1,6 @@
 {
   "name": "absurd",
-  "version": "0.2.2",
+  "version": "0.2.3",
   "homepage": "http://krasimir.github.io/absurd",
   "description": "CSS/HTML preprocessor. Check out krasimirtsonev.com/blog/article/AbsurdJS-fundamentals",
   "main": "index.js",
@@ -26,9 +26,7 @@
     "grunt-contrib-watch": "0.4.4",
     "grunt-contrib-uglify": "0.2.4",
     "grunt-lineending": "0.2.1",
-    "jasmine-node": "~1.11.0",
-    "npm-stats": "*",
-    "JSONStream": "*"
+    "jasmine-node": "~1.11.0"
   },
   "keywords": [
     "css",
