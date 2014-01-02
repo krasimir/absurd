@@ -20,6 +20,9 @@ var showDownloads = function(callback) {
 				} else {
 					month += data[i].value;
 				}
+				if(i > data.length-8) {
+					str += ' ' + data[i].date + ': ' + data[i].value + '\n';	
+				}
 				if(i == data.length-1) {
 					str += 'Month (' + currentMonth + '): ' + month + '\n';
 				}

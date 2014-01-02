@@ -55,8 +55,6 @@ var removeEmptyTextNodes = function(elem) {
                 i--;
                 len--;
             }
-        }else if(child.nodeType == 1){
-            removeEmptyTextNodes(child);
         }
     }
     return elem;

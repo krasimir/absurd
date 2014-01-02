@@ -1,4 +1,4 @@
-/* version: 0.2.0 */
+/* version: 0.2.1 */
 var Absurd = (function(w) {
 var lib = { 
 	api: {},
@@ -57,8 +57,6 @@ var removeEmptyTextNodes = function(elem) {
                 i--;
                 len--;
             }
-        }else if(child.nodeType == 1){
-            removeEmptyTextNodes(child);
         }
     }
     return elem;
@@ -142,6 +140,7 @@ var Component = function(name, absurd) {
 		extend = lib.helpers.Extend,
 		storage = {},
 		appended = false,
+		async = { funcs: {}, index: 0 },
 		cache = { events: {} };
 	var handleCSS = function(next) {
 		if(this.css) {
@@ -179,7 +178,7 @@ var Component = function(name, absurd) {
 				if(HTMLElement === false) {
 					absurd.flush().morph("html").add(HTMLSource).compile(function(err, html) {
 						HTMLElement = str2DOMElement(html);
-						next();
+						next(true);
 					}, this);		
 				} else {
 					next();
@@ -191,17 +190,19 @@ var Component = function(name, absurd) {
 			next();
 		}
 	}
-	var handleHTML = function(next) {
-		if(HTMLSource) {
+	var handleHTML = function(next, skipCompilation) {
+		if(HTMLSource && skipCompilation !== true) {
 			absurd.flush().morph("html").add(HTMLSource).compile(function(err, html) {
 				(function merge(e1, e2) {
+					removeEmptyTextNodes(e1);
+					removeEmptyTextNodes(e2);
 					if(typeof e1 === 'undefined' || typeof e2 === 'undefined' || e1.isEqualNode(e2)) return;
 					// replace the whole node
 					if(e1.nodeName !== e2.nodeName) {
 						if(e1.parentNode) {
 							e1.parentNode.replaceChild(e2, e1);
 						}
-						next(); return;
+						return;
 					}
 					// nodeValue
 					if(e1.nodeValue !== e2.nodeValue) {
@@ -239,12 +240,46 @@ var Component = function(name, absurd) {
 							merge(e1.childNodes[i], e2.childNodes[i]);
 						}
 					}
-				})(removeEmptyTextNodes(HTMLElement), removeEmptyTextNodes(str2DOMElement(html)));
+				})(HTMLElement, str2DOMElement(html));
 				next();
 			}, this);
 		} else {
 			next();
 		}
+	}
+	var handleAsyncFunctions = function(next) {
+		if(HTMLElement) {
+			var funcs = [];
+			if(HTMLElement.hasAttribute("data-absurd-async")) {
+				funcs.push(HTMLElement);
+			} else {
+				var els = HTMLElement.querySelectorAll ? HTMLElement.querySelectorAll('[data-absurd-async]') : [];
+				for(var i=0; i<els.length; i++) {
+					funcs.push(els[i]);
+				}
+			}
+			if(funcs.length === 0) {
+				next();
+			} else {
+				var self = this;
+				(function callFuncs() {
+					if(funcs.length === 0) {
+						next();
+					} else {
+						var el = funcs.shift(),
+							value = el.getAttribute("data-absurd-async");
+						if(typeof self[async.funcs[value].name] === 'function') {							
+							self[async.funcs[value].name].apply(self, [function(content) {
+								el.parentNode.replaceChild(str2DOMElement(content), el);
+								callFuncs();
+							}].concat(async.funcs[value].args));
+						}
+					}
+				})();
+			}			
+		} else {
+			next();
+		}		
 	}
 	var append = function(next) {
 		if(!appended && HTMLElement && this.get("parent")) {
@@ -288,14 +323,22 @@ var Component = function(name, absurd) {
 				handleCSS,
 				setHTMLSource,
 				handleHTML,
+				handleAsyncFunctions,
 				append, 
 				handleEvents,
 				function() {
-					var data = {css: CSS, html: { element: HTMLElement }};
+					async = { funcs: {}, index: 0 }
+					var data = {
+						css: CSS, 
+						html: { 
+							element: HTMLElement 
+						}
+					};
 					this.dispatch("populated", data);
-					if(options && typeof options.callback === 'function') { options.callback(data); }
+					if(options && typeof options.callback === 'function') { options.callback(data); }	
 				}
 			], this);
+			return this;
 		},
 		el: function() {
 			return HTMLElement;
@@ -309,6 +352,16 @@ var Component = function(name, absurd) {
 		},
 		wire: function(event) {
 			absurd.components.events.on(event, this[event] || function() {}, this);
+		},
+		async: function() {
+			var args = Array.prototype.slice.call(arguments, 0),
+				func = args.shift(),
+				index = '_' + (async.index++);
+			async.funcs[index] = {args: args, name: func};
+			return '<span data-absurd-async="' + index + '"></span>';
+		},
+		children: function(map) {
+			this.set("children", map);
 		}
 	}
 	return component;
@@ -1465,7 +1518,7 @@ lib.processors.html.helpers.PropAnalyzer = function(prop) {
 	return res;
 }
 lib.processors.html.helpers.TemplateEngine = function(html, options) {
-	var re = /<%(.+?)%>/g, reExp = /(^( )?(if|for|else|switch|case|break|{|}))(.*)?/g, code = 'var r=[];\n', cursor = 0;
+	var re = /<%(.+?)%>/g, reExp = /(^( )?(if|for|else|switch|case|break|{|}|;))(.*)?/g, code = 'var r=[];\n', cursor = 0, result;
 	var add = function(line, js) {
 		js? (code += line.match(reExp) ? line + '\n' : 'r.push(' + line + ');\n') :
 			(code += line != '' ? 'r.push("' + line.replace(/"/g, '\\"') + '");\n' : '');
@@ -1476,8 +1529,10 @@ lib.processors.html.helpers.TemplateEngine = function(html, options) {
 		cursor = match.index + match[0].length;
 	}
 	add(html.substr(cursor, html.length - cursor));
-	code += 'return r.join("");';
-	return new Function(code.replace(/[\r\t\n]/g, '')).apply(options);
+	code = (code + 'return r.join("");').replace(/[\r\t\n]/g, '');
+	try { result = new Function(code).apply(options); }
+	catch(err) { console.error("'" + err.message + "'", " in \n\nCode:\n", code, "\n"); }
+	return result;
 };
 return client();
 })(window);

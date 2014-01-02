@@ -2,7 +2,7 @@ describe("Testing components (nesting)", function() {
 
 	var absurd = Absurd();
 
-	xit("should register two components with same proto", function(done) {
+	it("should register two components with same proto", function(done) {
 		var proto = {
 			prop: 10,
 			method: function() {
@@ -10,28 +10,35 @@ describe("Testing components (nesting)", function() {
 				return this;
 			}
 		}
-		var c1 = absurd.components.register("c1", proto).method();
-		var c2 = absurd.components.register("c2", proto).method().method();
+		var c1 = absurd.components.register("c1", proto)().method();
+		var c2 = absurd.components.register("c2", proto)().method().method();
 		expect(c1.prop).toBe(11);
 		expect(c2.prop).toBe(12);
 		done();
 	});
 
-	xit("should nest components", function(done) {
+	it("should nest components", function(done) {
 
-		var title = absurd.components.register("title", {
+		var child = absurd.components.register("child", {
+			text: "Title",
 			html: {
-				h1: "Title"
+				h1: "<% this.text %>"
 			}
-		});
+		})();
 		var parent = absurd.components.register("parent", {
 			html: {
-				section: "<% this.include('title') %>"
+				section: [
+					"<% this.component('title') %>",
+					"<% this.component('title') %>"
+				]
 			},
 			populated: function(data) {
-				expect(data.html).toBe("<section><h1>Title</h1></section>");
+				console.log(data);
+				expect(data.html.element.outerHTML).toBe("<section><h1>Title</h1><h1>Title</h1></section>");
 				done();
 			}
+		})().children({
+			title: child
 		});
 
 		parent.populate();

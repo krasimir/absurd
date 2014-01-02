@@ -216,4 +216,22 @@ describe("Testing components (HTML compilation)", function() {
 		})().populate();
 	});
 
+
+	it("should compile with a function", function(done) {
+		absurd.components.register("FunctionData", {
+			title: '',
+			html: {
+				section: {
+					p: function() {
+						return "the answer is 42";
+					}
+				}
+			},
+			populated: function(data) {
+				expect(data.html.element.outerHTML).toBe('<section><p>the answer is 42</p></section>');
+				done();
+			}
+		})().populate();
+	});
+
 });

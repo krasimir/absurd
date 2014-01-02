@@ -48,17 +48,25 @@ describe("Testing components events", function() {
 	it("should send a message from one component to another", function(done) {
 		var a = absurd.component("ComponentA", {
 			go: function() {
-				this.dispatch("update", {value: 42})
+				this.dispatch("update", {value: 1})
+				this.dispatch("update2", {value: 2})
 			}
 		})();
 		var b = absurd.component("ComponentB", {
+			value: 0,
 			update: function(data) {
-				expect(data.value).toBe(42);
+				this.value += data.value;
+			},
+			update2: function(data) {
+				this.value += data.value;
+				expect(data.value).toBe(2);
+				expect(this.value).toBe(3);
 				expect(this.name).toBe("ComponentB");
 				done();
 			}
 		})();
 		b.wire("update");
+		absurd.components.events.on('update2', b.update2, b);
 		a.go();
 	});
 
