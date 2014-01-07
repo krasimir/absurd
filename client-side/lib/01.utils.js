@@ -9,8 +9,7 @@ var lib = {
 			helpers: {}
 		},
 		component: { plugins: {}}
-	},
-	ki: {}
+	}
 };
 var queue  = function(funcs, scope) {
 	(function next() {

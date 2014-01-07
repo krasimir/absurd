@@ -25,7 +25,7 @@ describe("Testing components events", function() {
 					var input = data.html.element.querySelector("input");
 					input.value = "42";
 					this.tested = true;
-					fireEvent(input, "keyup");	
+					fireEvent(input, "keyup");
 				} else {
 					expect(data.html.element.querySelector("p").innerHTML).toBe("42");
 					done();
@@ -77,6 +77,20 @@ describe("Testing components events", function() {
 			},
 			event: function(data) {
 				expect(data).toBe(100);
+				done();
+			}
+		})().run();
+	});
+
+	it("should pass an array", function(done) {
+		absurd.components.flush().register("c1", { 
+			run: function() {
+				this.dispatch("event", ['a', 'b'])
+			},
+			event: function(data) {
+				expect(data.length).toBe(2);
+				expect(data[0]).toBe('a');
+				expect(data[1]).toBe('b');
 				done();
 			}
 		})().run();

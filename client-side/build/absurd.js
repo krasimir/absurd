@@ -1,4 +1,4 @@
-/* version: 0.2.3 */
+/* version: 0.2.4 */
 var Absurd = (function(w) {
 var lib = { 
 	api: {},
@@ -11,8 +11,7 @@ var lib = {
 			helpers: {}
 		},
 		component: { plugins: {}}
-	},
-	ki: {}
+	}
 };
 var queue  = function(funcs, scope) {
 	(function next() {
@@ -114,12 +113,8 @@ var Observer = function(eventBus) {
 			return this;
 		},
 		dispatch: function(eventName, data, scope) {
-			if(data && typeof data === 'object') {
-				if(!(data instanceof Array)) {
-					data.target = this;
-				} else {
-					data = { target: this };
-				}
+			if(data && typeof data === 'object' && !(data instanceof Array)) {
+				data.target = this;
 			}
 			if(listeners[eventName]) {
 				for(var i=0; i<listeners[eventName].length; i++) {
