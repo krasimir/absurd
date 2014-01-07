@@ -22,10 +22,12 @@ var Observer = function(eventBus) {
 			return this;
 		},
 		dispatch: function(eventName, data, scope) {
-			if(data && typeof data === 'object' && !(data instanceof Array)) {
-				data.target = this;
-			} else {
-				data = { target: this };
+			if(data && typeof data === 'object') {
+				if(!(data instanceof Array)) {
+					data.target = this;
+				} else {
+					data = { target: this };
+				}
 			}
 			if(listeners[eventName]) {
 				for(var i=0; i<listeners[eventName].length; i++) {

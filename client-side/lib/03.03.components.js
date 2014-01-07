@@ -18,6 +18,7 @@ var components = function(absurd) {
 	api.register = function(name, cls) {
 		return comps[name] = function() {
 			var c = extend({}, Observer(api.events), Component(name, absurd), cls);
+			absurd.di.resolveObject(c);
 			instances.push(c);
 			if(typeof c.constructor === 'function') {
 				c.constructor.apply(c, Array.prototype.slice.call(arguments, 0));

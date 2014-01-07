@@ -71,6 +71,9 @@ var client = function() {
 		_api.components = components(_api);
 		_api.component = component(_api);
 
+		// dependency injector
+		_api.di = lib.DI(_api);
+
 		/******************************************* Copied directly from /lib/API.js */
 
 		// client side specific methods 

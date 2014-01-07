@@ -70,4 +70,16 @@ describe("Testing components events", function() {
 		a.go();
 	});
 
+	it("should pass a primitive data", function(done) {
+		absurd.components.flush().register("c1", { 
+			run: function() {
+				this.dispatch("event", 100)
+			},
+			event: function(data) {
+				expect(data).toBe(100);
+				done();
+			}
+		})().run();
+	});
+
 });

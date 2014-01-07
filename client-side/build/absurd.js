@@ -114,10 +114,12 @@ var Observer = function(eventBus) {
 			return this;
 		},
 		dispatch: function(eventName, data, scope) {
-			if(data && typeof data === 'object' && !(data instanceof Array)) {
-				data.target = this;
-			} else {
-				data = { target: this };
+			if(data && typeof data === 'object') {
+				if(!(data instanceof Array)) {
+					data.target = this;
+				} else {
+					data = { target: this };
+				}
 			}
 			if(listeners[eventName]) {
 				for(var i=0; i<listeners[eventName].length; i++) {
@@ -406,6 +408,7 @@ var components = function(absurd) {
 	api.register = function(name, cls) {
 		return comps[name] = function() {
 			var c = extend({}, Observer(api.events), Component(name, absurd), cls);
+			absurd.di.resolveObject(c);
 			instances.push(c);
 			if(typeof c.constructor === 'function') {
 				c.constructor.apply(c, Array.prototype.slice.call(arguments, 0));
@@ -515,6 +518,9 @@ var client = function() {
 		_api.components = components(_api);
 		_api.component = component(_api);
 
+		// dependency injector
+		_api.di = lib.DI(_api);
+
 		/******************************************* Copied directly from /lib/API.js */
 
 		// client side specific methods 
@@ -564,6 +570,58 @@ var client = function() {
 
 	}
 }
+lib.DI = function(api) {
+	var injector = {
+	    dependencies: {},
+	    register: function(key, value) {
+	        this.dependencies[key] = value;
+	        return this;
+	    },
+	    resolve: function() {
+	        var func, deps, scope, args = [], self = this, isForResolving = false;
+	        if(typeof arguments[0] === 'string') {
+	            func = arguments[1];
+	            deps = arguments[0].replace(/ /g, '').split(',');
+	            scope = arguments[2] || {};
+	        } else {
+	            func = arguments[0];
+	            deps = func.toString().match(/^function\s*[^\(]*\(\s*([^\)]*)\)/m)[1].replace(/ /g, '').split(',');
+	            scope = arguments[1] || {};
+	        }
+	        for(var i=0; i<deps.length; i++) {
+	        	if(typeof this.dependencies[deps[i]] != 'undefined') isForResolving = true;
+	        }
+	        if(isForResolving) {
+		        return function() {
+		            var a = Array.prototype.slice.call(arguments, 0);
+		            for(var i=0; i<deps.length; i++) {
+		                var d = deps[i];
+		                args.push(self.dependencies[d] && d != '' ? self.dependencies[d] : a.shift());
+		            }
+		            return func.apply(scope, args);
+		        }
+	    	}
+	    	return func;
+	    },
+	    resolveObject: function(o) {
+	    	if(typeof o == 'object') {
+	    		for(var key in o) {
+	    			if(typeof o[key] == 'function') {
+	    				o[key] = this.resolve(o[key], o);
+	    			} else if(o[key] instanceof Array && o[key].length == 2 && typeof o[key][0] == 'string' && typeof o[key][1] == 'function') {	    				
+	    				o[key] = this.resolve(o[key][0], o[key][1], o);
+	    			}
+	    		}
+	    	}
+	    	return this;
+	    },
+	    flush: function() {
+	    	this.dependencies = {};
+	    	return this;
+	    }
+	}
+	return injector;
+};
 lib.api.add = function(API) {
 	var extend = require("../helpers/Extend");
 	var clone = require("../helpers/Clone");
