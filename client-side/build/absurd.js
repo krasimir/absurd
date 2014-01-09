@@ -726,7 +726,6 @@ lib.api.add = function(API) {
 				selector = toRegister[i].selector,
 				props = toRegister[i].props,
 				allRules = API.getRules(stylesheet);
-			// console.log(selector, props);
 			if(typeof allRules[selector] == 'object') {
 				var current = allRules[selector];
 				for(var propNew in props) {
@@ -813,6 +812,13 @@ var ColorLuminance = function (hex, lum) {
 lib.api.darken = function(api) {
 	return function(color, percents) {
 		return ColorLuminance(color, -(percents/100));
+	}
+}
+lib.api.define = function(api) {
+	return function(prop, value) {
+		if(!api.getStorage().__defined) api.getStorage().__defined = {};
+		api.getStorage().__defined[prop] = value;
+		return api;
 	}
 }
 lib.api.hook = function(api) {
@@ -1204,6 +1210,21 @@ var minimize = function(content) {
     return content;
 }
 
+var replaceDefined = function(css, options) {
+	if(options && options.api && options.api.getStorage().__defined) {
+		var storage = options.api.getStorage().__defined;
+		for(var prop in storage) {
+			var re = new RegExp('<%( )?' + prop + '( )?%>', 'g');
+			if(typeof storage[prop] != 'function') {
+				css = css.replace(re, storage[prop]);
+			} else {
+				css = css.replace(re, storage[prop]());
+			}
+		}
+	}
+	return css;
+}
+
 lib.processors.css.CSS = function() {
 	var processor = function(rules, callback, options) {
 		options = options || defaultOptions;
@@ -1217,6 +1238,7 @@ lib.processors.css.CSS = function() {
 				css += stylesheet + " {" + newline + toCSS(r, options) + "}" + newline;
 			}		
 		}
+		css = replaceDefined(css, options);
 		// Minification
 		if(options.minify) {
 			css = minimize(css);

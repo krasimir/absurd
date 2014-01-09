@@ -1,0 +1,6 @@
+body {
+	color: <% brand-color %>;
+}
+p {
+	border-top: 1px solid <% brand-color %>;
+}
