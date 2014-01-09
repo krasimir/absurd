@@ -12,7 +12,8 @@ module.exports = function(grunt) {
 					'!lib/api/handlecss.js',
 					'!lib/api/handlecssrule.js',
 					'!lib/api/handlecssimport.js',
-					'!lib/api/import.js'
+					'!lib/api/import.js',
+					'!lib/processors/css/organic/**/*.*'
 				],
 				dest: 'client-side/tmp/absurd.js',
 				options: {
@@ -46,6 +47,7 @@ module.exports = function(grunt) {
 					'!tests/metamorphosis/html/morph.html.import.spec.js',
 					'!tests/metamorphosis/html/morph.html.indentation.spec.js',
 					'!tests/bugs/css.import.multiple.classes.spec.js',
+					'!tests/organic/*.js',
 				],
 				dest: 'client-side/tests/tests.from.node.js',
 			}
