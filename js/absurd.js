@@ -1,4 +1,4 @@
-/* version: 0.2.6 */
+/* version: 0.2.61 */
 var Absurd = (function(w) {
 var lib = { 
 	api: {},
@@ -394,6 +394,7 @@ var component = function(api) {
 }
 var components = function(absurd) {
 	var extend = lib.helpers.Extend,
+		clone = lib.helpers.Clone,
 		api = {}, 
 		comps = {}, 
 		instances = [];
@@ -402,7 +403,7 @@ var components = function(absurd) {
 
 	api.register = function(name, cls) {
 		return comps[name] = function() {
-			var c = extend({}, Observer(api.events), Component(name, absurd), cls);
+			var c = extend({}, Observer(api.events), Component(name, absurd), clone(cls));
 			absurd.di.resolveObject(c);
 			instances.push(c);
 			if(typeof c.constructor === 'function') {
@@ -619,7 +620,6 @@ lib.DI = function(api) {
 };
 lib.api.add = function(API) {
 	var extend = require("../helpers/Extend");
-	var clone = require("../helpers/Clone");
 	var toRegister = [];
 	var checkAndExecutePlugin = function(selector, prop, value, stylesheet, parentSelector) {
 		var plugin = API.getPlugins()[prop];
@@ -727,22 +727,22 @@ lib.api.add = function(API) {
 				props = toRegister[i].props,
 				allRules = API.getRules(stylesheet);
 			// overwrite already added value
-			if(typeof allRules[selector] == 'object') {
-				var current = allRules[selector];
-				for(var propNew in props) {
-					if(typeof props[propNew] != 'object') {
-						var value = props[propNew];
-						if(value.charAt(0) === "+") {
+			var current = allRules[selector] || {};
+			for(var propNew in props) {
+				var value = props[propNew];
+				if(typeof value != 'object') {
+					if(value.toString().charAt(0) === "+") {
+						if(current && current[propNew]) {
 							current[propNew] = current[propNew] + ", " + value.substr(1, value.length-1);	
 						} else {
-							current[propNew] = props[propNew];
+							current[propNew] = value.substr(1, value.length-1);	
 						}
+					} else {
+						current[propNew] = value;
 					}
 				}
-			// no, the selector is still not added
-			} else {
-				allRules[selector] = props;
 			}
+			allRules[selector] = current;
 		}
 
 		return API;
@@ -953,57 +953,55 @@ lib.api.storage = function(API) {
 	}
 	return storage;
 }
-/* http://davidwalsh.name/javascript-clone */
-lib.helpers.Clone = function clone(src) {
-	function mixin(dest, source, copyFunc) {
-		var name, s, i, empty = {};
-		for(name in source){
-			// the (!(name in empty) || empty[name] !== s) condition avoids copying properties in "source"
-			// inherited from Object.prototype.	 For example, if dest has a custom toString() method,
-			// don't overwrite it with the toString() method that source inherited from Object.prototype
-			s = source[name];
-			if(!(name in dest) || (dest[name] !== s && (!(name in empty) || empty[name] !== s))){
-				dest[name] = copyFunc ? copyFunc(s) : s;
-			}
-		}
-		return dest;
-	}
+lib.helpers.Clone = function clone(item) {
+    if (!item) { return item; } // null, undefined values check
 
-	if(!src || typeof src != "object" || Object.prototype.toString.call(src) === "[object Function]"){
-		// null, undefined, any non-object, or function
-		return src;	// anything
-	}
-	if(src.nodeType && "cloneNode" in src){
-		// DOM Node
-		return src.cloneNode(true); // Node
-	}
-	if(src instanceof Date){
-		// Date
-		return new Date(src.getTime());	// Date
-	}
-	if(src instanceof RegExp){
-		// RegExp
-		return new RegExp(src);   // RegExp
-	}
-	var r, i, l;
-	if(src instanceof Array){
-		// array
-		r = [];
-		for(i = 0, l = src.length; i < l; ++i){
-			if(i in src){
-				r.push(clone(src[i]));
-			}
-		}
-		// we don't clone functions for performance reasons
-		//		}else if(d.isFunction(src)){
-		//			// function
-		//			r = function(){ return src.apply(this, arguments); };
-	}else{
-		// generic objects
-		r = src.constructor ? new src.constructor() : {};
-	}
-	return mixin(r, src, clone);
+    var types = [ Number, String, Boolean ], 
+        result;
 
+    // normalizing primitives if someone did new String('aaa'), or new Number('444');
+    types.forEach(function(type) {
+        if (item instanceof type) {
+            result = type( item );
+        }
+    });
+
+    if (typeof result == "undefined") {
+        if (Object.prototype.toString.call( item ) === "[object Array]") {
+            result = [];
+            item.forEach(function(child, index, array) { 
+                result[index] = clone( child );
+            });
+        } else if (typeof item == "object") {
+            // testing that this is DOM
+            if (item.nodeType && typeof item.cloneNode == "function") {
+                var result = item.cloneNode( true );    
+            } else if (!item.prototype) { // check that this is a literal
+                if (item instanceof Date) {
+                    result = new Date(item);
+                } else {
+                    // it is an object literal
+                    result = {};
+                    for (var i in item) {
+                        result[i] = clone( item[i] );
+                    }
+                }
+            } else {
+                // depending what you would like here,
+                // just keep the reference, or create new object
+                if (false && item.constructor) {
+                    // would not advice to do that, reason? Read below
+                    result = new item.constructor();
+                } else {
+                    result = item;
+                }
+            }
+        } else {
+            result = item;
+        }
+    }
+
+    return result;
 }
 // credits: http://www.sitepoint.com/javascript-generate-lighter-darker-color/
 lib.helpers.ColorLuminance = function (hex, lum) {
