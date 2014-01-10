@@ -753,6 +753,48 @@ describe("Appending styles - ", function() {
 		}, {minify: true});		
 	});
 
+	it("should allow plus sign in the first selector", function(done) {
+		Absurd(function(api) {
+			api.add({
+			    body: {
+			        "text-shadow": "+0px 0px 3px red",
+			        "color": "green"
+			    }
+			});
+			api.add({
+			    body: {
+			        "text-shadow": "+0px 0px 7px blue"
+			    }
+			});
+		}).compile(function(err, css) {
+			expect(err).toBe(null);
+			expect(css).toBeDefined();
+			expect(css).toBe("body{text-shadow: 0px 0px 3px red,0px 0px 7px blue;color: green;}");
+			done();
+		}, {minify: true});		
+	});
+
+	it("should allow plus sign in the first selector only", function(done) {
+		Absurd(function(api) {
+			api.add({
+			    body: {
+			        "text-shadow": "+0px 0px 3px red",
+			        "color": "green"
+			    }
+			});
+			api.add({
+			    body: {
+			        "text-shadow": "0px 0px 7px blue"
+			    }
+			});
+		}).compile(function(err, css) {
+			expect(err).toBe(null);
+			expect(css).toBeDefined();
+			expect(css).toBe("body{text-shadow: 0px 0px 7px blue;color: green;}");
+			done();
+		}, {minify: true});		
+	});
+
 });
 describe("Fixing bug in array usage", function() {
 
@@ -1015,6 +1057,40 @@ describe("Support comma separated selectors", function() {
 	});
 
 });
+describe("Wrong handling of Array of Objects in Comma Separated Nested-Selectors", function() {
+
+	var api = require('../../index.js')();
+
+	it("should compile properly", function(done) {
+		// single value
+		api.storage("fontsize", "16px");
+		// multiple values
+		api.storage({
+		    color: "red",
+		    theme: function(color) {
+		        return {
+		            color: color,
+		            background: api.lighten(color, 50)
+		        }
+		    }
+		});
+		api.add({
+		    body: {
+		        background: api.storage("color"),
+		        "section a, section div": [
+		            api.storage("theme")("#999"),
+		            { marginTop: "20px" },
+		            { fontSize: api.storage("fontsize") }
+		        ]
+		    }
+		});
+		api.compile(function(err, css) {
+			expect(css).toBe('body{background: red;}body section a,body section div{background: #e6e6e6;color: #999;margin-top: 20px;font-size: 16px;}');
+			done();
+		}, {minify: true})
+	});
+
+})
 describe("Componenting", function() {
 
 	var api = require('../../../index.js')();

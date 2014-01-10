@@ -1,4 +1,4 @@
-/* version: 0.2.6 */
+/* version: 0.2.61 */
 var Absurd = (function(w) {
 var lib = { 
 	api: {},
@@ -727,22 +727,22 @@ lib.api.add = function(API) {
 				props = toRegister[i].props,
 				allRules = API.getRules(stylesheet);
 			// overwrite already added value
-			if(typeof allRules[selector] == 'object') {
-				var current = allRules[selector];
-				for(var propNew in props) {
-					if(typeof props[propNew] != 'object') {
-						var value = props[propNew];
-						if(value.charAt(0) === "+") {
+			var current = allRules[selector] || {};
+			for(var propNew in props) {
+				var value = props[propNew];
+				if(typeof value != 'object') {
+					if(value.toString().charAt(0) === "+") {
+						if(current && current[propNew]) {
 							current[propNew] = current[propNew] + ", " + value.substr(1, value.length-1);	
 						} else {
-							current[propNew] = props[propNew];
+							current[propNew] = value.substr(1, value.length-1);	
 						}
+					} else {
+						current[propNew] = value;
 					}
 				}
-			// no, the selector is still not added
-			} else {
-				allRules[selector] = props;
 			}
+			allRules[selector] = current;
 		}
 
 		return API;
