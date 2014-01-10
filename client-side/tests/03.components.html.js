@@ -234,4 +234,67 @@ describe("Testing components (HTML compilation)", function() {
 		})().populate();
 	});
 
+	it("should change the html dynamically", function(done) {
+		absurd.components.register("FunctionData", {
+			title: '',
+			html: {
+				section: {
+					h1: 'Test',
+					'.marker': { span: '' }
+				}
+			},
+			populated: function(data) {
+				if(!this.tested) {
+					this.tested = true;
+					this.html.section['.marker'] = { 'a[href="#"]': 'test link' };
+					this.populate();
+				} else {
+					expect(data.html.element.outerHTML).toBe('<section><h1>Test</h1><div class="marker"><a href="#">test link</a></div></section>');
+					done();	
+				}				
+			}
+		})().populate();
+	});
+
+	it("should change the html dynamically of two components", function(done) {
+		var C = absurd.components.register("FunctionData", {
+			title: '',
+			html: {
+				section: {
+					h1: 'Test',
+					'.marker': { span: '' }
+				}
+			},
+			constructor: function(change) {
+				this.change = change;
+			},
+			populated: function(data) {
+				if(!this.tested) {
+					this.tested = true;
+					if(this.change) {
+						this.html.section['.marker'] = { 'a[href="#"]': 'test link' };
+					}
+					this.populate();
+				} else {
+					result(data, this.change);
+				}				
+			}
+		});
+		var i = 0;
+		var result = function(data, change) {
+			if(change) {
+				expect(data.html.element.outerHTML).toBe('<section><h1>Test</h1><div class="marker"><a href="#">test link</a></div></section>');
+			} else {
+				expect(data.html.element.outerHTML).toBe('<section><h1>Test</h1><div class="marker"><span></span></div></section>');
+			}
+			i += 1;
+			if(i == 2) {
+				done();
+			}
+			done();
+		}
+		C(true).populate();
+		C().populate();
+	});
+
 });

@@ -9,6 +9,7 @@ var component = function(api) {
 }
 var components = function(absurd) {
 	var extend = lib.helpers.Extend,
+		clone = lib.helpers.Clone,
 		api = {}, 
 		comps = {}, 
 		instances = [];
@@ -17,7 +18,7 @@ var components = function(absurd) {
 
 	api.register = function(name, cls) {
 		return comps[name] = function() {
-			var c = extend({}, Observer(api.events), Component(name, absurd), cls);
+			var c = extend({}, Observer(api.events), Component(name, absurd), clone(cls));
 			absurd.di.resolveObject(c);
 			instances.push(c);
 			if(typeof c.constructor === 'function') {
