@@ -1,4 +1,4 @@
-/* version: 0.1.21 */
+/* version: 0.2.6 */
 var Absurd = (function(w) {
 var lib = { 
 	api: {},
@@ -11,8 +11,7 @@ var lib = {
 			helpers: {}
 		},
 		component: { plugins: {}}
-	},
-	ki: {}
+	}
 };
 var queue  = function(funcs, scope) {
 	(function next() {
@@ -57,8 +56,6 @@ var removeEmptyTextNodes = function(elem) {
                 i--;
                 len--;
             }
-        }else if(child.nodeType == 1){
-            removeEmptyTextNodes(child);
         }
     }
     return elem;
@@ -85,19 +82,22 @@ var require = function(v) {
 		return lib.processors.html.helpers.TemplateEngine;
 	} else if(v == '../helpers/Extend') {
 		return lib.helpers.Extend;
-	}  else {
+	} else if(v == '../helpers/Clone') {
+		return lib.helpers.Clone;
+	} else {
 		return function() {}
 	}
 };
 var __dirname = "";
-var Observer = function() {
+var Observer = function(eventBus) {
 	var listeners = [];
 	return {
-		on: function(eventName, callback) {
+		listeners: listeners,
+		on: function(eventName, callback, scope) {
 			if(!listeners[eventName]) {
 				listeners[eventName] = [];
 			}
-			listeners[eventName].push(callback);
+			listeners[eventName].push({callback: callback, scope: scope});
 			return this;
 		},
 		off: function(eventName, handler) {
@@ -105,46 +105,51 @@ var Observer = function() {
 			if(!handler) listeners[eventName] = []; return this;
 			var newArr = [];
 			for(var i=0; i<listeners[eventName].length; i++) {
-				if(listeners[eventName][i] !== handler) {
+				if(listeners[eventName][i].callback !== handler) {
 					newArr.push(listeners[eventName][i]);
 				}
 			}
 			listeners[eventName] = newArr;
 			return this;
 		},
-		dispatch: function(eventName, data) {
+		dispatch: function(eventName, data, scope) {
+			if(data && typeof data === 'object' && !(data instanceof Array)) {
+				data.target = this;
+			}
 			if(listeners[eventName]) {
 				for(var i=0; i<listeners[eventName].length; i++) {
-					var callback = listeners[eventName][i];
-					callback(data);
+					var callback = listeners[eventName][i].callback;
+					callback.apply(scope || listeners[eventName][i].scope || {}, [data]);
 				}
 			}
 			if(this[eventName] && typeof this[eventName] === 'function') {
 				this[eventName](data);
 			}
+			if(eventBus) eventBus.dispatch(eventName, data);
 			return this;
 		}
 	}
 }
-var Component = function(name, absurd) {
+var Component = function(componentName, absurd) {
 	var CSS = false, 
 		HTMLSource = false, 
 		HTMLElement = false,
 		extend = lib.helpers.Extend,
 		storage = {},
 		appended = false,
+		async = { funcs: {}, index: 0 },
 		cache = { events: {} };
 	var handleCSS = function(next) {
 		if(this.css) {
 			absurd.flush().add(this.css).compile(function(err, css) {
 				if(!CSS) {
 					var style = document.createElement("style");
-				    style.setAttribute("id", name + '-css');
+				    style.setAttribute("id", componentName + '-css');
 				    style.setAttribute("type", "text/css");
 				    style.innerHTML = css;
 					(select("head") || select("body"))[0].appendChild(style);
 					CSS = { raw: css, element: style };
-				} else {
+				} else if(CSS.raw !== css) {
 					CSS.raw = css;
 					CSS.element.innerHTML = css;
 				}
@@ -162,15 +167,15 @@ var Component = function(name, absurd) {
 					if(element.length > 0) {
 						HTMLElement = element[0];
 					}
+					HTMLSource = {'': HTMLElement.outerHTML.replace(/&lt;/g, '<').replace(/&gt;/g, '>') };
 				}
-				HTMLSource = {'': HTMLElement.outerHTML.replace(/&lt;/g, '<').replace(/&gt;/g, '>') };
 				next();
 			} else if(typeof this.html === 'object') {
 				HTMLSource = extend({}, this.html);
 				if(HTMLElement === false) {
 					absurd.flush().morph("html").add(HTMLSource).compile(function(err, html) {
 						HTMLElement = str2DOMElement(html);
-						next();
+						next(true);
 					}, this);		
 				} else {
 					next();
@@ -182,17 +187,19 @@ var Component = function(name, absurd) {
 			next();
 		}
 	}
-	var handleHTML = function(next) {
-		if(HTMLSource) {			
+	var handleHTML = function(next, skipCompilation) {
+		if(HTMLSource && skipCompilation !== true) {
 			absurd.flush().morph("html").add(HTMLSource).compile(function(err, html) {
 				(function merge(e1, e2) {
-					if(typeof e1 === 'undefined' || typeof e2 === 'undefined') return;
+					removeEmptyTextNodes(e1);
+					removeEmptyTextNodes(e2);
+					if(typeof e1 === 'undefined' || typeof e2 === 'undefined' || e1.isEqualNode(e2)) return;
 					// replace the whole node
 					if(e1.nodeName !== e2.nodeName) {
 						if(e1.parentNode) {
 							e1.parentNode.replaceChild(e2, e1);
 						}
-						next(); return;
+						return;
 					}
 					// nodeValue
 					if(e1.nodeValue !== e2.nodeValue) {
@@ -219,22 +226,68 @@ var Component = function(name, absurd) {
 						}
 					}
 					// childs
+					var newNodesToMerge = [];
 					if(e1.childNodes.length >= e2.childNodes.length) {
 						for(var i=0; i<e1.childNodes.length; i++) {
-							merge(e1.childNodes[i], e2.childNodes[i]);
+							if(!e2.childNodes[i]) { e2.appendChild(document.createTextNode("")); }
+							newNodesToMerge.push([e1.childNodes[i], e2.childNodes[i]]);
 						}
 					} else {
 						for(var i=0; i<e2.childNodes.length; i++) {
 							e1.appendChild(document.createTextNode(""));						
-							merge(e1.childNodes[i], e2.childNodes[i]);
+							newNodesToMerge.push([e1.childNodes[i], e2.childNodes[i]]);
 						}
 					}
-				})(removeEmptyTextNodes(HTMLElement), removeEmptyTextNodes(str2DOMElement(html)));
+					for(var i=0; i<newNodesToMerge.length; i++) {
+						merge(newNodesToMerge[i][0], newNodesToMerge[i][1]);
+					}
+				})(HTMLElement, str2DOMElement(html));
 				next();
 			}, this);
 		} else {
 			next();
 		}
+	}
+	var handleAsyncFunctions = function(next) {
+		if(HTMLElement) {
+			var funcs = [];
+			if(HTMLElement.hasAttribute("data-absurd-async")) {
+				funcs.push(HTMLElement);
+			} else {
+				var els = HTMLElement.querySelectorAll ? HTMLElement.querySelectorAll('[data-absurd-async]') : [];
+				for(var i=0; i<els.length; i++) {
+					funcs.push(els[i]);
+				}
+			}
+			if(funcs.length === 0) {
+				next();
+			} else {
+				var self = this;
+				(function callFuncs() {
+					if(funcs.length === 0) {						
+						next();
+					} else {
+						var el = funcs.shift(),
+							value = el.getAttribute("data-absurd-async"),
+							replaceNodes = function(childElement) {
+								if(typeof childElement === 'string') {
+									el.parentNode.replaceChild(str2DOMElement(childElement), el);
+								} else {
+									el.parentNode.replaceChild(childElement, el);
+								}
+								callFuncs();
+							};
+						if(typeof self[async.funcs[value].name] === 'function') {
+							self[async.funcs[value].name].apply(self, [replaceNodes].concat(async.funcs[value].args));
+						} else if(typeof async.funcs[value].func === 'function') {
+							async.funcs[value].func.apply(self, [replaceNodes].concat(async.funcs[value].args));
+						}
+					}
+				})();
+			}			
+		} else {
+			next();
+		}		
 	}
 	var append = function(next) {
 		if(!appended && HTMLElement && this.get("parent")) {
@@ -243,7 +296,7 @@ var Component = function(name, absurd) {
 		}
 		next();
 	}
-	var handleEvents = function(next) {
+	var handleEvents = function(next) {		
 		if(HTMLElement) {
 			var self = this;
 			var registerEvent = function(el) {
@@ -271,7 +324,8 @@ var Component = function(name, absurd) {
 		}
 		next();
 	}
-	return {
+	var component = {
+		name: componentName,
 		populate: function(options) {
 			queue([
 				handleCSS,
@@ -279,12 +333,23 @@ var Component = function(name, absurd) {
 				handleHTML,
 				append, 
 				handleEvents,
+				handleAsyncFunctions,
 				function() {
-					var data = {css: CSS, html: { element: HTMLElement }};
+					async = { funcs: {}, index: 0 }
+					var data = {
+						css: CSS, 
+						html: { 
+							element: HTMLElement 
+						}
+					};
 					this.dispatch("populated", data);
-					if(options && typeof options.callback === 'function') { options.callback(data); }
+					if(options && typeof options.callback === 'function') { options.callback(data); }	
 				}
 			], this);
+			return this;
+		},
+		el: function() {
+			return HTMLElement;
 		},
 		set: function(key, value) {
 			storage[key] = value;
@@ -292,14 +357,59 @@ var Component = function(name, absurd) {
 		},
 		get: function(key) {
 			return storage[key];
+		},
+		wire: function(event) {
+			absurd.components.events.on(event, this[event] || function() {}, this);
+		},
+		async: function() {
+			var args = Array.prototype.slice.call(arguments, 0),
+				func = args.shift(),
+				index = '_' + (async.index++);
+			async.funcs[index] = {args: args, name: func};
+			return '<span data-absurd-async="' + index + '"></span>';
+		},
+		child: function() {
+			var args = Array.prototype.slice.call(arguments, 0),
+				children = this.get("children"),
+				component = children && children[args.shift()],
+				index = '_' + (async.index++);
+			async.funcs[index] = {args: args, func: function(callback) {
+				component.populate({callback: function(data) {
+					callback(data.html.element);
+				}});
+			}};
+			return '<span data-absurd-async="' + index + '"></span>';
+		} 
+	}
+	return component;
+}
+var component = function(api) {
+	return function(name, cls) {
+		if(typeof cls == 'undefined') {
+			return api.components.get(name);
+		} else {
+			return api.components.register(name, cls);
 		}
 	}
 }
 var components = function(absurd) {
-	var api = {}, comps = {}, extend = lib.helpers.Extend;
+	var extend = lib.helpers.Extend,
+		api = {}, 
+		comps = {}, 
+		instances = [];
+
+	api.events = extend({}, Observer());
 
 	api.register = function(name, cls) {
-		return  comps[name] = extend({}, Observer(), Component(name, absurd), cls);
+		return comps[name] = function() {
+			var c = extend({}, Observer(api.events), Component(name, absurd), cls);
+			absurd.di.resolveObject(c);
+			instances.push(c);
+			if(typeof c.constructor === 'function') {
+				c.constructor.apply(c, Array.prototype.slice.call(arguments, 0));
+			}
+			return c;
+		};
 	}
 	api.get = function(name) {
 		if(comps[name]) { return comps[name]; }
@@ -316,11 +426,14 @@ var components = function(absurd) {
 	}
 	api.flush = function() {
 		comps = {};
+		instances = [];
 		return api;
 	}
-	api.broadcast = function(event) {
-		for(var name in comps) {
-			comps[name].dispatch(event);
+	api.broadcast = function(event, data) {
+		for(var i=0; i<instances.length, instance=instances[i]; i++) {
+			if(typeof instance[event] === 'function') {
+				instance[event](data);
+			}
 		}
 		return api;
 	}
@@ -398,6 +511,10 @@ var client = function() {
 		// internal variables
 		_api.numOfAddedRules = 0;
 		_api.components = components(_api);
+		_api.component = component(_api);
+
+		// dependency injector
+		_api.di = lib.DI(_api);
 
 		/******************************************* Copied directly from /lib/API.js */
 
@@ -448,141 +565,186 @@ var client = function() {
 
 	}
 }
+lib.DI = function(api) {
+	var injector = {
+	    dependencies: {},
+	    register: function(key, value) {
+	        this.dependencies[key] = value;
+	        return this;
+	    },
+	    resolve: function() {
+	        var func, deps, scope, args = [], self = this, isForResolving = false;
+	        if(typeof arguments[0] === 'string') {
+	            func = arguments[1];
+	            deps = arguments[0].replace(/ /g, '').split(',');
+	            scope = arguments[2] || {};
+	        } else {
+	            func = arguments[0];
+	            deps = func.toString().match(/^function\s*[^\(]*\(\s*([^\)]*)\)/m)[1].replace(/ /g, '').split(',');
+	            scope = arguments[1] || {};
+	        }
+	        for(var i=0; i<deps.length; i++) {
+	        	if(typeof this.dependencies[deps[i]] != 'undefined') isForResolving = true;
+	        }
+	        if(isForResolving) {
+		        return function() {
+		            var a = Array.prototype.slice.call(arguments, 0);
+		            for(var i=0; i<deps.length; i++) {
+		                var d = deps[i];
+		                args.push(self.dependencies[d] && d != '' ? self.dependencies[d] : a.shift());
+		            }
+		            return func.apply(scope, args);
+		        }
+	    	}
+	    	return func;
+	    },
+	    resolveObject: function(o) {
+	    	if(typeof o == 'object') {
+	    		for(var key in o) {
+	    			if(typeof o[key] == 'function') {
+	    				o[key] = this.resolve(o[key], o);
+	    			} else if(o[key] instanceof Array && o[key].length == 2 && typeof o[key][0] == 'string' && typeof o[key][1] == 'function') {	    				
+	    				o[key] = this.resolve(o[key][0], o[key][1], o);
+	    			}
+	    		}
+	    	}
+	    	return this;
+	    },
+	    flush: function() {
+	    	this.dependencies = {};
+	    	return this;
+	    }
+	}
+	return injector;
+};
 lib.api.add = function(API) {
 	var extend = require("../helpers/Extend");
-	var checkAndExecutePlugin = function(selector, prop, value, stylesheet) {
+	var clone = require("../helpers/Clone");
+	var toRegister = [];
+	var checkAndExecutePlugin = function(selector, prop, value, stylesheet, parentSelector) {
 		var plugin = API.getPlugins()[prop];
 		if(typeof plugin !== 'undefined') {
 			var pluginResponse = plugin(API, value);
 			if(pluginResponse) {
-				addRule(selector, pluginResponse, stylesheet);
+				addRule(selector, pluginResponse, stylesheet, parentSelector);
 			}
 			return true;
 		} else {
 			return false;
 		}
 	}
-	var clearing = function(props) {
-		// plugins
-		var plugins = API.getPlugins();
-		for(var prop in props) {
-			if(typeof plugins[prop] !== 'undefined') {
-				props[prop] = false;
+	var addRule = function(selector, props, stylesheet, parentSelector) {
+		// console.log("\n---------- addRule ---------", selector, ".........", parentSelector, "\n", props);
+
+		stylesheet = stylesheet || "mainstream";
+
+		if(/, ?/g.test(selector)) {
+			var parts = selector.replace(/, /g, ',').split(',');
+			for(var i=0; i<parts.length, p=parts[i]; i++) {
+				addRule(p, props, stylesheet, parentSelector);	
 			}
+			return;
 		}
-		// pseudo classes
-		for(var prop in props) {
-			if(prop.charAt(0) === ":") {
-				props[prop] = false;
-			}
-		}
-		// ampersand 
-		for(var prop in props) {
-			if(/&/g.test(prop)) {
-				props[prop] = false;
-			}
-		}
-	}
-	var checkForNesting = function(selector, props, stylesheet) {
-		for(var prop in props) {
-			if(typeof props[prop] === 'object') {
-				// check for pseudo classes
-				if(prop.charAt(0) === ":") {
-					addRule(selector + prop, props[prop], stylesheet);
-			    // check for ampersand operator
-				} else if(/&/g.test(prop)) {
-					addRule(prop.replace(/&/g, selector), props[prop], stylesheet);
-				// check for media query
-				} else if(prop.indexOf("@media") === 0 || prop.indexOf("@supports") === 0) {
-					addRule(selector, props[prop], prop);
-				// check for media query
-				} else if(selector.indexOf("@media") === 0 || prop.indexOf("@supports") === 0) {
-					addRule(prop, props[prop], selector);
-				// check for plugins
-				} else if(checkAndExecutePlugin(selector, prop, props[prop], stylesheet) === false) {
-					addRule(selector + " " + prop, props[prop], stylesheet);
-				}
-				props[prop] = false;
-			} else if(typeof props[prop] === 'function') {
-				props[prop] = props[prop]();
-				checkForNesting(selector, props, stylesheet);
-			} else {
-				if(checkAndExecutePlugin(selector, prop, props[prop], stylesheet)) {
-					props[prop] = false;
-				}
-			}
-		}
-	}
-	var addRule = function(selector, props, stylesheet) {
 
 		// if array is passed as props
 		if(typeof props.length !== 'undefined' && typeof props === "object") {
-			for(var i=0; prop=props[i]; i++) {
-				addRule(selector, prop, stylesheet);
+			for(var i=0; i<props.length, prop=props[i]; i++) {
+				addRule(selector, prop, stylesheet, parentSelector);
 			}
 			return;
 		}
  
 		// check for plugin
-		if(checkAndExecutePlugin(null, selector, props, stylesheet)) {
+		if(checkAndExecutePlugin(null, selector, props, stylesheet, parentSelector)) {
 			return;	
 		}
 
-		// if the selector is already there
-		if(typeof API.getRules(stylesheet || "mainstream")[selector] == 'object') {
-			var current = API.getRules(stylesheet || "mainstream")[selector];
-			for(var propNew in props) {
-				// overwrite already added value
-				if(typeof props[propNew] != 'object') {
-					current[propNew] = props[propNew];
+		var _props = {}, 
+			_selector = selector,
+			_objects = {}, 
+			_functions = {};
+
+		// processing props
+		for(var prop in props) {
+			var type = typeof props[prop];
+			if(type !== 'object' && type !== 'function') {
+				if(checkAndExecutePlugin(selector, prop, props[prop], stylesheet, parentSelector) === false) {
+					_selector = typeof parentSelector !== "undefined" ? parentSelector + " " + selector : selector;
+					_props[prop] = props[prop];
 				}
+			} else if(type === 'object') {
+				_objects[prop] = props[prop];
+			} else if(type === 'function') {
+				_functions[prop] = props[prop];
 			}
-		// no, the selector is still not added
-		} else {
-			API.getRules(stylesheet || "mainstream")[selector] = props;
 		}
 
-		checkForNesting(selector, props, stylesheet || "mainstream");
-		clearing(props);
+		toRegister.push({
+			selector: _selector,
+			props: _props,
+			stylesheet: stylesheet
+		});
+
+		for(var prop in _objects) {
+			// check for pseudo classes
+			if(prop.charAt(0) === ":") {
+				addRule(selector + prop, _objects[prop], stylesheet, parentSelector);
+		    // check for ampersand operator
+			} else if(/&/g.test(prop)) {
+				addRule(prop.replace(/&/g, selector), _objects[prop], stylesheet, parentSelector);
+			// check for media query
+			} else if(prop.indexOf("@media") === 0 || prop.indexOf("@supports") === 0) {
+				addRule(selector, _objects[prop], prop, parentSelector);
+			// check for media query
+			} else if(selector.indexOf("@media") === 0 || prop.indexOf("@supports") === 0) {
+				addRule(prop, _objects[prop], selector, parentSelector);
+			// check for plugins
+			} else if(checkAndExecutePlugin(selector, prop, _objects[prop], stylesheet, parentSelector) === false) {
+				addRule(prop, _objects[prop], stylesheet, (parentSelector ? parentSelector + " " : "") + selector);
+			}
+		}
+
+		for(var prop in _functions) {
+			var o = {};
+			o[prop] = _functions[prop]();
+			addRule(selector, o, stylesheet, parentSelector);
+		}
 		
 	}
-	var prepareRules = function(obj) {
-		if(obj instanceof Array) {
-			for(var i=0; i<obj.length; i++) {
-				prepareRules(obj[i]);
-			}
-			return;
+	var add = function(rules, stylesheet) {
+
+		toRegister = [];
+		API.numOfAddedRules += 1;
+
+		for(var selector in rules) {
+			addRule(selector, rules[selector], stylesheet || "mainstream");
 		}
-		for(var prop in obj) {
-			var value = obj[prop];
-			if(typeof value == 'object') {
-				prepareRules(value);
-			}
-			if(/, ?/g.test(prop)) {
-				var parts = prop.replace(/, /g, ',').split(',');
-				for(var i=0; i<parts.length, p=parts[i]; i++) {
-					if(obj[p]) {
-						obj[p] = extend({}, obj[p], value);
-					} else {
-						obj[p] = extend({}, value);
+
+		// if the selector is already there
+		for(var i=0; i<toRegister.length; i++) {
+			var stylesheet = toRegister[i].stylesheet,
+				selector = toRegister[i].selector,
+				props = toRegister[i].props,
+				allRules = API.getRules(stylesheet);
+			// overwrite already added value
+			if(typeof allRules[selector] == 'object') {
+				var current = allRules[selector];
+				for(var propNew in props) {
+					if(typeof props[propNew] != 'object') {
+						var value = props[propNew];
+						if(value.charAt(0) === "+") {
+							current[propNew] = current[propNew] + ", " + value.substr(1, value.length-1);	
+						} else {
+							current[propNew] = props[propNew];
+						}
 					}
 				}
-				delete obj[prop];
-			}
-		}
-	}
-	var add = function(rules, stylesheet) {
-		API.numOfAddedRules += 1;
-		prepareRules(rules);
-		for(var selector in rules) {
-			if(rules[selector] instanceof Array) {
-				for(var i=0; i<rules[selector].length, r=rules[selector][i]; i++) {
-					addRule(selector, r, stylesheet || "mainstream");
-				}
+			// no, the selector is still not added
 			} else {
-				addRule(selector, rules[selector], stylesheet || "mainstream");
+				allRules[selector] = props;
 			}
 		}
+
 		return API;
 	}
 	return add;
@@ -655,6 +817,13 @@ var ColorLuminance = function (hex, lum) {
 lib.api.darken = function(api) {
 	return function(color, percents) {
 		return ColorLuminance(color, -(percents/100));
+	}
+}
+lib.api.define = function(api) {
+	return function(prop, value) {
+		if(!api.getStorage().__defined) api.getStorage().__defined = {};
+		api.getStorage().__defined[prop] = value;
+		return api;
 	}
 }
 lib.api.hook = function(api) {
@@ -784,6 +953,58 @@ lib.api.storage = function(API) {
 	}
 	return storage;
 }
+/* http://davidwalsh.name/javascript-clone */
+lib.helpers.Clone = function clone(src) {
+	function mixin(dest, source, copyFunc) {
+		var name, s, i, empty = {};
+		for(name in source){
+			// the (!(name in empty) || empty[name] !== s) condition avoids copying properties in "source"
+			// inherited from Object.prototype.	 For example, if dest has a custom toString() method,
+			// don't overwrite it with the toString() method that source inherited from Object.prototype
+			s = source[name];
+			if(!(name in dest) || (dest[name] !== s && (!(name in empty) || empty[name] !== s))){
+				dest[name] = copyFunc ? copyFunc(s) : s;
+			}
+		}
+		return dest;
+	}
+
+	if(!src || typeof src != "object" || Object.prototype.toString.call(src) === "[object Function]"){
+		// null, undefined, any non-object, or function
+		return src;	// anything
+	}
+	if(src.nodeType && "cloneNode" in src){
+		// DOM Node
+		return src.cloneNode(true); // Node
+	}
+	if(src instanceof Date){
+		// Date
+		return new Date(src.getTime());	// Date
+	}
+	if(src instanceof RegExp){
+		// RegExp
+		return new RegExp(src);   // RegExp
+	}
+	var r, i, l;
+	if(src instanceof Array){
+		// array
+		r = [];
+		for(i = 0, l = src.length; i < l; ++i){
+			if(i in src){
+				r.push(clone(src[i]));
+			}
+		}
+		// we don't clone functions for performance reasons
+		//		}else if(d.isFunction(src)){
+		//			// function
+		//			r = function(){ return src.apply(this, arguments); };
+	}else{
+		// generic objects
+		r = src.constructor ? new src.constructor() : {};
+	}
+	return mixin(r, src, clone);
+
+}
 // credits: http://www.sitepoint.com/javascript-generate-lighter-darker-color/
 lib.helpers.ColorLuminance = function (hex, lum) {
 
@@ -826,14 +1047,10 @@ lib.helpers.RequireUncached = function(module) {
 lib.helpers.TransformUppercase = function(prop, options) {
 	var transformed = "";
 	for(var i=0; c=prop.charAt(i); i++) {
-		if(options && options.keepCamelCase === true) {
-			transformed += c;
+		if(c === c.toUpperCase() && c.toLowerCase() !== c.toUpperCase()) {
+			transformed += "-" + c.toLowerCase();
 		} else {
-			if(c === c.toUpperCase() && c.toLowerCase() !== c.toUpperCase()) {
-				transformed += "-" + c.toLowerCase();
-			} else {
-				transformed += c;
-			}
+			transformed += c;
 		}
 	}
 	return transformed;
@@ -946,33 +1163,17 @@ var toCSS = function(rules, options) {
 				if(value === "") {
 					value = '""';
 				}
-				entity += '  ' + transformUppercase(prop, options) + ': ' + value + ';' + newline;
+				if(options && options.keepCamelCase === true) {
+					entity += '  ' + prop + ': ' + value + ';' + newline;
+				} else {
+					entity += '  ' + transformUppercase(prop) + ': ' + value + ';' + newline;
+				}
 			}
 			entity += '}' + newline;
 			css += entity;
 		}
 	}
 	return css;
-}
-
-// dealing with false values
-var filterRules = function(rules) {
-	var arr = {};
-	for(var selector in rules) {
-		var areThereAnyProps = false;
-		var props = {};
-		for(var prop in rules[selector]) {
-			var value = rules[selector][prop];
-			if(value !== false && typeof value != 'object') {
-				areThereAnyProps = true;
-				props[prop] = value;
-			}
-		}
-		if(areThereAnyProps) {
-			arr[selector] = props;
-		}
-	}
-	return arr;
 }
 
 // combining selectors
@@ -1014,12 +1215,27 @@ var minimize = function(content) {
     return content;
 }
 
+var replaceDefined = function(css, options) {
+	if(options && options.api && options.api.getStorage().__defined) {
+		var storage = options.api.getStorage().__defined;
+		for(var prop in storage) {
+			var re = new RegExp('<%( )?' + prop + '( )?%>', 'g');
+			if(typeof storage[prop] != 'function') {
+				css = css.replace(re, storage[prop]);
+			} else {
+				css = css.replace(re, storage[prop]());
+			}
+		}
+	}
+	return css;
+}
+
 lib.processors.css.CSS = function() {
 	var processor = function(rules, callback, options) {
 		options = options || defaultOptions;
 		var css = '';
 		for(var stylesheet in rules) {
-			var r = filterRules(rules[stylesheet]);
+			var r = rules[stylesheet];
 			r = options.combineSelectors ? combineSelectors(r) : r;
 			if(stylesheet === "mainstream") {
 				css += toCSS(r, options);
@@ -1027,6 +1243,7 @@ lib.processors.css.CSS = function() {
 				css += stylesheet + " {" + newline + toCSS(r, options) + "}" + newline;
 			}		
 		}
+		css = replaceDefined(css, options);
 		// Minification
 		if(options.minify) {
 			css = minimize(css);
@@ -1174,7 +1391,7 @@ var data = null,
 	defaultOptions = {},
 	tags = [],
 	beautifyHTML = require('js-beautify').html,
-	transformUppercase = require("../../helpers/TransformUppercase"),
+	tu = require("../../helpers/TransformUppercase"),
 	passedOptions = {};
 
 var processTemplate = function(templateName) {
@@ -1188,6 +1405,13 @@ var processTemplate = function(templateName) {
 		}
 	}
 	return html;
+}
+var prepareProperty = function(prop, options) {
+	if(options && options.keepCamelCase === true) {
+		return prop;
+	} else {
+		return tu(prop, options);
+	}
 }
 var process = function(tagName, obj) {
 	// console.log("------------------------\n", tagName, ">", obj);
@@ -1216,16 +1440,14 @@ var process = function(tagName, obj) {
 			case "_attrs":
 				for(var attrName in value) {
 					if(typeof value[attrName] === "function") {
-						attrs += " " + transformUppercase(attrName, passedOptions) + "=\"" + value[attrName]() + "\"";
+						attrs += " " + prepareProperty(attrName, passedOptions) + "=\"" + value[attrName]() + "\"";
 					} else {
-						attrs += " " + transformUppercase(attrName, passedOptions) + "=\"" + value[attrName] + "\"";
+						attrs += " " + prepareProperty(attrName, passedOptions) + "=\"" + value[attrName] + "\"";
 					}
 				}
-				obj[directiveName] = false;
 			break;
 			case "_":
 				addToChilds(value);
-				obj[directiveName] = false;
 			break;
 			case "_tpl": 
 				if(typeof value == "string") {
@@ -1238,7 +1460,6 @@ var process = function(tagName, obj) {
 					}
 					addToChilds(tmp);
 				}
-				obj[directiveName] = false;
 			break;
 			case "_include":
 				var tmp = '';
@@ -1255,31 +1476,25 @@ var process = function(tagName, obj) {
 					add(value);
 				}
 				addToChilds(tmp);
-				obj[directiveName] = false;
 			break;
-		}
-	}
-
-	for(var prop in obj) {
-		var value = obj[prop];
-		if(value !== false) {
-			var name = prop;
-			switch(typeof value) {
-				case "string": addToChilds(process(name, value)); break;
-				case "object": 
-					if(value.length && value.length > 0) {
-						var tmp = '';
-						for(var i=0; v=value[i]; i++) {
-							tmp += process('', typeof v == "function" ? v() : v);
-							if(i < value.length-1) tmp += newline;
+			default:
+				switch(typeof value) {
+					case "string": addToChilds(process(directiveName, value)); break;
+					case "object": 
+						if(value.length && value.length > 0) {
+							var tmp = '';
+							for(var i=0; v=value[i]; i++) {
+								tmp += process('', typeof v == "function" ? v() : v);
+								if(i < value.length-1) tmp += newline;
+							}
+							addToChilds(process(directiveName, tmp));
+						} else {
+							addToChilds(process(directiveName, value));
 						}
-						addToChilds(process(name, tmp));
-					} else {
-						addToChilds(process(name, value));
-					}
-				break;
-				case "function": addToChilds(process(name, value())); break;
-			}
+					break;
+					case "function": addToChilds(process(directiveName, value())); break;
+				}
+			break;
 		}
 	}
 
@@ -1298,9 +1513,9 @@ var packTag = function(tagName, attrs, childs) {
 	}
 	tagName = tagName == '' ? 'div' : tagName;
 	if(childs !== '') {
-		html += '<' + transformUppercase(tagName, passedOptions) + attrs + '>' + newline + childs + newline + '</' + transformUppercase(tagName, passedOptions) + '>';
+		html += '<' + prepareProperty(tagName, passedOptions) + attrs + '>' + newline + childs + newline + '</' + prepareProperty(tagName, passedOptions) + '>';
 	} else {
-		html += '<' + transformUppercase(tagName, passedOptions) + attrs + '/>';
+		html += '<' + prepareProperty(tagName, passedOptions) + attrs + '/>';
 	}
 	return html;
 }
@@ -1335,7 +1550,14 @@ lib.processors.html.helpers.PropAnalyzer = function(prop) {
 		idName = "", readingId = false, ids = [],
 		attributes = "", readingAttributes = false;
 
-	for(var i=0; c=prop[i]; i++) {
+	if(/(#|\.|\[|\])/gi.test(prop) === false) {
+		return {
+			tag: prop,
+			attrs: ''
+		};
+	}
+
+	for(var i=0; i<prop.length, c=prop[i]; i++) {
 		if(c === "[" && !readingAttributes) {
 			readingAttributes = true;
 		} else if(readingAttributes) {
@@ -1396,7 +1618,7 @@ lib.processors.html.helpers.PropAnalyzer = function(prop) {
 	return res;
 }
 lib.processors.html.helpers.TemplateEngine = function(html, options) {
-	var re = /<%(.+?)%>/g, reExp = /(^( )?(if|for|else|switch|case|break|{|}))(.*)?/g, code = 'var r=[];\n', cursor = 0;
+	var re = /<%(.+?)%>/g, reExp = /(^( )?(if|for|else|switch|case|break|{|}|;))(.*)?/g, code = 'var r=[];\n', cursor = 0, result;
 	var add = function(line, js) {
 		js? (code += line.match(reExp) ? line + '\n' : 'r.push(' + line + ');\n') :
 			(code += line != '' ? 'r.push("' + line.replace(/"/g, '\\"') + '");\n' : '');
@@ -1407,8 +1629,10 @@ lib.processors.html.helpers.TemplateEngine = function(html, options) {
 		cursor = match.index + match[0].length;
 	}
 	add(html.substr(cursor, html.length - cursor));
-	code += 'return r.join("");';
-	return new Function(code.replace(/[\r\t\n]/g, '')).apply(options);
+	code = (code + 'return r.join("");').replace(/[\r\t\n]/g, '');
+	try { result = new Function(code).apply(options); }
+	catch(err) { console.error("'" + err.message + "'", " in \n\nCode:\n", code, "\n"); }
+	return result;
 };
 return client();
 })(window);

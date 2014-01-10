@@ -156,7 +156,6 @@ h1, h2, .documentation h3, .documentation h4 {
 .result {
   overflow: auto;
   padding-left: 10px;
-  pre: [object Object];
 }
 .result pre {
   word-wrap: break-word;
