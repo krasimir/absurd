@@ -1,4 +1,4 @@
-/* version: 0.2.61 */
+/* version: 0.2.62 */
 var Absurd = (function(w) {
 var lib = { 
 	api: {},
@@ -560,6 +560,11 @@ var client = function() {
 		// accept function
 		if(typeof arg === "function") {
 			arg(_api);
+		}
+
+		// check for Organic
+		if(typeof Organic != 'undefined') {
+			Organic.init(_api);
 		}
 
 		return _api;

@@ -33,6 +33,7 @@ module.exports = function(grunt) {
 					'tests/metamorphosis/**/*.js',
 					'tests/componenting/**/*.js',
 					'tests/di/*.js',
+					'tests/organic/*.js',
 					'!tests/common/api.import.spec.js',
 					'!tests/common/compile-and-save.spec.js',
 					'!tests/common/minify.spec.js',
@@ -46,22 +47,44 @@ module.exports = function(grunt) {
 					'!tests/common/define.external.css.spec.js',
 					'!tests/metamorphosis/html/morph.html.import.spec.js',
 					'!tests/metamorphosis/html/morph.html.indentation.spec.js',
-					'!tests/bugs/css.import.multiple.classes.spec.js',
-					'!tests/organic/*.js',
+					'!tests/bugs/css.import.multiple.classes.spec.js'
 				],
 				dest: 'client-side/tests/tests.from.node.js',
+			},
+			organic: {
+				src: [
+					'lib/processors/css/organic/**/*.js'
+				],
+				dest: 'client-side/tmp/absurd.organic.js',
+				options: {
+					process: function(src, filepath) {
+						var moduleDef = filepath
+						.replace(/\//g, '.')
+						.replace(/\//g, '.')
+						.replace(/\.js/g, '')
+						.replace('lib.processors.css.organic', 'o');
+						return src.replace("module.exports", moduleDef);
+					}
+				}
+
 			}
 		},
 		'client-side': {
 			index: {
 				src: '<%= concat.absurd.dest %>',
-				dest: 'client-side/build/absurd.js'
+				organicSrc: '<%= concat.organic.dest %>',
+				dest: 'client-side/build/absurd.js',
+				organicDest: 'client-side/build/absurd.organic.js'
 			}
 		},
 		uglify: {
 			absurd: {
 				src: 'client-side/build/absurd.js',
 				dest: 'client-side/build/absurd.min.js'
+			},
+			organic: {
+				src: 'client-side/build/absurd.organic.js',
+				dest: 'client-side/build/absurd.organic.min.js'
 			}
 		},
 		watch: {
@@ -69,6 +92,7 @@ module.exports = function(grunt) {
 				files: [
 					'<%= concat.absurd.src[0] %>',
 					'client-side/lib/**/*.js',
+					'client-side/lib-organic/**/*.js',
 					'tests/**/*.js'
 				],
 				tasks: ['concat', 'client-side', 'uglify']

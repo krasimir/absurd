@@ -119,6 +119,11 @@ var client = function() {
 			arg(_api);
 		}
 
+		// check for Organic
+		if(typeof Organic != 'undefined') {
+			Organic.init(_api);
+		}
+
 		return _api;
 
 	}
