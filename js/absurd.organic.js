@@ -1,4 +1,4 @@
-/* version: 0.2.62 */
+/* version: 0.2.63 */
 var Organic = (function(w){
 var o = {
 	helpers: {},
@@ -710,96 +710,52 @@ o.index = {
 	        })(files[i]);
 	    }
 	    // converting snippets to plugins
-	    var snippets = require(__dirname + "/helpers/snippets")(),
-	    	atoms = require(__dirname + "/lib/atoms/atoms");
+	    var snippets = require(__dirname + "/helpers/snippets")();
 	    for(var atom in snippets) {
-	    	var pluginName = atom.split(":").shift();
-	    	(function(p) {
-	    		self.absurd.plugin(p, function(absurd, value) {
-		        	return atoms(p + ":" + value);
+	    	atom = atom.split(":");
+	    	(function(pluginName) {
+	    		self.absurd.plugin(pluginName, function(absurd, value, prefixes) {
+	    			if(prefixes === false) { prefixes = ''; }
+	    			var s, r = {};
+	    			if(s = snippets[pluginName + ':' + value]) {
+	    				s = s.split(':');
+	    				r[prefixes + s[0]] = s[1] || '';
+	    			} else if(s = snippets[pluginName]){
+	    				r[prefixes + s] = value;
+	    			}
+	    			return r;
 		        });
-	    	})(pluginName);	    	
+	    	})(atom.shift());
 	    }
 	    return this;
 	}
 }
 o.lib.atoms.atoms = function(value) {
-	var atoms, r = {}, snippets = require('../../helpers/snippets')();
+
+	var toObj = function(value, r) {
+		value = value.replace(/( )?:( )?/, ':').split(':');
+		r = r || {};
+		r[value[0]] = value[1] || '';
+		return r;
+	}
+	var processArr = function(value) {
+		var r = {};
+		for(var i=0; i<value.length; i++) {
+			toObj(value[i], r);
+		}
+		return r;
+	}
 
 	if(typeof value == 'string') {
-		atoms = value.replace(/ \/ /g, '/').replace(/ \//g, '/').replace(/\/ /g, '/').split('/');
+		return processArr(value.replace(/( )?\/( )?/g, '/').split('/'));
 	} else if(typeof value == 'object') {
 		if(!(value instanceof Array)) {
-			atoms = [];
-			for(var key in value) {
-				atoms.push(key + ':' + value[key]);
-			}
+			return value;
 		} else {
-			atoms = value;
+			return processArr(value);
 		}
 	}
-
-	var process = function(snippetValue, prefix) {
-		snippetValue = snippetValue.split(':');
-		var value = snippetValue[1] || '';
-		r[snippetValue[0]] = value;
-		if(prefix !== false) {
-			if(prefix === '' || prefix.indexOf('w') >= 0)
-				r['-webkit-' + snippetValue[0]] = value;
-			if(prefix === '' || prefix.indexOf('m') >= 0)
-				r['-moz-' + snippetValue[0]] = value;
-			if(prefix === '' || prefix.indexOf('s') >= 0)
-				r['-ms-' + snippetValue[0]] = value;
-			if(prefix === '' || prefix.indexOf('o') >= 0)
-				r['-o-' + snippetValue[0]] = value;
-		}
-	}
-
-	// http://docs.emmet.io/css-abbreviations/vendor-prefixes/
-	/*
-	w: webkit
-	m: moz
-	s: ms
-	o: o
-	*/
-	var extractPrefix = function(value) {
-		var result, parts = value.split(':'), atom = parts[0];
-		if(atom.charAt(0) === '-') {
-			var tmp = atom.split("-"), a = tmp.pop();
-			result = {
-				prefix: tmp.join('-')
-			}
-			value = value.replace(result.prefix, '');
-			value = value.substr(1, value.length-1);
-			result.atom = value;
-		} else {
-			result = {
-				prefix: false,
-				atom: value
-			}
-		}		
-		return result;
-	}
-
-	for(var i=0; i<atoms.length; i++) {
-		var p = extractPrefix(atoms[i]),
-			atom = p.atom, prefix = p.prefix;
-		if(atom != '') {
-			if(typeof snippets[atom] != 'undefined') {
-				process(snippets[atom], prefix);
-			} else {
-				var atomParts = atom.replace(/: /, ':').split(':'),
-					snippetValue = atomParts.pop(),
-					snippet = atomParts.join(':');
-				if(typeof snippets[snippet] != 'undefined') {
-					process(snippets[snippet] + ':' + snippetValue, prefix);
-				} else {
-					process(atom.replace(/: /, ':'), prefix);
-				}
-			}
-		}
-	}
-	return r;
+	
 }
 o.lib.molecules.cf = function(value) {
 	var r = {}, clearing = {

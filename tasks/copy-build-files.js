@@ -17,7 +17,7 @@ module.exports = function(grunt) {
 			        request.get(urlMin, function (error, response, body) {
 					    if (!error && response.statusCode == 200) {
 					        grunt.file.write(__dirname + "/../js/absurd.min.js", body, {});
-					        callback();
+					        if(callback) callback();
 					    }
 					});
 			    }
@@ -31,7 +31,7 @@ module.exports = function(grunt) {
 			        request.get(organicurlMin, function (error, response, body) {
 					    if (!error && response.statusCode == 200) {
 					        grunt.file.write(__dirname + "/../js/absurd.organic.min.js", body, {});
-					        callback();
+					        if(callback) callback();
 					    }
 					});
 			    }
