@@ -22,6 +22,8 @@ var require = function(v) {
 		return lib.helpers.Extend;
 	} else if(v == '../helpers/Clone') {
 		return lib.helpers.Clone;
+	} else if(v == '../helpers/Prefixes') {
+		return lib.helpers.Prefixes;
 	} else {
 		return function() {}
 	}

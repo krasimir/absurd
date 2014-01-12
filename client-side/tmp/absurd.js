@@ -51,12 +51,15 @@ lib.DI = function(api) {
 	return injector;
 };
 lib.api.add = function(API) {
-	var extend = require("../helpers/Extend");
-	var toRegister = [];
+	var extend = require("../helpers/Extend"),
+		prefixes = require("../helpers/Prefixes"),
+		toRegister = [];
+
 	var checkAndExecutePlugin = function(selector, prop, value, stylesheet, parentSelector) {
-		var plugin = API.getPlugins()[prop];
+		var prefix = prefixes.nonPrefixProp(prop);
+		var plugin = API.getPlugins()[prefix.prop];
 		if(typeof plugin !== 'undefined') {
-			var pluginResponse = plugin(API, value);
+			var pluginResponse = plugin(API, value, prefix.prefix);
 			if(pluginResponse) {
 				addRule(selector, pluginResponse, stylesheet, parentSelector);
 			}
@@ -70,6 +73,7 @@ lib.api.add = function(API) {
 
 		stylesheet = stylesheet || "mainstream";
 
+		// multiple selectors
 		if(/, ?/g.test(selector)) {
 			var parts = selector.replace(/, /g, ',').split(',');
 			for(var i=0; i<parts.length, p=parts[i]; i++) {
@@ -78,7 +82,7 @@ lib.api.add = function(API) {
 			return;
 		}
 
-		// if array is passed as props
+		// if array is passed
 		if(typeof props.length !== 'undefined' && typeof props === "object") {
 			for(var i=0; i<props.length, prop=props[i]; i++) {
 				addRule(selector, prop, stylesheet, parentSelector);
@@ -103,6 +107,7 @@ lib.api.add = function(API) {
 				if(checkAndExecutePlugin(selector, prop, props[prop], stylesheet, parentSelector) === false) {
 					_selector = typeof parentSelector !== "undefined" ? parentSelector + " " + selector : selector;
 					_props[prop] = props[prop];
+					prefixes.addPrefixes(prop, _props);
 				}
 			} else if(type === 'object') {
 				_objects[prop] = props[prop];
@@ -143,10 +148,13 @@ lib.api.add = function(API) {
 		}
 		
 	}
+
 	var add = function(rules, stylesheet) {
 
 		toRegister = [];
 		API.numOfAddedRules += 1;
+
+		var typeOfPreprocessor = API.defaultProcessor.type;
 
 		for(var selector in rules) {
 			addRule(selector, rules[selector], stylesheet || "mainstream");
@@ -163,15 +171,21 @@ lib.api.add = function(API) {
 			for(var propNew in props) {
 				var value = props[propNew];
 				if(typeof value != 'object') {
-					if(value.toString().charAt(0) === "+") {
-						if(current && current[propNew]) {
-							current[propNew] = current[propNew] + ", " + value.substr(1, value.length-1);	
+					if(typeOfPreprocessor == "css") {
+						// appending values
+						if(value.toString().charAt(0) === "+") {
+							if(current && current[propNew]) {
+								current[propNew] = current[propNew] + ", " + value.substr(1, value.length-1);	
+							} else {
+								current[propNew] = value.substr(1, value.length-1);	
+							}
 						} else {
-							current[propNew] = value.substr(1, value.length-1);	
+							current[propNew] = value;
 						}
 					} else {
 						current[propNew] = value;
 					}
+					
 				}
 			}
 			allRules[selector] = current;
@@ -469,6 +483,50 @@ lib.helpers.Extend = function() {
 		result = process(result, arguments[i]);
 	}
 	return result;
+}
+// http://docs.emmet.io/css-abbreviations/vendor-prefixes/ (w: webkit, m: moz, s: ms, o: o)
+var prefixExtract = function(prop) {
+	var result, match;
+	if(match = prop.match(/^\-(w|m|s|o|-?)+/)) {
+		result = {
+			prefix: match[0].replace(/-/g, '')
+		}
+		result.prop = prop.replace(match[0], '');
+	} else {
+		result = {
+			prefix: false,
+			prop: prop
+		}
+	}
+	return result;
+}
+lib.helpers.Prefixes = {
+	addPrefixes: function(prop, obj) {
+		var originalProp = prop, p = prefixExtract(prop), value = obj[prop];
+		if(p.prefix !== false) {
+			delete obj[originalProp];
+			obj[p.prop] = value;
+			if(p.prefix === '' || p.prefix.indexOf('w') >= 0)
+				obj['-webkit-' + p.prop] = value;
+			if(p.prefix === '' || p.prefix.indexOf('m') >= 0)
+				obj['-moz-' + p.prop] = value;
+			if(p.prefix === '' || p.prefix.indexOf('s') >= 0)
+				obj['-ms-' + p.prop] = value;
+			if(p.prefix === '' || p.prefix.indexOf('o') >= 0)
+				obj['-o-' + p.prop] = value;
+		}
+	},
+	nonPrefixProp: function(prop) {
+		var p = prefixExtract(prop);
+		if(p.prefix !== false) {
+			if(p.prefix == '') { 
+				p.prefix = '-';
+			} else {
+				p.prefix = '-' + p.prefix + '-'; 
+			}
+		}
+		return p;
+	}
 }
 lib.helpers.RequireUncached = function(module) {
 	delete require.cache[require.resolve(module)]

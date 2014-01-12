@@ -20,7 +20,7 @@ describe("Testing atoms", function() {
 	it("should use atom 2", function(done) {
 		api.add({
 			body: {
-				atoms: ['pad:10px', 'fz:16px', 'd:b']
+				atoms: ['pad: 10px', 'fz : 16px', 'd:b']
 			}
 		}).compile(function(err, css) {
 			expect(css).toBe('body{padding: 10px;font-size: 16px;display: block;}');
@@ -73,6 +73,24 @@ describe("Testing atoms", function() {
 			}
 		}).compile(function(err, css) {
 			expect(css).toBe('body{box-sizing: border-box;-webkit-box-sizing: border-box;-moz-box-sizing: border-box;}body p{transition: all 4000ms;-o-transition: all 4000ms;}');
+			done();
+		}, { minify: true})
+	});
+
+	it("should use atom with function and prefix", function(done) {
+		api.add({
+			body: {
+				p: [
+					{ d: 'b' },
+					{
+						'-ws-pos': function() {
+							return 'static';
+						}
+					}
+				]
+			}
+		}).compile(function(err, css) {
+			expect(css).toBe('body p{display: block;position: static;-webkit-position: static;-ms-position: static;}');
 			done();
 		}, { minify: true})
 	});

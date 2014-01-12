@@ -94,6 +94,70 @@ describe("API(colors)", function() {
 	});
 
 });
+describe("CSS prefixes", function() {
+
+	var api = require('../../index.js')();
+
+	it("should use prefixes", function(done) {
+		api.add({
+			body: {
+				p: {
+					marginTop: '1px 0',
+					'-border-radius': '10px',
+					fontSize: '20px'
+				}
+			}
+		}).compile(function(err, css) {
+			expect(css).toBe('body p{margin-top: 1px 0;border-radius: 10px;-webkit-border-radius: 10px;-moz-border-radius: 10px;-ms-border-radius: 10px;-o-border-radius: 10px;font-size: 20px;}');
+			done();
+		}, { minify: true });
+	});
+
+	it("should use only specific prefixes", function(done) {
+		api.add({
+			body: {
+				p: {
+					'-wm-border-radius': '10px'
+				}
+			}
+		}).compile(function(err, css) {
+			expect(css).toBe('body p{border-radius: 10px;-webkit-border-radius: 10px;-moz-border-radius: 10px;}');
+			done();
+		}, { minify: true });
+	});
+
+	it("should use only one prefix", function(done) {
+		api.add({
+			body: {
+				p: {
+					'-s-border-radius': '10px'
+				}
+			}
+		}).compile(function(err, css) {
+			expect(css).toBe('body p{border-radius: 10px;-ms-border-radius: 10px;}');
+			done();
+		}, { minify: true });
+	});
+
+	it("should use prefixes with plugin", function(done) {
+		api.plugin('awesome', function(api, value, prefix) {	
+			var r = {};
+			r[prefix + 'borderRadius'] = value + "px";
+			return r;
+		});
+		api.add({
+			body: {
+				p: {
+					'-sw-awesome': 20
+				}
+			}
+		}).compile(function(err, css) {
+			expect(css).toBe('body p{border-radius: 20px;-webkit-border-radius: 20px;-ms-border-radius: 20px;}');
+			done();
+		}, { minify: true });
+	});
+
+});
 describe(".define function", function() {
 
 	var api = require('../../index.js')();
@@ -2097,7 +2161,7 @@ describe("Testing atoms", function() {
 	it("should use atom 2", function(done) {
 		api.add({
 			body: {
-				atoms: ['pad:10px', 'fz:16px', 'd:b']
+				atoms: ['pad: 10px', 'fz : 16px', 'd:b']
 			}
 		}).compile(function(err, css) {
 			expect(css).toBe('body{padding: 10px;font-size: 16px;display: block;}');
@@ -2150,6 +2214,24 @@ describe("Testing atoms", function() {
 			}
 		}).compile(function(err, css) {
 			expect(css).toBe('body{box-sizing: border-box;-webkit-box-sizing: border-box;-moz-box-sizing: border-box;}body p{transition: all 4000ms;-o-transition: all 4000ms;}');
+			done();
+		}, { minify: true})
+	});
+
+	it("should use atom with function and prefix", function(done) {
+		api.add({
+			body: {
+				p: [
+					{ d: 'b' },
+					{
+						'-ws-pos': function() {
+							return 'static';
+						}
+					}
+				]
+			}
+		}).compile(function(err, css) {
+			expect(css).toBe('body p{display: block;position: static;-webkit-position: static;-ms-position: static;}');
 			done();
 		}, { minify: true})
 	});
