@@ -1,6 +1,6 @@
 var require = function(v) {
 	// css preprocessor
-	if(v.indexOf('css/CSS.js') > 0) {
+	if(v.indexOf('css/CSS.js') > 0 || v == '/../CSS.js') {
 		return lib.processors.css.CSS;
 	} else if(v.indexOf('html/HTML.js') > 0) {
 		return lib.processors.html.HTML;
@@ -22,7 +22,7 @@ var require = function(v) {
 		return lib.helpers.Extend;
 	} else if(v == '../helpers/Clone') {
 		return lib.helpers.Clone;
-	} else if(v == '../helpers/Prefixes') {
+	} else if(v == '../helpers/Prefixes' || v == '/../../../helpers/Prefixes') {
 		return lib.helpers.Prefixes;
 	} else {
 		return function() {}

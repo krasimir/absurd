@@ -779,9 +779,15 @@ lib.processors.css.plugins.document = function() {
 lib.processors.css.plugins.keyframes = function() {
 	return function(api, value) {
 		var processor = require(__dirname + "/../CSS.js")();
+		var prefixes = require(__dirname + "/../../../helpers/Prefixes");
 		if(typeof value === "object") {			
 			// js or json
 			if(typeof value.frames != "undefined") {
+				for(var frame in value.frames) {
+					for(var prop in value.frames[frame]) {
+						prefixes.addPrefixes(prop, value.frames[frame]);
+					}
+				}
 				var content = '@keyframes ' + value.name + " {\n";
 				content += processor({mainstream: value.frames});
 				content += "}";

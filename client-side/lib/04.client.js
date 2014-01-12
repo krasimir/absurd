@@ -110,8 +110,8 @@ var client = function() {
 		}
 
 		// registering plugins
-		for(var pluginName in lib.plugins) {
-			_api.plugin(pluginName, lib.plugins[pluginName]());
+		for(var pluginName in lib.processors.css.plugins) {
+			_api.plugin(pluginName, lib.processors.css.plugins[pluginName]());
 		}
 
 		// accept function
