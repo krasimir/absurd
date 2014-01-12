@@ -68,11 +68,11 @@ describe("Testing atoms", function() {
 			body: {
 				atoms: '-mw-bxz:bb',
 				p: {
-					atoms: '-o-trs: all 4000ms'
+					atoms: '-w-trs: all 4000ms'
 				}
 			}
 		}).compile(function(err, css) {
-			expect(css).toBe('body{box-sizing: border-box;-webkit-box-sizing: border-box;-moz-box-sizing: border-box;}body p{transition: all 4000ms;-o-transition: all 4000ms;}');
+			expect(css).toBe('body{box-sizing: border-box;-webkit-box-sizing: border-box;-moz-box-sizing: border-box;}body p{transition: all 4000ms;-webkit-transition: all 4000ms;}');
 			done();
 		}, { minify: true})
 	});

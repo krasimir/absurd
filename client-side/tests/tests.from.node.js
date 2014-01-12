@@ -859,6 +859,27 @@ describe("Appending styles - ", function() {
 		}, {minify: true});		
 	});
 
+	it("should append with an interval", function(done) {
+		Absurd(function(api) {
+			api.add({
+			    body: {
+			        "text-shadow": ">0px 0px 3px red",
+			        "color": "green"
+			    }
+			});
+			api.add({
+			    body: {
+			        "text-shadow": ">0px 0px 7px blue"
+			    }
+			});
+		}).compile(function(err, css) {
+			expect(err).toBe(null);
+			expect(css).toBeDefined();
+			expect(css).toBe("body{text-shadow: 0px 0px 3px red 0px 0px 7px blue;color: green;}");
+			done();
+		}, {minify: true});		
+	});
+
 });
 describe("Fixing bug in array usage", function() {
 
@@ -2209,11 +2230,11 @@ describe("Testing atoms", function() {
 			body: {
 				atoms: '-mw-bxz:bb',
 				p: {
-					atoms: '-o-trs: all 4000ms'
+					atoms: '-w-trs: all 4000ms'
 				}
 			}
 		}).compile(function(err, css) {
-			expect(css).toBe('body{box-sizing: border-box;-webkit-box-sizing: border-box;-moz-box-sizing: border-box;}body p{transition: all 4000ms;-o-transition: all 4000ms;}');
+			expect(css).toBe('body{box-sizing: border-box;-webkit-box-sizing: border-box;-moz-box-sizing: border-box;}body p{transition: all 4000ms;-webkit-transition: all 4000ms;}');
 			done();
 		}, { minify: true})
 	});
@@ -2298,7 +2319,37 @@ describe("Testing molecules", function() {
 				moveto: '10/20/30'
 			}
 		}).compile(function(err, css) {
-			expect(css).toBe('p{transform: translate3d(10,20,30);-webkit-transform: translate3d(10,20,30);-ms-transform: translate3d(10,20,30);}');
+			expect(css).toBe('p{transform: translate3d(10px,20px,30px);-webkit-transform: translate3d(10px,20px,30px);-ms-transform: translate3d(10px,20px,30px);}');
+			done();
+		}, { minify: true })
+	});
+
+	it("should use rotateto", function(done) {
+		api.add({
+			'.content': {
+				rotateto: 25,
+				section: {
+					rotateto: '-30deg',
+				},
+				a: {
+					rotateto: '10',
+					moveto: '20/30'
+				}
+			}
+		}).compile(function(err, css) {
+			expect(css).toBe('.content{transform: rotate(25deg);-webkit-transform: rotate(25deg);-ms-transform: rotate(25deg);}.content section{transform: rotate(-30deg);-webkit-transform: rotate(-30deg);-ms-transform: rotate(-30deg);}.content a{transform: rotate(10deg) translate(20px,30px);-webkit-transform: rotate(10deg) translate(20px,30px);-ms-transform: rotate(10deg) translate(20px,30px);}');
+			done();
+		}, { minify: true })
+	});
+
+	it("should use scaleto", function(done) {
+		api.add({
+			p: {
+				scaleto: '1.4/1.3',
+				moveto: '30/0'
+			}
+		}).compile(function(err, css) {
+			expect(css).toBe('p{transform: scale(1.4,1.3) translate(30px,0px);-webkit-transform: scale(1.4,1.3) translate(30px,0px);-ms-transform: scale(1.4,1.3) translate(30px,0px);}');
 			done();
 		}, { minify: true })
 	});

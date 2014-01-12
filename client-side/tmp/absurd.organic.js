@@ -614,8 +614,8 @@ o.helpers.snippets = function() {
 	};
 
 }
-o.helpers.units = function(v) {
-	if(!v.match(/[%|in|cm|mm|em|ex|pt|pc|px]/)) return v + '%';
+o.helpers.units = function(v, def) {
+	if(!v.toString().match(/[%|in|cm|mm|em|ex|pt|pc|px|deg|ms|s]/)) return v + (def || '%');
 	else return v;
 }
 var extend = require("./helpers/extend"),
@@ -743,16 +743,30 @@ o.lib.molecules.metrics = function(value) {
 }
 o.lib.molecules.moveto = function(value) {
 	var units = require('../../helpers/units'), 
-		args = require('../../helpers/args')(value)
-		atoms = require('../atoms/atoms.js'),
-		x = !args[0] || args[0] == '' ? 0 : args[0],
-		y = !args[1] || args[1] == '' ? 0 : args[1],
-		z = !args[2] || args[2] == '' ? 0 : args[2];
+		args = require('../../helpers/args')(value),
+		x = units(!args[0] || args[0] == '' ? 0 : args[0], 'px'),
+		y = units(!args[1] || args[1] == '' ? 0 : args[1], 'px'),
+		z = units(!args[2] || args[2] == '' ? 0 : args[2], 'px');		
 	if(args.length == 2) {
-		return atoms("-ws-trf: translate(" + x + "," + y + ")");
+		return {"-ws-trf": ">translate(" + x + "," + y + ")"};
 	} else if(args.length == 3) {
-		return atoms("-ws-trf: translate3d(" + x + "," + y + "," + z + ")");
+		return {"-ws-trf": ">translate3d(" + x + "," + y + "," + z + ")"};
 	}	
+}
+o.lib.molecules.rotateto = function(value) {
+	var units = require('../../helpers/units'), 
+		args = require('../../helpers/args')(value);
+	if(args.length == 1) {
+		return {"-ws-trf": ">rotate(" + units(args[0], 'deg') + ")"};
+	}	
+}
+o.lib.molecules.scaleto = function(value) {
+	var args = require('../../helpers/args')(value),
+		x = !args[0] || args[0] == '' ? 0 : args[0],
+		y = !args[1] || args[1] == '' ? 0 : args[1];
+	if(args.length == 2) {
+		return {"-ws-trf": ">scale(" + x + "," + y + ")"};
+	}
 }
 o.lib.molecules.size = function(value) {
 	var units = require('../../helpers/units'), 

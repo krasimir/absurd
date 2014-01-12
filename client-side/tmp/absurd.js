@@ -179,6 +179,12 @@ lib.api.add = function(API) {
 							} else {
 								current[propNew] = value.substr(1, value.length-1);	
 							}
+						} else if(value.toString().charAt(0) === ">") {
+							if(current && current[propNew]) {
+								current[propNew] = current[propNew] + " " + value.substr(1, value.length-1);	
+							} else {
+								current[propNew] = value.substr(1, value.length-1);	
+							}
 						} else {
 							current[propNew] = value;
 						}

@@ -59,7 +59,37 @@ describe("Testing molecules", function() {
 				moveto: '10/20/30'
 			}
 		}).compile(function(err, css) {
-			expect(css).toBe('p{transform: translate3d(10,20,30);-webkit-transform: translate3d(10,20,30);-ms-transform: translate3d(10,20,30);}');
+			expect(css).toBe('p{transform: translate3d(10px,20px,30px);-webkit-transform: translate3d(10px,20px,30px);-ms-transform: translate3d(10px,20px,30px);}');
+			done();
+		}, { minify: true })
+	});
+
+	it("should use rotateto", function(done) {
+		api.add({
+			'.content': {
+				rotateto: 25,
+				section: {
+					rotateto: '-30deg',
+				},
+				a: {
+					rotateto: '10',
+					moveto: '20/30'
+				}
+			}
+		}).compile(function(err, css) {
+			expect(css).toBe('.content{transform: rotate(25deg);-webkit-transform: rotate(25deg);-ms-transform: rotate(25deg);}.content section{transform: rotate(-30deg);-webkit-transform: rotate(-30deg);-ms-transform: rotate(-30deg);}.content a{transform: rotate(10deg) translate(20px,30px);-webkit-transform: rotate(10deg) translate(20px,30px);-ms-transform: rotate(10deg) translate(20px,30px);}');
+			done();
+		}, { minify: true })
+	});
+
+	it("should use scaleto", function(done) {
+		api.add({
+			p: {
+				scaleto: '1.4/1.3',
+				moveto: '30/0'
+			}
+		}).compile(function(err, css) {
+			expect(css).toBe('p{transform: scale(1.4,1.3) translate(30px,0px);-webkit-transform: scale(1.4,1.3) translate(30px,0px);-ms-transform: scale(1.4,1.3) translate(30px,0px);}');
 			done();
 		}, { minify: true })
 	});
