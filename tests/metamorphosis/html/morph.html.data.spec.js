@@ -2,7 +2,7 @@ describe("Metamorphosis (to html preprocessor)", function() {
 
 	var api = require('../../../index.js')();
 
-	xit("should compile html with data", function(done) {
+	it("should compile html with data", function(done) {
 		api.morph("html").add({
 			body: {
 				h1: "<% this.name %> <small>(<% this.profile.job %>)</small>"
@@ -18,7 +18,7 @@ describe("Metamorphosis (to html preprocessor)", function() {
 		})
 	});
 
-	xit("should use 'if' statement", function(done) {
+	it("should use 'if' statement", function(done) {
 		api.morph("html").add({
 			body: {
 				h1: [
@@ -38,7 +38,7 @@ describe("Metamorphosis (to html preprocessor)", function() {
 		})
 	});
 
-	xit("should use 'if' statement (false)", function(done) {
+	it("should use 'if' statement (false)", function(done) {
 		api.morph("html").add({
 			body: {
 				h1: [
@@ -58,7 +58,7 @@ describe("Metamorphosis (to html preprocessor)", function() {
 		})
 	});
 
-	xit("should use 'if/else' statement", function(done) {
+	it("should use 'if/else' statement", function(done) {
 		api.morph("html").add({
 			body: {
 				h1: [
@@ -80,7 +80,7 @@ describe("Metamorphosis (to html preprocessor)", function() {
 		})
 	});
 
-	xit("should use 'switch' statement", function(done) {
+	it("should use 'switch' statement", function(done) {
 		api.morph("html").add({
 			body: [
 				"<% switch(this.theme) { %>",

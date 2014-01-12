@@ -23,7 +23,7 @@ describe("Testing components", function() {
 		})().populate();
 	});
 
-	xit("should use async in a loop", function(done) {
+	it("should use async in a loop", function(done) {
 		absurd.components.flush().register("Async test 2", {
 			html: {
 				'.content': {
