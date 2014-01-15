@@ -29,7 +29,7 @@ o.helpers.snippets = function() {
 	"pos:a": "position:absolute",
 	"pos:r": "position:relative",
 	"pos:f": "position:fixed",
-	"top": "top",
+	// "top": "top",
 	"t:a": "top:auto",
 	"rig": "right",
 	"r:a": "right:auto",
