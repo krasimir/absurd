@@ -1,4 +1,4 @@
-/* version: 0.2.66 */
+/* version: 0.2.67 */
 var Absurd = (function(w) {
 var lib = { 
 	api: {},
@@ -644,7 +644,7 @@ lib.api.add = function(API) {
 		}
 	}
 	var addRule = function(selector, props, stylesheet, parentSelector) {
-		// console.log("\n---------- addRule ---------", selector, ".........", parentSelector, "\n", props);
+		// console.log("\n---------- addRule ---------", parentSelector + ' >>>  ' + selector, "\n", props);
 
 		stylesheet = stylesheet || "mainstream";
 
@@ -696,14 +696,25 @@ lib.api.add = function(API) {
 			props: _props,
 			stylesheet: stylesheet
 		});
-
+		
 		for(var prop in _objects) {
 			// check for pseudo classes
 			if(prop.charAt(0) === ":") {
 				addRule(selector + prop, _objects[prop], stylesheet, parentSelector);
 		    // check for ampersand operator
 			} else if(/&/g.test(prop)) {
-				addRule(prop.replace(/&/g, selector), _objects[prop], stylesheet, parentSelector);
+				if(/, ?/g.test(prop)) {
+					var parts = prop.replace(/, /g, ',').split(',');
+					for(var i=0; i<parts.length, p=parts[i]; i++) {
+						if(p.indexOf('&') >= 0) {
+							addRule(p.replace(/&/g, selector), _objects[prop], stylesheet, parentSelector);
+						} else {
+							addRule(p, _objects[prop], stylesheet, typeof parentSelector !== "undefined" ? parentSelector + " " + selector : selector);
+						}
+					}
+				} else {
+					addRule(prop.replace(/&/g, selector), _objects[prop], stylesheet, parentSelector);
+				}
 			// check for media query
 			} else if(prop.indexOf("@media") === 0 || prop.indexOf("@supports") === 0) {
 				addRule(selector, _objects[prop], prop, parentSelector);
