@@ -19,7 +19,7 @@ describe("Testing components (nesting)", function() {
 
 	it("should nest components", function(done) {
 
-		var Child = absurd.components.register("child", {
+		var Child = absurd.component("child", {
 			text: "Title",
 			html: {
 				'h1[data-absurd-event="click:handler"]': "<% this.text %>"
@@ -29,7 +29,7 @@ describe("Testing components (nesting)", function() {
 				this.populate();
 			}
 		});
-		var parent = absurd.components.register("parent", {
+		var parent = absurd.component("parent", {
 			html: {
 				section: [
 					"<% this.child('title1') %>",
@@ -55,6 +55,38 @@ describe("Testing components (nesting)", function() {
 
 		parent.populate();
 
+	});
+
+	it("should nest components with tables involved", function(done) {
+		absurd.components.flush();
+		var Child = absurd.component("Child", {
+			html: {
+				tr: [
+					'<td class="team"><% this.name %></td>',
+					'<td class="score">V</td>'
+				]
+			},
+			constructor: function(data) {
+				this.name = data.name;
+			}
+		});
+		absurd.component("Parent", {
+			html: {
+				'table.kuusi-pelia': [
+					'<% this.child("home") %>',
+					'<% this.child("away") %>'
+				]
+			},
+			constructor: function() {
+				this.set("children", {
+                    home: Child({name: "AChild"}),
+                    away: Child({name: "BChild"})
+                }).populate({ callback: function(res) {
+                	// console.log(res.html.element.outerHTML);
+                	done();
+                }});				
+			}
+		})();
 	});
 
 });

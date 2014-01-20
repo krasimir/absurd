@@ -61,7 +61,7 @@ describe("Testing components events", function() {
 				this.value += data.value;
 				expect(data.value).toBe(2);
 				expect(this.value).toBe(3);
-				expect(this.name).toBe("ComponentB");
+				expect(this.__name).toBe("ComponentB");
 				done();
 			}
 		})();

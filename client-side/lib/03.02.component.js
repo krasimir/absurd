@@ -56,7 +56,7 @@ var Component = function(componentName, absurd) {
 		}
 	}
 	var handleHTML = function(next, skipCompilation) {
-		if(HTMLSource && skipCompilation !== true) {
+		if(HTMLSource && skipCompilation !== true) {			
 			absurd.flush().morph("html").add(HTMLSource).compile(function(err, html) {
 				(function merge(e1, e2) {
 					removeEmptyTextNodes(e1);
@@ -119,7 +119,7 @@ var Component = function(componentName, absurd) {
 	var handleAsyncFunctions = function(next) {
 		if(HTMLElement) {
 			var funcs = [];
-			if(HTMLElement.hasAttribute("data-absurd-async")) {
+			if(HTMLElement.hasAttribute && HTMLElement.hasAttribute("data-absurd-async")) {
 				funcs.push(HTMLElement);
 			} else {
 				var els = HTMLElement.querySelectorAll ? HTMLElement.querySelectorAll('[data-absurd-async]') : [];
@@ -182,7 +182,7 @@ var Component = function(componentName, absurd) {
 					}
 				}
 			}
-			if(HTMLElement.hasAttribute('data-absurd-event')) {
+			if(HTMLElement.hasAttribute && HTMLElement.hasAttribute('data-absurd-event')) {
 				registerEvent(HTMLElement);
 			}
 			var els = HTMLElement.querySelectorAll ? HTMLElement.querySelectorAll('[data-absurd-event]') : [];
@@ -193,7 +193,7 @@ var Component = function(componentName, absurd) {
 		next();
 	}
 	var component = {
-		name: componentName,
+		__name: componentName,
 		populate: function(options) {
 			queue([
 				handleCSS,
@@ -236,7 +236,7 @@ var Component = function(componentName, absurd) {
 			async.funcs[index] = {args: args, name: func};
 			return '<span data-absurd-async="' + index + '"></span>';
 		},
-		child: function() {
+		child: function() {			
 			var args = Array.prototype.slice.call(arguments, 0),
 				children = this.get("children"),
 				component = children && children[args.shift()],
@@ -247,7 +247,7 @@ var Component = function(componentName, absurd) {
 				}});
 			}};
 			return '<span data-absurd-async="' + index + '"></span>';
-		} 
+		}
 	}
 	return component;
 }

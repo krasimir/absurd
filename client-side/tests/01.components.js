@@ -32,7 +32,7 @@ describe("Testing components", function() {
 	it("should create a component and call its constructor", function(done) {
 		var Component = absurd.component("ComponentCreation", {
 			constructor: function(a, b, c) {
-				expect(this.name).toBe("ComponentCreation");
+				expect(this.__name).toBe("ComponentCreation");
 				expect(a).toBe(10);
 				expect(b).toBe(20);
 				expect(c).toBe(30);
