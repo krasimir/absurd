@@ -234,7 +234,7 @@ var Component = function(componentName, absurd) {
 				func = args.shift(),
 				index = '_' + (async.index++);
 			async.funcs[index] = {args: args, name: func};
-			return '<span data-absurd-async="' + index + '"></span>';
+			return '<script data-absurd-async="' + index + '"></script>';
 		},
 		child: function() {			
 			var args = Array.prototype.slice.call(arguments, 0),
@@ -246,7 +246,7 @@ var Component = function(componentName, absurd) {
 					callback(data.html.element);
 				}});
 			}};
-			return '<span data-absurd-async="' + index + '"></span>';
+			return '<script data-absurd-async="' + index + '"></script>';
 		}
 	}
 	return component;

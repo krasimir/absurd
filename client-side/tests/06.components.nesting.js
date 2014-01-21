@@ -62,8 +62,8 @@ describe("Testing components (nesting)", function() {
 		var Child = absurd.component("Child", {
 			html: {
 				tr: [
-					'<td class="team"><% this.name %></td>',
-					'<td class="score">V</td>'
+					'<td class="c1"><% this.name %></td>',
+					'<td class="c2">test</td>'
 				]
 			},
 			constructor: function(data) {
@@ -72,7 +72,7 @@ describe("Testing components (nesting)", function() {
 		});
 		absurd.component("Parent", {
 			html: {
-				'table.kuusi-pelia': [
+				'table': [
 					'<% this.child("home") %>',
 					'<% this.child("away") %>'
 				]
@@ -82,33 +82,29 @@ describe("Testing components (nesting)", function() {
                     home: Child({name: "AChild"}),
                     away: Child({name: "BChild"})
                 }).populate({ callback: function(res) {
-                	// console.log(res.html.element.outerHTML);
+                	expect(res.html.element.outerHTML).toBe('<table><tr><td class="c1">AChild</td><td class="c2">test</td></tr><tr><td class="c1">BChild</td><td class="c2">test</td></tr></table>');
                 	done();
                 }});				
 			}
 		})();
 	});
 
-	/*
-	var Last6GamesTable = absurd.component("Last6GamesTable", {
-		html: {
-			tr: [
-				'<td class="team"><% this.name %></td>',
-				'<td class="score"><span>H</span></td>',
-				'<td class="score"><span>V</span></td>',
-				'<td class="score"><span>V</span></td>',
-				'<td class="score"><span>H</span></td>',
-				'<td class="score"><span>V</span></td>',
-				'<td class="score"><span>V</span></td>'
-			]
-		},
-		constructor: function(data) {
-			this.name = data.name;
-		},
-		populated: function(res) {
-			console.log(res.html.element.outerHTML);
-		}
+	it("should compile tr tag", function(done) {
+		absurd.component("Person", {
+			name: "John",
+			age: 42,
+			html: {
+				tr: [
+					'<td class="A"><% this.name %></td>',
+					'<td class="B"><% this.age %></td>',
+				]
+			},
+			constructor: function() {
+				this.populate({ callback: function(res) {
+                	expect(res.html.element.outerHTML).toBe('<tr><td class="A">John</td><td class="B">42</td></tr>');
+                	done();
+                }});				
+			}
+		})();
 	});
-	*/
-
 });
