@@ -113,4 +113,33 @@ describe("Dependency injector", function() {
 		component.doSomething();
 	});
 
+	it("should use same function with different parameters", function(done) {
+		api.di.flush().register("service", function(value) {
+			return value;
+		});
+		var App = {
+			init: [',service,', function(a, service, b) {
+				if(!this.tested) {
+					this.tested = true;
+					expect(service(42)).toBeDefined(42);
+					expect(a.value).toBe("A");
+					expect(b.value).toBe("B");
+				} else {
+					expect(a.value).toBe(10);
+					expect(b.value).toBe(20);
+					done();
+				}
+				return this;
+			}]
+		};
+		api.di.resolveObject(App);
+		App.init(
+			{ value: "A" },
+			{ value: "B" }
+		).init(
+			{ value: 10 },
+			{ value: 20 }
+		);
+	});
+
 });

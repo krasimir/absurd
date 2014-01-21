@@ -1,9 +1,9 @@
 {
   "name": "absurd",
-  "version": "0.2.67",
+  "version": "0.2.68",
   "homepage": "http://krasimir.github.io/absurd",
   "description": "CSS/HTML preprocessor. Check out krasimirtsonev.com/blog/article/AbsurdJS-fundamentals",
-  "main": "index.js",
+  "main": "./index.js",
   "author": {
     "name": "Krasimir Tsonev",
     "email": "info@krasimirtsonev.com",

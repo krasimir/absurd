@@ -1,4 +1,4 @@
-/* version: 0.2.67 */
+/* version: 0.2.68 */
 var Absurd = (function(w) {
 var lib = { 
 	api: {},
@@ -581,7 +581,7 @@ lib.DI = function(api) {
 	        return this;
 	    },
 	    resolve: function() {
-	        var func, deps, scope, args = [], self = this, isForResolving = false;
+	        var func, deps, scope, self = this, isForResolving = false;
 	        if(typeof arguments[0] === 'string') {
 	            func = arguments[1];
 	            deps = arguments[0].replace(/ /g, '').split(',');
@@ -596,6 +596,7 @@ lib.DI = function(api) {
 	        }
 	        if(isForResolving) {
 		        return function() {
+		        	var args = [];
 		            var a = Array.prototype.slice.call(arguments, 0);
 		            for(var i=0; i<deps.length; i++) {
 		                var d = deps[i];

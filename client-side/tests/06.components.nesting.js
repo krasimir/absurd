@@ -89,4 +89,26 @@ describe("Testing components (nesting)", function() {
 		})();
 	});
 
+	/*
+	var Last6GamesTable = absurd.component("Last6GamesTable", {
+		html: {
+			tr: [
+				'<td class="team"><% this.name %></td>',
+				'<td class="score"><span>H</span></td>',
+				'<td class="score"><span>V</span></td>',
+				'<td class="score"><span>V</span></td>',
+				'<td class="score"><span>H</span></td>',
+				'<td class="score"><span>V</span></td>',
+				'<td class="score"><span>V</span></td>'
+			]
+		},
+		constructor: function(data) {
+			this.name = data.name;
+		},
+		populated: function(res) {
+			console.log(res.html.element.outerHTML);
+		}
+	});
+	*/
+
 });
