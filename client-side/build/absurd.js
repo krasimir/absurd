@@ -13,6 +13,37 @@ var lib = {
 		component: { plugins: {}}
 	}
 };
+var require = function(v) {
+	// css preprocessor
+	if(v.indexOf('css/CSS.js') > 0 || v == '/../CSS.js') {
+		return lib.processors.css.CSS;
+	} else if(v.indexOf('html/HTML.js') > 0) {
+		return lib.processors.html.HTML;
+	} else if(v.indexOf('component/Component.js') > 0) {
+		return lib.processors.component.Component;
+	} else if(v == 'js-beautify') {
+		return { 
+			html: function(html) {
+				return html;
+			}
+		}
+	} else if(v == './helpers/PropAnalyzer') {
+		return lib.processors.html.helpers.PropAnalyzer;
+	} else if(v == '../../helpers/TransformUppercase') {
+		return lib.helpers.TransformUppercase;
+	} else if(v == './helpers/TemplateEngine') {
+		return lib.processors.html.helpers.TemplateEngine;
+	} else if(v == '../helpers/Extend') {
+		return lib.helpers.Extend;
+	} else if(v == '../helpers/Clone') {
+		return lib.helpers.Clone;
+	} else if(v == '../helpers/Prefixes' || v == '/../../../helpers/Prefixes') {
+		return lib.helpers.Prefixes;
+	} else {
+		return function() {}
+	}
+};
+var __dirname = "";
 var queue  = function(funcs, scope) {
 	(function next() {
 		if(funcs.length > 0) {
@@ -92,68 +123,45 @@ var removeEmptyTextNodes = function(elem) {
     }
     return elem;
 }
-var require = function(v) {
-	// css preprocessor
-	if(v.indexOf('css/CSS.js') > 0 || v == '/../CSS.js') {
-		return lib.processors.css.CSS;
-	} else if(v.indexOf('html/HTML.js') > 0) {
-		return lib.processors.html.HTML;
-	} else if(v.indexOf('component/Component.js') > 0) {
-		return lib.processors.component.Component;
-	} else if(v == 'js-beautify') {
-		return { 
-			html: function(html) {
-				return html;
-			}
-		}
-	} else if(v == './helpers/PropAnalyzer') {
-		return lib.processors.html.helpers.PropAnalyzer;
-	} else if(v == '../../helpers/TransformUppercase') {
-		return lib.helpers.TransformUppercase;
-	} else if(v == './helpers/TemplateEngine') {
-		return lib.processors.html.helpers.TemplateEngine;
-	} else if(v == '../helpers/Extend') {
-		return lib.helpers.Extend;
-	} else if(v == '../helpers/Clone') {
-		return lib.helpers.Clone;
-	} else if(v == '../helpers/Prefixes' || v == '/../../../helpers/Prefixes') {
-		return lib.helpers.Prefixes;
-	} else {
-		return function() {}
+var createNode = function(type, attrs, content) {
+	var node = document.createElement(type);
+	for(var i=0; i<attrs.length, a=attrs[i]; i++) {
+		node.setAttribute(a.name, a.value);
 	}
-};
-var __dirname = "";
+	node.innerHTML = content;
+	return node;
+}
 var Observer = function(eventBus) {
-	var listeners = [];
+	var l = [];
 	return {
-		listeners: listeners,
+		listeners: l,
 		on: function(eventName, callback, scope) {
-			if(!listeners[eventName]) {
-				listeners[eventName] = [];
+			if(!l[eventName]) {
+				l[eventName] = [];
 			}
-			listeners[eventName].push({callback: callback, scope: scope});
+			l[eventName].push({callback: callback, scope: scope});
 			return this;
 		},
 		off: function(eventName, handler) {
-			if(!listeners[eventName]) return this;
-			if(!handler) listeners[eventName] = []; return this;
+			if(!l[eventName]) return this;
+			if(!handler) l[eventName] = []; return this;
 			var newArr = [];
-			for(var i=0; i<listeners[eventName].length; i++) {
-				if(listeners[eventName][i].callback !== handler) {
-					newArr.push(listeners[eventName][i]);
+			for(var i=0; i<l[eventName].length; i++) {
+				if(l[eventName][i].callback !== handler) {
+					newArr.push(l[eventName][i]);
 				}
 			}
-			listeners[eventName] = newArr;
+			l[eventName] = newArr;
 			return this;
 		},
 		dispatch: function(eventName, data, scope) {
 			if(data && typeof data === 'object' && !(data instanceof Array)) {
 				data.target = this;
 			}
-			if(listeners[eventName]) {
-				for(var i=0; i<listeners[eventName].length; i++) {
-					var callback = listeners[eventName][i].callback;
-					callback.apply(scope || listeners[eventName][i].scope || {}, [data]);
+			if(l[eventName]) {
+				for(var i=0; i<l[eventName].length; i++) {
+					var callback = l[eventName][i].callback;
+					callback.apply(scope || l[eventName][i].scope || {}, [data]);
 				}
 			}
 			if(this[eventName] && typeof this[eventName] === 'function') {
@@ -165,6 +173,7 @@ var Observer = function(eventBus) {
 	}
 }
 var Component = function(componentName, absurd) {
+
 	var CSS = false, 
 		HTMLSource = false, 
 		HTMLElement = false,
@@ -173,14 +182,18 @@ var Component = function(componentName, absurd) {
 		appended = false,
 		async = { funcs: {}, index: 0 },
 		cache = { events: {} };
+
 	var handleCSS = function(next) {
 		if(this.css) {
 			absurd.flush().add(this.css).compile(function(err, css) {
 				if(!CSS) {
-					var style = document.createElement("style");
-				    style.setAttribute("id", componentName + '-css');
-				    style.setAttribute("type", "text/css");
-				    style.innerHTML = css;
+					var style = createNode(
+						'style', [
+							{ name: "id", value: componentName + '-css' },
+							{ name: "type", value: "text/css"}
+						],
+						 css
+					);
 					(select("head") || select("body"))[0].appendChild(style);
 					CSS = { raw: css, element: style };
 				} else if(CSS.raw !== css) {
@@ -413,6 +426,17 @@ var Component = function(componentName, absurd) {
 				}});
 			}};
 			return '<script data-absurd-async="' + index + '"></script>';
+		},
+		utils: {
+			str2DOMElement: str2DOMElement,
+			addEventListener: addEventListener,
+			queue: queue,
+			compileHTML: function(HTML, data, callback) {
+				absurd.flush().morph("html").add(HTML).compile(callback, data);
+			},
+			compileCSS: function(CSS, data, callback) {
+				absurd.flush().add(CSS).compile(callback, data);
+			}
 		}
 	}
 	return component;

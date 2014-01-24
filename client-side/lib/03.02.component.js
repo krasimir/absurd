@@ -1,4 +1,5 @@
 var Component = function(componentName, absurd) {
+
 	var CSS = false, 
 		HTMLSource = false, 
 		HTMLElement = false,
@@ -7,14 +8,18 @@ var Component = function(componentName, absurd) {
 		appended = false,
 		async = { funcs: {}, index: 0 },
 		cache = { events: {} };
+
 	var handleCSS = function(next) {
 		if(this.css) {
 			absurd.flush().add(this.css).compile(function(err, css) {
 				if(!CSS) {
-					var style = document.createElement("style");
-				    style.setAttribute("id", componentName + '-css');
-				    style.setAttribute("type", "text/css");
-				    style.innerHTML = css;
+					var style = createNode(
+						'style', [
+							{ name: "id", value: componentName + '-css' },
+							{ name: "type", value: "text/css"}
+						],
+						 css
+					);
 					(select("head") || select("body"))[0].appendChild(style);
 					CSS = { raw: css, element: style };
 				} else if(CSS.raw !== css) {
@@ -247,6 +252,17 @@ var Component = function(componentName, absurd) {
 				}});
 			}};
 			return '<script data-absurd-async="' + index + '"></script>';
+		},
+		utils: {
+			str2DOMElement: str2DOMElement,
+			addEventListener: addEventListener,
+			queue: queue,
+			compileHTML: function(HTML, data, callback) {
+				absurd.flush().morph("html").add(HTML).compile(callback, data);
+			},
+			compileCSS: function(CSS, data, callback) {
+				absurd.flush().add(CSS).compile(callback, data);
+			}
 		}
 	}
 	return component;

@@ -1,16 +1,3 @@
-var lib = { 
-	api: {},
-	helpers: {},
-	plugins: {},
-	processors: { 
-		css: { plugins: {}},
-		html: { 
-			plugins: {},
-			helpers: {}
-		},
-		component: { plugins: {}}
-	}
-};
 var queue  = function(funcs, scope) {
 	(function next() {
 		if(funcs.length > 0) {
@@ -89,4 +76,12 @@ var removeEmptyTextNodes = function(elem) {
         }
     }
     return elem;
+}
+var createNode = function(type, attrs, content) {
+	var node = document.createElement(type);
+	for(var i=0; i<attrs.length, a=attrs[i]; i++) {
+		node.setAttribute(a.name, a.value);
+	}
+	node.innerHTML = content;
+	return node;
 }

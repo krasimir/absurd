@@ -1,34 +1,34 @@
 var Observer = function(eventBus) {
-	var listeners = [];
+	var l = [];
 	return {
-		listeners: listeners,
+		listeners: l,
 		on: function(eventName, callback, scope) {
-			if(!listeners[eventName]) {
-				listeners[eventName] = [];
+			if(!l[eventName]) {
+				l[eventName] = [];
 			}
-			listeners[eventName].push({callback: callback, scope: scope});
+			l[eventName].push({callback: callback, scope: scope});
 			return this;
 		},
 		off: function(eventName, handler) {
-			if(!listeners[eventName]) return this;
-			if(!handler) listeners[eventName] = []; return this;
+			if(!l[eventName]) return this;
+			if(!handler) l[eventName] = []; return this;
 			var newArr = [];
-			for(var i=0; i<listeners[eventName].length; i++) {
-				if(listeners[eventName][i].callback !== handler) {
-					newArr.push(listeners[eventName][i]);
+			for(var i=0; i<l[eventName].length; i++) {
+				if(l[eventName][i].callback !== handler) {
+					newArr.push(l[eventName][i]);
 				}
 			}
-			listeners[eventName] = newArr;
+			l[eventName] = newArr;
 			return this;
 		},
 		dispatch: function(eventName, data, scope) {
 			if(data && typeof data === 'object' && !(data instanceof Array)) {
 				data.target = this;
 			}
-			if(listeners[eventName]) {
-				for(var i=0; i<listeners[eventName].length; i++) {
-					var callback = listeners[eventName][i].callback;
-					callback.apply(scope || listeners[eventName][i].scope || {}, [data]);
+			if(l[eventName]) {
+				for(var i=0; i<l[eventName].length; i++) {
+					var callback = l[eventName][i].callback;
+					callback.apply(scope || l[eventName][i].scope || {}, [data]);
 				}
 			}
 			if(this[eventName] && typeof this[eventName] === 'function') {
