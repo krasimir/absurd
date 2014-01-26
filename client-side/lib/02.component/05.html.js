@@ -1,7 +1,6 @@
 var HTMLSource = false;
 
-api.el = false;
-api.__mergeDOMElements = function(e1, e2) {
+api.__mergeDOMElements = function(e1, e2) {	
 	removeEmptyTextNodes(e1);
 	removeEmptyTextNodes(e2);
 	if(typeof e1 === 'undefined' || typeof e2 === 'undefined' || e1.isEqualNode(e2)) return;
@@ -52,46 +51,34 @@ api.__mergeDOMElements = function(e1, e2) {
 	for(var i=0; i<newNodesToMerge.length; i++) {
 		api.__mergeDOMElements(newNodesToMerge[i][0], newNodesToMerge[i][1]);
 	}
-}
+};
 api.__handleHTML = function(next) {
-	var compile = function(HTMLSource) {
+	var self = this;
+	var compile = function() {
 		absurd.flush().morph("html").add(HTMLSource).compile(function(err, html) {
-			api.__mergeDOMElements(api.el, str2DOMElement(html));
+			if(!self.el) {
+				self.el = str2DOMElement(html);
+			} else {
+				api.__mergeDOMElements(self.el, str2DOMElement(html));
+			}
 			next();
-		}, this);
+		}, self);
 	}
 	if(this.html) {
 		if(typeof this.html === 'string') {
-			if(api.el === false) {
+			if(!this.el) {
 				var element = select(this.html);
-				api.el = element[0];
-				HTMLSource = {'': api.el.outerHTML.replace(/&lt;/g, '<').replace(/&gt;/g, '>') };
+				this.el = element[0];
+				HTMLSource = {'': this.el.outerHTML.replace(/&lt;/g, '<').replace(/&gt;/g, '>') };
 			}
-			next();
+			compile();
 		} else if(typeof this.html === 'object') {
 			HTMLSource = extend({}, this.html);
-			if(api.el === false) {
-				absurd.flush().morph("html").add(HTMLSource).compile(function(err, html) {
-					api.el = str2DOMElement(html);
-					next(true);
-				}, this);		
-			} else {
-				next();
-			}		
+			compile();		
 		} else {
 			next();
 		}
 	} else {
 		next();
 	}
-}
-var handleHTML = function(next, skipCompilation) {
-	if(HTMLSource && skipCompilation !== true) {			
-		absurd.flush().morph("html").add(HTMLSource).compile(function(err, html) {
-			api.__mergeDOMElements(api.el, str2DOMElement(html));
-			next();
-		}, this);
-	} else {
-		next();
-	}
-}
+};

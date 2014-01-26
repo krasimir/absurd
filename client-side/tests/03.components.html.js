@@ -209,7 +209,7 @@ describe("Testing components (HTML compilation)", function() {
 					]
 					this.populate();
 				} else {
-					expect(this.el().outerHTML).toBe('<nav><a href="#">A</a><a href="#">C</a></nav>');
+					expect(this.el.outerHTML).toBe('<nav><a href="#">A</a><a href="#">C</a></nav>');
 					done();
 				}
 			}

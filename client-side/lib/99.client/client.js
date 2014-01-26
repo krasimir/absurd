@@ -82,7 +82,7 @@ var client = function() {
 				events: events,
 				register: function(name, cls) {
 					return comps[name] = function() {
-						var c = extend({}, Component(name, api, events), clone(cls));
+						var c = extend({}, Component(name, api, events, clone(cls)));
 						api.di.resolveObject(c);
 						instances.push(c);
 						if(typeof c.constructor === 'function') {

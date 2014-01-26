@@ -22,12 +22,12 @@ describe("Testing components events", function() {
 			},
 			populated: function(data) {
 				if(!this.tested) {
-					var input = data.html.element.querySelector("input");
+					var input = this.el.querySelector("input");
 					input.value = "42";
 					this.tested = true;
 					fireEvent(input, "keyup");
 				} else {
-					expect(data.html.element.querySelector("p").innerHTML).toBe("42");
+					expect(this.el.querySelector("p").innerHTML).toBe("42");
 					done();
 				}				
 			}

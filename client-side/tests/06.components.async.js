@@ -1,4 +1,4 @@
-describe("Testing components", function() {
+describe("Testing components (async)", function() {
 
 	it("should use async", function(done) {
 		absurd.components.flush().register("Async test", {
