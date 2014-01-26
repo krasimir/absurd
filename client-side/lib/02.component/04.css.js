@@ -21,4 +21,5 @@ api.__handleCSS = function(next) {
 	} else {
 		next();
 	}
+	return this;
 }

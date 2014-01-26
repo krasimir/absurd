@@ -17,5 +17,5 @@ api.populate = function(options) {
 			if(options && typeof options.callback === 'function') { options.callback(data); }	
 		}
 	], this);
-	return api;
+	return this;
 };

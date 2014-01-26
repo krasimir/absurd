@@ -202,6 +202,7 @@ api.__handleCSS = function(next) {
 	} else {
 		next();
 	}
+	return this;
 }
 var HTMLSource = false;
 
@@ -286,6 +287,7 @@ api.__handleHTML = function(next) {
 	} else {
 		next();
 	}
+	return this;
 };
 var	appended = false
 api.__append = function(next) {
@@ -294,6 +296,7 @@ api.__append = function(next) {
 		this.get("parent").appendChild(this.el);
 	}
 	next();
+	return this;
 }
 var cache = { events: {} };
 api.__handleEvents = function(next) {		
@@ -323,6 +326,7 @@ api.__handleEvents = function(next) {
 		}
 	}
 	next();
+	return this;
 }	
 var	async = { funcs: {}, index: 0 };
 api.__handleAsyncFunctions = function(next) {
@@ -364,7 +368,8 @@ api.__handleAsyncFunctions = function(next) {
 		}			
 	} else {
 		next();
-	}		
+	}	
+	return this;	
 }
 api.async = function() {
 	var args = Array.prototype.slice.call(arguments, 0),
@@ -387,6 +392,7 @@ api.child = function() {
 };
 api.wire = function(event) {
 	absurd.components.events.on(event, this[event] || function() {}, this);
+	return this;
 };
 api.populate = function(options) {	
 	queue([
@@ -407,7 +413,7 @@ api.populate = function(options) {
 			if(options && typeof options.callback === 'function') { options.callback(data); }	
 		}
 	], this);
-	return api;
+	return this;
 };
 api.utils = {
 	str2DOMElement: str2DOMElement,

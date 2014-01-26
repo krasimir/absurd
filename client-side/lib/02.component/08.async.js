@@ -38,7 +38,8 @@ api.__handleAsyncFunctions = function(next) {
 		}			
 	} else {
 		next();
-	}		
+	}	
+	return this;	
 }
 api.async = function() {
 	var args = Array.prototype.slice.call(arguments, 0),

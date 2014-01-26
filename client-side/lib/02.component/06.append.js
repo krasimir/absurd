@@ -5,4 +5,5 @@ api.__append = function(next) {
 		this.get("parent").appendChild(this.el);
 	}
 	next();
+	return this;
 }

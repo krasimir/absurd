@@ -81,4 +81,5 @@ api.__handleHTML = function(next) {
 	} else {
 		next();
 	}
+	return this;
 };

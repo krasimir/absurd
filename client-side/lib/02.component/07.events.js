@@ -26,4 +26,5 @@ api.__handleEvents = function(next) {
 		}
 	}
 	next();
+	return this;
 }	
