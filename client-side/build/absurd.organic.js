@@ -51,8 +51,7 @@ var walkClientSide = function(res, obj, path) {
 		}
 	}
 	return res;
-}
-o.helpers.args = function(value) {
+};o.helpers.args = function(value) {
 	value = value.toString().replace(/\/ /g, '/').split('/');
 	return value;
 }

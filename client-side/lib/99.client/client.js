@@ -12,7 +12,9 @@ var client = function() {
 			return destination;
 		};
 
-		var _api = { defaultProcessor: lib.processors.css.CSS() },
+		var _api = { 
+				defaultProcessor: lib.processors.css.CSS() 
+			},
 			_rules = {},
 			_storage = {},
 			_plugins = {},
@@ -68,8 +70,66 @@ var client = function() {
 
 		// internal variables
 		_api.numOfAddedRules = 0;
-		_api.components = components(_api);
-		_api.component = component(_api);
+
+		// absurd.components API
+		_api.components = (function(api) {
+			var extend = lib.helpers.Extend,
+				clone = lib.helpers.Clone,
+				comps = {}, 
+				instances = [],
+				events = extend({}, Component());
+			return {
+				events: events,
+				register: function(name, cls) {
+					return comps[name] = function() {
+						var c = extend({}, Component(name, api, events), clone(cls));
+						api.di.resolveObject(c);
+						instances.push(c);
+						if(typeof c.constructor === 'function') {
+							c.constructor.apply(c, Array.prototype.slice.call(arguments, 0));
+						}
+						return c;
+					};
+				},
+				get: function(name) {
+					if(comps[name]) { return comps[name]; }
+					else { throw new Error("There is no component with name '" + name + "'."); }
+				},
+				remove: function(name) {
+					if(comps[name]) { delete comps[name]; return true; }
+					return false;
+				},
+				list: function() {
+					var l = [];
+					for(var name in comps) l.push(name);
+					return l;
+				},
+				flush: function() {
+					comps = {};
+					instances = [];
+					return this;
+				},
+				broadcast: function(event, data) {
+					for(var i=0; i<instances.length, instance=instances[i]; i++) {
+						if(typeof instance[event] === 'function') {
+							instance[event](data);
+						}
+					}
+					return this;
+				}
+			}
+		})(_api);
+
+		// absurd.component shortcut
+		_api.component = (function(api) {
+			return function(name, cls) {
+				if(typeof cls == 'undefined') {
+					return api.components.get(name);
+				} else {
+					return api.components.register(name, cls);
+				}
+			}
+		})(_api);
 
 		// dependency injector
 		_api.di = lib.DI(_api);
@@ -127,4 +187,4 @@ var client = function() {
 		return _api;
 
 	}
-}
+};

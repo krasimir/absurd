@@ -1,0 +1,97 @@
+var HTMLSource = false;
+
+api.el = false;
+api.__mergeDOMElements = function(e1, e2) {
+	removeEmptyTextNodes(e1);
+	removeEmptyTextNodes(e2);
+	if(typeof e1 === 'undefined' || typeof e2 === 'undefined' || e1.isEqualNode(e2)) return;
+	// replace the whole node
+	if(e1.nodeName !== e2.nodeName) {
+		if(e1.parentNode) {
+			e1.parentNode.replaceChild(e2, e1);
+		}
+		return;
+	}
+	// nodeValue
+	if(e1.nodeValue !== e2.nodeValue) {
+		e1.nodeValue = e2.nodeValue;
+	}
+	// attributes
+	if(e1.attributes) {
+		var attr1 = e1.attributes, attr2 = e2.attributes, a1, a2, found = {};
+		for(var i=0; i<attr1.length, a1=attr1[i]; i++) {
+			for(var j=0; j<attr2.length, a2=attr2[j]; j++) {
+				if(a1.name === a2.name) {
+					e1.setAttribute(a1.name, a2.value);
+					found[a1.name] = true;
+				}
+			}
+			if(!found[a1.name]) {
+				e1.removeAttribute(a1.name);
+			}
+		}
+		for(var i=0; i<attr2.length, a2=attr2[i]; i++) {
+			if(!found[a2.name]) {
+				e1.setAttribute(a2.name, a2.value);
+			}
+		}
+	}
+	// childs
+	var newNodesToMerge = [];
+	if(e1.childNodes.length >= e2.childNodes.length) {
+		for(var i=0; i<e1.childNodes.length; i++) {
+			if(!e2.childNodes[i]) { e2.appendChild(document.createTextNode("")); }
+			newNodesToMerge.push([e1.childNodes[i], e2.childNodes[i]]);
+		}
+	} else {
+		for(var i=0; i<e2.childNodes.length; i++) {
+			e1.appendChild(document.createTextNode(""));						
+			newNodesToMerge.push([e1.childNodes[i], e2.childNodes[i]]);
+		}
+	}
+	for(var i=0; i<newNodesToMerge.length; i++) {
+		api.__mergeDOMElements(newNodesToMerge[i][0], newNodesToMerge[i][1]);
+	}
+}
+api.__handleHTML = function(next) {
+	var compile = function(HTMLSource) {
+		absurd.flush().morph("html").add(HTMLSource).compile(function(err, html) {
+			api.__mergeDOMElements(api.el, str2DOMElement(html));
+			next();
+		}, this);
+	}
+	if(this.html) {
+		if(typeof this.html === 'string') {
+			if(api.el === false) {
+				var element = select(this.html);
+				api.el = element[0];
+				HTMLSource = {'': api.el.outerHTML.replace(/&lt;/g, '<').replace(/&gt;/g, '>') };
+			}
+			next();
+		} else if(typeof this.html === 'object') {
+			HTMLSource = extend({}, this.html);
+			if(api.el === false) {
+				absurd.flush().morph("html").add(HTMLSource).compile(function(err, html) {
+					api.el = str2DOMElement(html);
+					next(true);
+				}, this);		
+			} else {
+				next();
+			}		
+		} else {
+			next();
+		}
+	} else {
+		next();
+	}
+}
+var handleHTML = function(next, skipCompilation) {
+	if(HTMLSource && skipCompilation !== true) {			
+		absurd.flush().morph("html").add(HTMLSource).compile(function(err, html) {
+			api.__mergeDOMElements(api.el, str2DOMElement(html));
+			next();
+		}, this);
+	} else {
+		next();
+	}
+}

@@ -4,6 +4,7 @@ module.exports = function(grunt) {
 
 	grunt.initConfig({
 		concat: {
+			// packing the nodejs code
 			absurd: {
 				src: [
 					'lib/**/*.js',
@@ -16,7 +17,7 @@ module.exports = function(grunt) {
 					'!lib/processors/css/organic/**/*.*',
 					'!lib/helpers/CSS2JSON.js'
 				],
-				dest: 'client-side/tmp/absurd.js',
+				dest: 'tasks/tmp/absurd.js',
 				options: {
 					process: function(src, filepath) {
 						var moduleDef = filepath
@@ -27,6 +28,38 @@ module.exports = function(grunt) {
 					}
 				}
 			},
+			// packing organic framework
+			organic: {
+				src: [
+					'lib/processors/css/organic/**/*.js'
+				],
+				dest: 'tasks/tmp/absurd-organic.js',
+				options: {
+					process: function(src, filepath) {
+						var moduleDef = filepath
+						.replace(/\//g, '.')
+						.replace(/\//g, '.')
+						.replace(/\.js/g, '')
+						.replace('lib.processors.css.organic', 'o');
+						return src.replace("module.exports", moduleDef);
+					}
+				}
+			},
+			// packing client side code
+			'absurd-client-code': {
+				src: [
+					'client-side/lib/**/*.js',
+				],
+				dest: 'tasks/tmp/absurd-client-code.js',
+			},
+			// packing client side code
+			'absurd-organic-client-code': {
+				src: [
+					'client-side/lib-organic/**/*.js',
+				],
+				dest: 'tasks/tmp/absurd-organic-client-code.js',
+			},
+			// packing the nodejs tests for client-side usage
 			'node-tests-to-client': {
 				src: [
 					'tests/common/*.js',
@@ -52,33 +85,16 @@ module.exports = function(grunt) {
 					'!tests/experiments/*.js'
 				],
 				dest: 'client-side/tests/tests.from.node.js',
-			},
-			organic: {
-				src: [
-					'lib/processors/css/organic/**/*.js'
-				],
-				dest: 'client-side/tmp/absurd.organic.js',
-				options: {
-					process: function(src, filepath) {
-						var moduleDef = filepath
-						.replace(/\//g, '.')
-						.replace(/\//g, '.')
-						.replace(/\.js/g, '')
-						.replace('lib.processors.css.organic', 'o');
-						return src.replace("module.exports", moduleDef);
-					}
-				}
-
 			}
 		},
-		'client-side': {
+		// building the client-side port of absurd and organic
+		build: {
 			index: {
-				src: '<%= concat.absurd.dest %>',
-				organicSrc: '<%= concat.organic.dest %>',
 				dest: 'client-side/build/absurd.js',
 				organicDest: 'client-side/build/absurd.organic.js'
 			}
 		},
+		// minification
 		uglify: {
 			absurd: {
 				src: 'client-side/build/absurd.js',
@@ -89,6 +105,7 @@ module.exports = function(grunt) {
 				dest: 'client-side/build/absurd.organic.min.js'
 			}
 		},
+		// watching
 		watch: {
 			commands: {
 				files: [
@@ -97,7 +114,7 @@ module.exports = function(grunt) {
 					'client-side/lib-organic/**/*.js',
 					'tests/**/*.js'
 				],
-				tasks: ['concat', 'client-side', 'uglify']
+				tasks: ['concat', 'build', 'uglify']
 			}
 		},
 		lineending: {
@@ -118,6 +135,6 @@ module.exports = function(grunt) {
 	grunt.loadNpmTasks('grunt-lineending');
 	grunt.loadTasks('tasks');
 
-	grunt.registerTask('default', ['concat', 'client-side', 'uglify', 'lineending', 'watch']);
+	grunt.registerTask('default', ['concat', 'build', 'uglify', 'lineending', 'watch']);
 
 }

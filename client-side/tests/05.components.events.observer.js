@@ -17,7 +17,7 @@ describe("Testing components Observer", function() {
 	}
 
 	it("should attach a listener and dispatch an event", function(done) {
-		var observer = Observer();
+		var observer = absurd.component("Observer", {})();
 		observer.on("event", function(data) {
 			expect(data.value).toBe(10);
 			done();
@@ -25,7 +25,7 @@ describe("Testing components Observer", function() {
 	});
 
 	it("should remove a listener", function(done) {
-		var observer = Observer();
+		var observer = absurd.component("Observer", {})();
 		var listener = function() {};
 		observer.on("event", listener);
 		expect(observer.listeners['event'].length === 1).toBe(true);
@@ -35,7 +35,8 @@ describe("Testing components Observer", function() {
 	});
 
 	it("should keep the scope (passed on 'dispatch' method)", function(done) {
-		var component = extend({}, Observer());
+		var observer = absurd.component("Observer", {})();
+		var component = extend({}, observer);
 		component.name = 'Component';
 		component.on('event', function(data) {
 			expect(data.value).toBe(10);
@@ -45,7 +46,8 @@ describe("Testing components Observer", function() {
 	});
 
 	it("should keep the scope (passed on 'on' method)", function(done) {
-		var component = extend({}, Observer());
+		var observer = absurd.component("Observer", {})();
+		var component = extend({}, observer);
 		component.name = 'Component';
 		component.on('event', function(data) {
 			expect(data.value).toBe(10);
