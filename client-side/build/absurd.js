@@ -417,17 +417,21 @@ api.populate = function(options) {
 	], this);
 	return this;
 };
-api.utils = {
-	str2DOMElement: str2DOMElement,
-	addEventListener: addEventListener,
-	queue: queue,
-	compileHTML: function(HTML, data, callback) {
-		absurd.flush().morph("html").add(HTML).compile(callback, data);
-	},
-	compileCSS: function(CSS, data, callback) {
-		absurd.flush().add(CSS).compile(callback, data);
-	}
-}
+api.str2DOMElement = str2DOMElement;
+api.addEventListener = addEventListener;
+api.queue = queue;
+api.compileHTML = function(HTML, callback, data) {
+	absurd.flush().morph("html").add(HTML).compile(callback, data);
+};
+api.compileCSS = function(CSS, callback, options) {
+	absurd.flush().add(CSS).compile(callback, options);
+};
+api.qs = function(selector, parent) {
+	return (parent || this.el || document).querySelector(selector);
+};
+api.qsa = function(selector, parent) {
+	return (parent || this.el || document).querySelectorAll(selector);
+};
 	return api;
 };
 var client = function() {
