@@ -22,4 +22,25 @@ describe("Testing components (utils)", function() {
 		})();
 	});
 
+	it("should use getStyle", function(done) {
+		absurd.component("GetStyleTest", {
+			css: {
+				'#get-style-test': {
+					color: '#F00',
+					width: '300px',
+					display: 'none'
+				}
+			},
+			html: {
+				'#get-style-test': 'The answer is 42'
+			},
+			constructor: function() {				
+				this.set("parent", this.qs("body")).populate();
+				expect(this.getStyle('width')).toBe('300px');
+				expect(this.getStyle('display')).toBe('none');
+				done();
+			}
+		})();
+	});
+
 });

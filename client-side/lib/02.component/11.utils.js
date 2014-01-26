@@ -13,3 +13,12 @@ api.qs = function(selector, parent) {
 api.qsa = function(selector, parent) {
 	return (parent || this.el || document).querySelectorAll(selector);
 };
+api.getStyle = function(styleProp, el) {
+	el = el || this.el;
+	if(el && el.currentStyle) {
+		return el.currentStyle[styleProp];
+	} else if (window.getComputedStyle) {
+		return document.defaultView.getComputedStyle(el, null).getPropertyValue(styleProp);
+	}
+	return null;
+};
