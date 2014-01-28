@@ -96,4 +96,29 @@ describe("Testing components events", function() {
 		})().run();
 	});
 
+	it("should register events and pass parameter", function(done) {
+		absurd.components.register("TestingEvents", {
+			css: {
+				'#testing-events-form2': {
+					display: 'none'
+				}
+			},
+			html: {
+				'form#testing-events-form2': {
+					'input[type="text" data-absurd-event="keyup:handler:300:400"]': ''
+				}
+			},
+			handler: function(e, a, b) {
+				expect(parseInt(a)).toBe(300);
+				expect(parseInt(b)).toBe(400);
+				done();
+			},
+			populated: function(data) {
+				var input = this.el.querySelector("input");
+				input.value = "42";
+				fireEvent(input, "keyup");				
+			}
+		})().set("parent", document.querySelector("body")).populate();
+	});
+
 });

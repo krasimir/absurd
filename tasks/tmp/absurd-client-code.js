@@ -313,7 +313,9 @@ api.__handleEvents = function(next) {
 					cache.events[attrValue[0]].push(el);
 					addEventListener(el, attrValue[0], function(e) {
 						if(typeof self[attrValue[1]] === 'function') {
-							self[attrValue[1]](e);
+							attrValue.shift();
+							var f = self[attrValue.shift()];
+							f.apply(self, [e].concat(attrValue));
 						}
 					});
 				}
