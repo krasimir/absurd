@@ -274,8 +274,10 @@ api.__handleHTML = function(next) {
 		if(typeof this.html === 'string') {
 			if(!this.el) {
 				var element = select(this.html);
-				this.el = element[0];
-				HTMLSource = {'': this.el.outerHTML.replace(/&lt;/g, '<').replace(/&gt;/g, '>') };
+				if(element.length > 0) {
+					this.el = element[0];
+					HTMLSource = {'': this.el.outerHTML.replace(/&lt;/g, '<').replace(/&gt;/g, '>') };
+				}
 			}
 			compile();
 		} else if(typeof this.html === 'object') {

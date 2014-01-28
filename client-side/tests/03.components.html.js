@@ -297,4 +297,14 @@ describe("Testing components (HTML compilation)", function() {
 		C().populate();
 	});
 
+	it("should not throw an error if the element is not found", function(done) {
+		absurd.components.register("FunctionData", {
+			html: "#missing-element-42",
+			populated: function() {
+				expect(this.el).toBe(null);
+				done();
+			}
+		})().populate();
+	});
+
 });
