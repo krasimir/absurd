@@ -308,14 +308,17 @@ api.__handleEvents = function(next) {
 			var attrValue = el.getAttribute('data-absurd-event');
 			attrValue = attrValue.split(":");
 			if(attrValue.length >= 2) {
-				if(!cache.events[attrValue[0]] || cache.events[attrValue[0]].indexOf(el) < 0) {
-					if(!cache.events[attrValue[0]]) cache.events[attrValue[0]] = [];
-					cache.events[attrValue[0]].push(el);
-					addEventListener(el, attrValue[0], function(e) {
-						if(typeof self[attrValue[1]] === 'function') {
-							attrValue.shift();
-							var f = self[attrValue.shift()];
-							f.apply(self, [e].concat(attrValue));
+				var eventType = attrValue[0];
+				var methodName = attrValue[1];
+				attrValue.splice(0, 2);
+				var args = attrValue;
+				if(!cache.events[eventType] || cache.events[eventType].indexOf(el) < 0) {
+					if(!cache.events[eventType]) cache.events[eventType] = [];
+					cache.events[eventType].push(el);
+					addEventListener(el, eventType, function(e) {
+						if(typeof self[methodName] === 'function') {
+							var f = self[methodName];
+							f.apply(self, [e].concat(args));
 						}
 					});
 				}

@@ -121,4 +121,31 @@ describe("Testing components events", function() {
 		})().set("parent", document.querySelector("body")).populate();
 	});
 
+	it("should call click event twice", function(done) {
+		absurd.components.register("TestingEvents", {
+			css: {
+				'#testing-events-form3': {
+					display: 'block'
+				}
+			},
+			html: {
+				'form#testing-events-form3': {
+					'input[type="button" data-absurd-event="click:handler"]': ''
+				}
+			},
+			handler: function(e) {
+				if(!this.tested) {
+					this.tested = 1;
+					fireEvent(this.input, "click");
+					done();
+				}				
+			},
+			populated: function(data) {
+				this.input = this.el.querySelector("input");
+				this.input.value = "42";
+				fireEvent(this.input, "click");				
+			}
+		})().set("parent", document.querySelector("body")).populate();
+	});
+
 });
