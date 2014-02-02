@@ -19,7 +19,7 @@ describe("Wrong output on combineSelectors:false", function() {
 		api.compile(function(err, css) {
 			expect(css).toBe('.clearfix{*zoom: 1;}.clearfix:before,.clearfix:after{display: table;content: "";line-height: 0;}.clearfix:after{clear: both;}');
 			done();
-		}, {minify: true});
+		}, {minify: true, combineSelectors: false});
 	})
 
 });
