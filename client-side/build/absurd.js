@@ -1,4 +1,4 @@
-/* version: 0.2.72 */
+/* version: 0.2.73 */
 var Absurd = (function(w) {
 var lib = { 
     api: {},
@@ -711,7 +711,7 @@ lib.api.add = function(API) {
 		}
 	}
 	var addRule = function(selector, props, stylesheet, parentSelector) {
-		// console.log("\n---------- addRule ---------", parentSelector + ' >>>  ' + selector, "\n", props);
+		// console.log("\n---------- addRule ---------", parentSelector + ' >>> ' + selector, "\n", props);
 
 		stylesheet = stylesheet || "mainstream";
 
@@ -747,7 +747,12 @@ lib.api.add = function(API) {
 			var type = typeof props[prop];
 			if(type !== 'object' && type !== 'function') {
 				if(checkAndExecutePlugin(selector, prop, props[prop], stylesheet, parentSelector) === false) {
-					_selector = typeof parentSelector !== "undefined" ? parentSelector + " " + selector : selector;
+					// moving the selector to the top of the chain
+					if(_selector.indexOf("^") === 0) {
+						_selector = _selector.substr(1, _selector.length-1) + (typeof parentSelector !== "undefined" ? " " + parentSelector : '');
+					} else {
+						_selector = typeof parentSelector !== "undefined" ? parentSelector + " " + selector : selector;
+					}
 					_props[prop] = props[prop];
 					prefixes.addPrefixes(prop, _props);
 				}
@@ -763,9 +768,9 @@ lib.api.add = function(API) {
 			props: _props,
 			stylesheet: stylesheet
 		});
-		
+
 		for(var prop in _objects) {
-			// check for pseudo classes
+			// check for pseudo classes			
 			if(prop.charAt(0) === ":") {
 				addRule(selector + prop, _objects[prop], stylesheet, parentSelector);
 		    // check for ampersand operator
@@ -788,6 +793,14 @@ lib.api.add = function(API) {
 			// check for media query
 			} else if(selector.indexOf("@media") === 0 || prop.indexOf("@supports") === 0) {
 				addRule(prop, _objects[prop], selector, parentSelector);
+			// moving the selector to the top of the chain
+			} else if(selector.indexOf("^") === 0) {
+				// selector, props, stylesheet, parentSelector
+				addRule(
+					selector.substr(1, selector.length-1) + (typeof parentSelector !== "undefined" ? " " + parentSelector : '') + " " + prop,
+					_objects[prop], 
+					stylesheet
+				);
 			// check for plugins
 			} else if(checkAndExecutePlugin(selector, prop, _objects[prop], stylesheet, parentSelector) === false) {
 				addRule(prop, _objects[prop], stylesheet, (parentSelector ? parentSelector + " " : "") + selector);

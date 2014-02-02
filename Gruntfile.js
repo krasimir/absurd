@@ -68,6 +68,7 @@ module.exports = function(grunt) {
 					'tests/componenting/**/*.js',
 					'tests/di/*.js',
 					'tests/organic/*.js',
+					'tests/experimental/move.selector.up.spec.js',
 					'!tests/common/api.import.spec.js',
 					'!tests/common/compile-and-save.spec.js',
 					'!tests/common/minify.spec.js',
@@ -82,7 +83,7 @@ module.exports = function(grunt) {
 					'!tests/metamorphosis/html/morph.html.import.spec.js',
 					'!tests/metamorphosis/html/morph.html.indentation.spec.js',
 					'!tests/bugs/css.import.multiple.classes.spec.js',
-					'!tests/experiments/csstojson.spec.js'
+					'!tests/experimental/csstojson.spec.js'
 				],
 				dest: 'client-side/tests/tests.from.node.js',
 			}
