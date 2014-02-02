@@ -185,7 +185,7 @@ lib.api.add = function(API) {
 			addRule(selector, rules[selector], stylesheet || "mainstream");
 		}
 
-		// if the selector is already there
+		// looping through the rules for registering
 		for(var i=0; i<toRegister.length; i++) {
 			var stylesheet = toRegister[i].stylesheet,
 				selector = toRegister[i].selector,
@@ -685,6 +685,7 @@ var toCSS = function(rules, options) {
 				if(value === "") {
 					value = '""';
 				}
+				prop = prop.replace(/^%(.*)+?%/, '');
 				if(options && options.keepCamelCase === true) {
 					entity += '  ' + prop + ': ' + value + ';' + newline;
 				} else {
