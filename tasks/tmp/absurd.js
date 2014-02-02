@@ -54,7 +54,10 @@ lib.DI = function(api) {
 lib.api.add = function(API) {
 	var extend = require("../helpers/Extend"),
 		prefixes = require("../helpers/Prefixes"),
-		toRegister = [];
+		toRegister = [],
+		options = {
+			combineSelectors: true
+		};
 
 	var checkAndExecutePlugin = function(selector, prop, value, stylesheet, parentSelector) {
 		var prefix = prefixes.nonPrefixProp(prop);
@@ -75,7 +78,7 @@ lib.api.add = function(API) {
 		stylesheet = stylesheet || "mainstream";
 
 		// multiple selectors
-		if(/, ?/g.test(selector)) {
+		if(/, ?/g.test(selector) && options.combineSelectors) {
 			var parts = selector.replace(/, /g, ',').split(',');
 			for(var i=0; i<parts.length, p=parts[i]; i++) {
 				addRule(p, props, stylesheet, parentSelector);	
@@ -134,7 +137,7 @@ lib.api.add = function(API) {
 				addRule(selector + prop, _objects[prop], stylesheet, parentSelector);
 		    // check for ampersand operator
 			} else if(/&/g.test(prop)) {
-				if(/, ?/g.test(prop)) {
+				if(/, ?/g.test(prop) && options.combineSelectors) {
 					var parts = prop.replace(/, /g, ',').split(',');
 					for(var i=0; i<parts.length, p=parts[i]; i++) {
 						if(p.indexOf('&') >= 0) {
@@ -174,10 +177,18 @@ lib.api.add = function(API) {
 		
 	}
 
-	var add = function(rules, stylesheet) {
+	var add = function(rules, stylesheet, opts) {
 
 		toRegister = [];
 		API.numOfAddedRules += 1;
+
+		if(typeof stylesheet === 'object' && typeof opts === 'undefined') {
+			options = stylesheet;
+			stylesheet = null;
+		}
+		if(typeof opts != 'undefined') {
+			options = opts;
+		}
 
 		var typeOfPreprocessor = API.defaultProcessor.type;
 
