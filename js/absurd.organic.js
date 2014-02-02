@@ -1,4 +1,4 @@
-/* version: 0.2.67 */
+/* version: 0.2.74 */
 var Organic = (function(w){
 var o = {
 	helpers: {},
@@ -51,8 +51,7 @@ var walkClientSide = function(res, obj, path) {
 		}
 	}
 	return res;
-}
-o.helpers.args = function(value) {
+};o.helpers.args = function(value) {
 	value = value.toString().replace(/\/ /g, '/').split('/');
 	return value;
 }
