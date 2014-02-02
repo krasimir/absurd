@@ -82,7 +82,7 @@ module.exports = function(grunt) {
 					'!tests/metamorphosis/html/morph.html.import.spec.js',
 					'!tests/metamorphosis/html/morph.html.indentation.spec.js',
 					'!tests/bugs/css.import.multiple.classes.spec.js',
-					'!tests/experiments/*.js'
+					'!tests/experiments/csstojson.spec.js'
 				],
 				dest: 'client-side/tests/tests.from.node.js',
 			}
