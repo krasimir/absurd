@@ -1,4 +1,4 @@
-/* version: 0.2.77 */
+/* version: 0.2.78 */
 var Organic = (function(w){
 var o = {
 	helpers: {},
@@ -642,8 +642,8 @@ o.helpers.snippets = function() {
 	"ln:a": "&:lang(){}",
 	"lc": " :last-child{}",
 	"lc:a": "&:last-child{}",
-	"li": " :link{}",
-	"li:a": "&:link{}",
+	// "li": " :link{}",
+	// "li:a": "&:link{}",
 	"nc": " :nth-child(){}",
 	"nc:a": "&:nth-child(){}",
 	"vit": " :visited{}",
