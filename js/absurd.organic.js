@@ -1,4 +1,4 @@
-/* version: 0.2.75 */
+/* version: 0.2.78 */
 var Organic = (function(w){
 var o = {
 	helpers: {},
@@ -642,8 +642,8 @@ o.helpers.snippets = function() {
 	"ln:a": "&:lang(){}",
 	"lc": " :last-child{}",
 	"lc:a": "&:last-child{}",
-	"li": " :link{}",
-	"li:a": "&:link{}",
+	// "li": " :link{}",
+	// "li:a": "&:link{}",
 	"nc": " :nth-child(){}",
 	"nc:a": "&:nth-child(){}",
 	"vit": " :visited{}",
@@ -1973,22 +1973,20 @@ o.lib.molecules.cf = function(value) {
 	}
 	return r;
 }
-o.lib.molecules.metrics = function(value) {
-	var r = {},
-		args = require('../../helpers/args')(value);
+o.lib.molecules.grid = function(value) {
+	var args = require('../../helpers/args')(value);
 	if(args.length == 2) {
-		if(args[0] != '') {
-			r.margin = args[0];
+		var res = {
+			cf: 'both'
+		}	
+		res[args[1]] = {
+			fl: 'l',
+			'-mw-bxz': 'bb',
+			wid: (100 / parseInt(args[0])).toFixed(2) + '%'
 		}
-		if(args[1] != '') {
-			r.padding = args[1];
-		}
-		return r;
+		return res;
 	} else {
-		return {
-			margin: args[0],
-			padding: args[1] || args[0]
-		}
+		return {};
 	}
 }
 o.lib.molecules.moveto = function(value) {
