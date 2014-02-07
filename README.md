@@ -1,6 +1,6 @@
 # AbsurdJS
 
-[![Build Status](https://travis-ci.org/krasimir/absurd.png?branch=master)](https://travis-ci.org/krasimir/absurd)
+[![Build Status](https://travis-ci.org/krasimir/absurd.png?branch=master)](https://travis-ci.org/krasimir/absurd) [![Bitdeli Badge](https://d2weczhvl823v0.cloudfront.net/krasimir/absurd/trend.png)](https://bitdeli.com/free "Bitdeli Badge")
 
 ## Overview
 
@@ -46,7 +46,4 @@ AbsurdJS was started as CSS preprocessor, but later it was expanded to a HTML pr
 
   - AbsurdJS fundamentals - [link](http://krasimirtsonev.com/blog/article/AbsurdJS-fundamentals)
   - Writing your CSS with JavaScript - [link](http://davidwalsh.name/write-css-javascript)
-
-
-[![Bitdeli Badge](https://d2weczhvl823v0.cloudfront.net/krasimir/absurd/trend.png)](https://bitdeli.com/free "Bitdeli Badge")
 
