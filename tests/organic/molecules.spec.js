@@ -19,23 +19,6 @@ describe("Testing molecules", function() {
 		}, { minify: true})
 	});
 
-	it("should use metrics", function(done) {
-		api.add({
-			body: {
-				metrics: '20px',
-				p: {
-					metrics: '10px 20px/2px'
-				},
-				section: {
-					metrics: '/0 0 20px 0'
-				}
-			}
-		}).compile(function(err, css) {
-			expect(css).toBe('body{margin: 20px;padding: 20px;}body p{margin: 10px 20px;padding: 2px;}body section{padding: 0 0 20px 0;}');
-			done();
-		}, { minify: true})
-	});
-
 	it("should use cf", function(done) {
 		api.add({
 			body: {
@@ -91,7 +74,18 @@ describe("Testing molecules", function() {
 		}).compile(function(err, css) {
 			expect(css).toBe('p{transform: scale(1.4,1.3) translate(30px,0px);-webkit-transform: scale(1.4,1.3) translate(30px,0px);-ms-transform: scale(1.4,1.3) translate(30px,0px);}');
 			done();
-		}, { minify: true })
+		}, { minify: true });
+	});
+
+	it("should use grid", function(done) {
+		api.add({
+			'section.container': {
+				grid: '3/div'
+			}
+		}).compile(function(err, css) {
+			expect(css).toBe('section.container:before,section.container:after{content: " ";display: table;clear: both;}section.container div{float: left;box-sizing: border-box;-webkit-box-sizing: border-box;-moz-box-sizing: border-box;width: 33.33%;}');
+			done();
+		}, { minify: true });
 	});
 
 });
