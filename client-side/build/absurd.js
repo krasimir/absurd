@@ -1,4 +1,4 @@
-/* version: 0.2.76 */
+/* version: 0.2.77 */
 var Absurd = (function(w) {
 var lib = { 
     api: {},
