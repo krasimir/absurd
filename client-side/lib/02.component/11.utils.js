@@ -23,6 +23,7 @@ api.getStyle = function(styleProp, el) {
 	return null;
 };
 api.addClass = function(className, el) {
+	el = el || this.el;
 	if(el.classList) {
 		el.classList.add(className);
 	} else {
@@ -35,6 +36,7 @@ api.addClass = function(className, el) {
 	return api;
 };
 api.removeClass = function(className, el) {
+	el = el || this.el;
 	if (el.classList) {
 		el.classList.remove(className);
 	} else {
@@ -48,6 +50,7 @@ api.removeClass = function(className, el) {
 	return api;
 }
 api.replaceClass = function(classNameA, classNameB, el) {
+	el = el || this.el;
 	var current = el.className.split(' '), found = false;
 	for(var i=0; i<current.length; i++) {
 		if(current[i] == classNameA) {
@@ -59,5 +62,26 @@ api.replaceClass = function(classNameA, classNameB, el) {
 		return api.addClass(classNameB, el);
 	}
 	el.className = current.join(' ');
+	return api;
+}
+api.toggleClass = function(className, el) {
+	el = el || this.el;
+	if (el.classList) {
+		el.classList.toggle(className);
+	} else {
+		var classes = el.className.split(' ');
+		var existingIndex = -1;
+		for (var i = classes.length; i--;) {
+	  		if (classes[i] === className)
+	    		existingIndex = i;
+		}
+		
+		if(existingIndex >= 0)
+	  		classes.splice(existingIndex, 1);
+		else
+	  		classes.push(className);
+
+		el.className = classes.join(' ');
+	}
 	return api;
 }
