@@ -43,4 +43,36 @@ describe("Testing components (utils)", function() {
 		})();
 	});
 
+	it("should manage classes", function(done) {
+		absurd.component("GetStyleTest", {			
+			css: {
+				'.content-manage-class-test': {
+					display: 'block'
+				}
+			},
+			html: {
+				'.content-manage-class-test': {
+					p: {
+						a: 'link'
+					}
+				}
+			},
+			constructor: function() {				
+				this.set("parent", this.qs("body")).populate();
+				this.addClass('testA', this.qs('p'));
+				expect(this.el.outerHTML).toBe('<div class="content-manage-class-test"><p class="testA"><a>link</a></p></div>');
+				this.addClass('testA', this.qs('p'));
+				expect(this.el.outerHTML).toBe('<div class="content-manage-class-test"><p class="testA"><a>link</a></p></div>');
+				this.addClass('testB', this.qs('p'));
+				this.addClass('testC', this.qs('p'));
+				this.addClass('testD', this.qs('p'));
+				this.removeClass('testC', this.qs('p'));
+				expect(this.el.outerHTML).toBe('<div class="content-manage-class-test"><p class="testA testB testD"><a>link</a></p></div>');
+				this.replaceClass('testB', 'testE', this.qs('p'));
+				expect(this.el.outerHTML).toBe('<div class="content-manage-class-test"><p class="testA testE testD"><a>link</a></p></div>');
+				done();
+			}
+		})();
+	});
+
 });

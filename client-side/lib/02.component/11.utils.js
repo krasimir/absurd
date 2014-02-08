@@ -22,3 +22,33 @@ api.getStyle = function(styleProp, el) {
 	}
 	return null;
 };
+api.addClass = function(className, el) {
+	if(el.classList) {
+		el.classList.add(className);
+	} else {
+		var current = el.className;
+		if(current.indexOf(className) < 0) {
+			if(current == '') el.className = className;
+			else el.className += ' ' + className;
+		}
+	}
+};
+api.removeClass = function(className, el) {
+	if (el.classList) {
+		el.classList.remove(className);
+	} else {
+		var current = el.className.split(' ');
+		var newClasses = [];
+		for(var i=0; i<current.length; i++) {
+			if(current[i] != className) newClasses.push(current[i]);
+		}
+		el.className = newClasses.join(' ');
+	}
+}
+api.replaceClass = function(classNameA, classNameB, el) {
+	var current = el.className.split(' ');
+	for(var i=0; i<current.length; i++) {
+		if(current[i] == classNameA) current[i] = classNameB;
+	}
+	el.className = current.join(' ');
+}
