@@ -32,6 +32,7 @@ api.addClass = function(className, el) {
 			else el.className += ' ' + className;
 		}
 	}
+	return api;
 };
 api.removeClass = function(className, el) {
 	if (el.classList) {
@@ -44,11 +45,19 @@ api.removeClass = function(className, el) {
 		}
 		el.className = newClasses.join(' ');
 	}
+	return api;
 }
 api.replaceClass = function(classNameA, classNameB, el) {
-	var current = el.className.split(' ');
+	var current = el.className.split(' '), found = false;
 	for(var i=0; i<current.length; i++) {
-		if(current[i] == classNameA) current[i] = classNameB;
+		if(current[i] == classNameA) {
+			found = true;
+			current[i] = classNameB;
+		}
+	}
+	if(!found) {
+		return api.addClass(classNameB, el);
 	}
 	el.className = current.join(' ');
+	return api;
 }
