@@ -529,8 +529,24 @@ var client = function() {
 				clone = lib.helpers.Clone,
 				comps = {}, 
 				instances = [],
-				events = extend({}, Component());
-			return {
+				events = extend({}, Component()),
+				exports = {};
+
+			(function(fn) {
+				if (document.addEventListener) {
+					document.addEventListener('DOMContentLoaded', fn);
+				} else {
+					document.attachEvent('onreadystatechange', function() {
+						if (document.readyState === 'interactive') {
+							fn();
+						}
+					});
+				}
+			})(function() {
+				exports.broadcast("ready");
+			})
+
+			return exports = {
 				events: events,
 				register: function(name, cls) {
 					return comps[name] = function() {

@@ -148,4 +148,17 @@ describe("Testing components events", function() {
 		})().set("parent", document.querySelector("body")).populate();
 	});
 
+	it("should broadcast a ready message", function(done) {
+		expect(isDomReady).toBe(true);
+		done();
+	});
+
 });
+
+var absurd = Absurd();
+var isDomReady = false;
+absurd.component('WaitingForReadyEvent', {
+	ready: function() {
+		isDomReady = true;
+	}
+})();
