@@ -434,10 +434,14 @@ api.compileCSS = function(CSS, callback, options) {
 	absurd.flush().add(CSS).compile(callback, options);
 };
 api.qs = function(selector, parent) {
-	return (parent || this.el || document).querySelector(selector);
+	if(parent === false) { parent = document; }
+	else { parent = parent || this.el || document; }
+	return parent.querySelector(selector);
 };
 api.qsa = function(selector, parent) {
-	return (parent || this.el || document).querySelectorAll(selector);
+	if(parent === false) { parent = document; }
+	else { parent = parent || this.el || document; }
+	return parent.querySelectorAll(selector);
 };
 api.getStyle = function(styleProp, el) {
 	el = el || this.el;
