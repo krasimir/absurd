@@ -1,4 +1,4 @@
-/* version: 0.2.79 */
+/* version: 0.2.80 */
 var Organic = (function(w){
 var o = {
 	helpers: {},
@@ -281,7 +281,7 @@ o.helpers.snippets = function() {
 	"tal:l": "text-align-last:left",
 	"tal:c": "text-align-last:center",
 	"tal:r": "text-align-last:right",
-	"td": "text-decoration",
+	"ted": "text-decoration",
 	"ted:n": "text-decoration:none",
 	"ted:u": "text-decoration:underline",
 	"ted:o": "text-decoration:overline",
