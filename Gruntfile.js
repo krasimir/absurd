@@ -35,7 +35,7 @@ module.exports = function(grunt) {
 		'generate-index': {
 			index: {
 				src: 'tpl/index.html',
-				dest: 'index.html'
+				dest: 'index-old.html'
 			}
 		},
 		'copy-build-files': {
