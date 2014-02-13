@@ -8,11 +8,11 @@ Javascript based preprocessor. No new language, no new syntax. Write everything 
 
 ## Installation
 
-### [Server-side](http://krasimir.github.io/absurd/#server-side-usage)
+### [Server-side](http://absurdjs.com/pages/installation/#node-js)
 
 	npm install -g absurd
 
-### [Client-side](http://krasimir.github.io/absurd/#client-side-usage)
+### [Client-side](http://absurdjs.com/pages/installation/#client-side-port)
 
 	<script src="absurd.min.js"></script>
 
@@ -40,7 +40,7 @@ AbsurdJS was started as CSS preprocessor, but later it was expanded to a HTML pr
 
 ## Official site, documentation and online compilator
 
-[http://krasimir.github.io/absurd/](http://krasimir.github.io/absurd/)
+[http://absurdjs.com/](http://absurdjs.com/)
 
 ## Resources
 
