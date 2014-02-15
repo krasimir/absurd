@@ -1,4 +1,4 @@
-/* version: 0.2.82 */
+/* version: 0.2.83 */
 var Absurd = (function(w) {
 var lib = { 
     api: {},
@@ -801,6 +801,9 @@ lib.api.add = function(API) {
 
 		stylesheet = stylesheet || "mainstream";
 
+		// catching null values
+		if(props === null || typeof props === 'undefined' || props === false) return;
+
 		// multiple selectors
 		if(/, ?/g.test(selector) && options.combineSelectors) {
 			var parts = selector.replace(/, /g, ',').split(',');
@@ -831,7 +834,7 @@ lib.api.add = function(API) {
 		// processing props
 		for(var prop in props) {
 			var type = typeof props[prop];
-			if(type !== 'object' && type !== 'function') {
+			if(type !== 'object' && type !== 'function' && props[prop] !== false) {
 				if(checkAndExecutePlugin(selector, prop, props[prop], stylesheet, parentSelector) === false) {
 					// moving the selector to the top of the chain
 					if(_selector.indexOf("^") === 0) {
