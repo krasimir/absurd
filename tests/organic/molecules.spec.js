@@ -88,4 +88,15 @@ describe("Testing molecules", function() {
 		}, { minify: true });
 	});
 
+	it("should use transparent", function(done) {
+		api.add({
+			'section.container': {
+				transparent: 0.4
+			}
+		}).compile(function(err, css) {
+			expect(css).toBe('section.container{filter: alpha(opacity=40);-ms-filter: progid:DXImageTransform.Microsoft.Alpha(Opacity=40);opacity: 0.4;-moz-opacity: 0.4;-khtml-opacity: 0.4;}');
+			done();
+		}, { minify: true });
+	});
+
 });

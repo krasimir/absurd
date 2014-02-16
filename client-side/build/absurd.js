@@ -1,4 +1,4 @@
-/* version: 0.2.83 */
+/* version: 0.2.84 */
 var Absurd = (function(w) {
 var lib = { 
     api: {},
@@ -1552,11 +1552,23 @@ lib.processors.css.plugins.keyframes = function() {
 			if(typeof value.frames != "undefined") {
 				for(var frame in value.frames) {
 					for(var prop in value.frames[frame]) {
-						prefixes.addPrefixes(prop, value.frames[frame]);
+						var plugin = api.getPlugins()[prop];
+						if(typeof plugin !== 'undefined') {
+							var prefix = prefixes.nonPrefixProp(prop);
+							var pluginResponse = plugin(api, value.frames[frame][prop], prefix.prefix);
+							if(pluginResponse) {
+								delete value.frames[frame][prop];
+								for(var prKey in pluginResponse) {
+									value.frames[frame][prKey] = pluginResponse[prKey];
+								}
+							}
+						} else {
+							prefixes.addPrefixes(prop, value.frames[frame]);
+						}
 					}
 				}
 				var content = '@keyframes ' + value.name + " {\n";
-				content += processor({mainstream: value.frames});
+				content += processor({mainstream: value.frames}, null, {combineSelectors: false});
 				content += "}";
 				api.raw(content + "\n" + content.replace("@keyframes", "@-webkit-keyframes"));
 			// css
@@ -1573,7 +1585,7 @@ lib.processors.css.plugins.keyframes = function() {
 						}
 					}
 				}
-				content += processor({mainstream: frames});
+				content += processor({mainstream: frames}, null, {combineSelectors: false});
 				content += "}";
 				api.raw(content + "\n" + content.replace("@keyframes", "@-webkit-keyframes"));
 			}
