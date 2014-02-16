@@ -1,6 +1,6 @@
 {
   "name": "absurd",
-  "version": "0.2.84",
+  "version": "0.2.85",
   "homepage": "http://absurdjs.com/",
   "description": "CSS/HTML preprocessor. Check out krasimirtsonev.com/blog/article/AbsurdJS-fundamentals",
   "main": "./index.js",

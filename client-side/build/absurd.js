@@ -1,4 +1,4 @@
-/* version: 0.2.84 */
+/* version: 0.2.85 */
 var Absurd = (function(w) {
 var lib = { 
     api: {},
@@ -1547,34 +1547,14 @@ lib.processors.css.plugins.keyframes = function() {
 	return function(api, value) {
 		var processor = require(__dirname + "/../CSS.js")();
 		var prefixes = require(__dirname + "/../../../helpers/Prefixes");
-		if(typeof value === "object") {			
+		if(typeof value === "object") {
 			// js or json
+			var frames;
 			if(typeof value.frames != "undefined") {
-				for(var frame in value.frames) {
-					for(var prop in value.frames[frame]) {
-						var plugin = api.getPlugins()[prop];
-						if(typeof plugin !== 'undefined') {
-							var prefix = prefixes.nonPrefixProp(prop);
-							var pluginResponse = plugin(api, value.frames[frame][prop], prefix.prefix);
-							if(pluginResponse) {
-								delete value.frames[frame][prop];
-								for(var prKey in pluginResponse) {
-									value.frames[frame][prKey] = pluginResponse[prKey];
-								}
-							}
-						} else {
-							prefixes.addPrefixes(prop, value.frames[frame]);
-						}
-					}
-				}
-				var content = '@keyframes ' + value.name + " {\n";
-				content += processor({mainstream: value.frames}, null, {combineSelectors: false});
-				content += "}";
-				api.raw(content + "\n" + content.replace("@keyframes", "@-webkit-keyframes"));
+				frames = value.frames;
 			// css
 			} else if(typeof value.keyframes != "undefined") {
-				var content = '@keyframes ' + value.name + " {\n";
-				var frames = {};
+				frames = {};
 				for(var i=0; rule=value.keyframes[i]; i++) {
 					if(rule.type === "keyframe") {
 						var f = frames[rule.values] = {};
@@ -1585,10 +1565,15 @@ lib.processors.css.plugins.keyframes = function() {
 						}
 					}
 				}
-				content += processor({mainstream: frames}, null, {combineSelectors: false});
-				content += "}";
-				api.raw(content + "\n" + content.replace("@keyframes", "@-webkit-keyframes"));
 			}
+			var absurd = require(__dirname + '/../../../../')();
+			absurd.add(frames).compile(function(err, css) {
+				var content = '@keyframes ' + value.name + " {\n";
+				content += css;
+				content += "}";
+				content = content + "\n" + content.replace("@keyframes", "@-webkit-keyframes");
+				api.raw(content);
+			}, {combineSelectors: false});
 		}
 	}
 }

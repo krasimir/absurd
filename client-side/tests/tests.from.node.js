@@ -946,6 +946,33 @@ describe("Fixing bug in array usage", function() {
 	});
 
 });
+describe("Can't compile atoms and molecules in keyframes", function() {
+
+	var api = require('../../index.js')();
+
+	it("should compile top property", function(done) {
+		api.add({
+			'-w-keyframes': {
+				name: "hide-preloader",
+				frames: {
+					"0%": { 
+						transparent: 1,
+						moveto: '0/0'
+					},
+					"100%": { 
+						transparent: 0,
+						'-wms-trf': 'translate(0px,-40px)'
+					}
+				}
+			}
+		})
+		api.compile(function(err, css) {
+			expect(css).toBe('@keyframes hide-preloader {0%{filter: alpha(opacity=100);-ms-filter: progid:DXImageTransform.Microsoft.Alpha(Opacity=100);opacity: 1;-moz-opacity: 1;-khtml-opacity: 1;transform: translate(0px,0px);-webkit-transform: translate(0px,0px);-ms-transform: translate(0px,0px);}100%{filter: alpha(opacity=0);-ms-filter: progid:DXImageTransform.Microsoft.Alpha(Opacity=0);opacity: 0;-moz-opacity: 0;-khtml-opacity: 0;transform: translate(0px,-40px);-webkit-transform: translate(0px,-40px);-moz-transform: translate(0px,-40px);-ms-transform: translate(0px,-40px);}}@-webkit-keyframes hide-preloader {0%{filter: alpha(opacity=100);-ms-filter: progid:DXImageTransform.Microsoft.Alpha(Opacity=100);opacity: 1;-moz-opacity: 1;-khtml-opacity: 1;transform: translate(0px,0px);-webkit-transform: translate(0px,0px);-ms-transform: translate(0px,0px);}100%{filter: alpha(opacity=0);-ms-filter: progid:DXImageTransform.Microsoft.Alpha(Opacity=0);opacity: 0;-moz-opacity: 0;-khtml-opacity: 0;transform: translate(0px,-40px);-webkit-transform: translate(0px,-40px);-moz-transform: translate(0px,-40px);-ms-transform: translate(0px,-40px);}}');
+			done();
+		}, {minify: true});
+	})
+
+});
 describe("Can't compile top property", function() {
 
 	var api = require('../../index.js')();
@@ -2347,7 +2374,7 @@ describe("Animations", function() {
 				}
 			}
 		}).compile(function(err, css) {
-			expect(css).toBe('@keyframes bounce {0%,20%,50%,80%,100%{transform: translateY(0);-webkit-transform: translateY(0);-moz-transform: translateY(0);-ms-transform: translateY(0);-o-transform: translateY(0);}40%{transform: translateY(-30px);-webkit-transform: translateY(-30px);-moz-transform: translateY(-30px);-ms-transform: translateY(-30px);-o-transform: translateY(-30px);}60%{transform: translateY(-15px);-webkit-transform: translateY(-15px);-moz-transform: translateY(-15px);-ms-transform: translateY(-15px);-o-transform: translateY(-15px);}}@-webkit-keyframes bounce {0%,20%,50%,80%,100%{transform: translateY(0);-webkit-transform: translateY(0);-moz-transform: translateY(0);-ms-transform: translateY(0);-o-transform: translateY(0);}40%{transform: translateY(-30px);-webkit-transform: translateY(-30px);-moz-transform: translateY(-30px);-ms-transform: translateY(-30px);-o-transform: translateY(-30px);}60%{transform: translateY(-15px);-webkit-transform: translateY(-15px);-moz-transform: translateY(-15px);-ms-transform: translateY(-15px);-o-transform: translateY(-15px);}}div:hover{animation-name: bounce;-webkit-animation-name: bounce;-moz-animation-name: bounce;-ms-animation-name: bounce;-o-animation-name: bounce;animation-duration: 1s;-webkit-animation-duration: 1s;-moz-animation-duration: 1s;-ms-animation-duration: 1s;-o-animation-duration: 1s;}');
+			expect(css).toBe('@keyframes bounce {0%{transform: translateY(0);-webkit-transform: translateY(0);-moz-transform: translateY(0);-ms-transform: translateY(0);-o-transform: translateY(0);}20%{transform: translateY(0);-webkit-transform: translateY(0);-moz-transform: translateY(0);-ms-transform: translateY(0);-o-transform: translateY(0);}50%{transform: translateY(0);-webkit-transform: translateY(0);-moz-transform: translateY(0);-ms-transform: translateY(0);-o-transform: translateY(0);}80%{transform: translateY(0);-webkit-transform: translateY(0);-moz-transform: translateY(0);-ms-transform: translateY(0);-o-transform: translateY(0);}100%{transform: translateY(0);-webkit-transform: translateY(0);-moz-transform: translateY(0);-ms-transform: translateY(0);-o-transform: translateY(0);}40%{transform: translateY(-30px);-webkit-transform: translateY(-30px);-moz-transform: translateY(-30px);-ms-transform: translateY(-30px);-o-transform: translateY(-30px);}60%{transform: translateY(-15px);-webkit-transform: translateY(-15px);-moz-transform: translateY(-15px);-ms-transform: translateY(-15px);-o-transform: translateY(-15px);}}@-webkit-keyframes bounce {0%{transform: translateY(0);-webkit-transform: translateY(0);-moz-transform: translateY(0);-ms-transform: translateY(0);-o-transform: translateY(0);}20%{transform: translateY(0);-webkit-transform: translateY(0);-moz-transform: translateY(0);-ms-transform: translateY(0);-o-transform: translateY(0);}50%{transform: translateY(0);-webkit-transform: translateY(0);-moz-transform: translateY(0);-ms-transform: translateY(0);-o-transform: translateY(0);}80%{transform: translateY(0);-webkit-transform: translateY(0);-moz-transform: translateY(0);-ms-transform: translateY(0);-o-transform: translateY(0);}100%{transform: translateY(0);-webkit-transform: translateY(0);-moz-transform: translateY(0);-ms-transform: translateY(0);-o-transform: translateY(0);}40%{transform: translateY(-30px);-webkit-transform: translateY(-30px);-moz-transform: translateY(-30px);-ms-transform: translateY(-30px);-o-transform: translateY(-30px);}60%{transform: translateY(-15px);-webkit-transform: translateY(-15px);-moz-transform: translateY(-15px);-ms-transform: translateY(-15px);-o-transform: translateY(-15px);}}div:hover{animation-name: bounce;-webkit-animation-name: bounce;-moz-animation-name: bounce;-ms-animation-name: bounce;-o-animation-name: bounce;animation-duration: 1s;-webkit-animation-duration: 1s;-moz-animation-duration: 1s;-ms-animation-duration: 1s;-o-animation-duration: 1s;}');
 			done();
 		}, { minify: true });
 	});
@@ -2371,7 +2398,7 @@ describe("Animations", function() {
 				}
 			}
 		}).compile(function(err, css) {
-			expect(css).toBe('@keyframes preloader {0%{margin: 0;font-size: 10px;padding: 20px;}50%{margin: 10px;font-size: 20px;}100%{margin: 20px;font-size: 10px;padding: 22px;}}@-webkit-keyframes preloader {0%{margin: 0;font-size: 10px;padding: 20px;}50%{margin: 10px;font-size: 20px;}100%{margin: 20px;font-size: 10px;padding: 22px;}}.preloader{animation-name: preloader;-webkit-animation-name: preloader;-moz-animation-name: preloader;-ms-animation-name: preloader;-o-animation-name: preloader;animation-duration: 1s;-webkit-animation-duration: 1s;-moz-animation-duration: 1s;-ms-animation-duration: 1s;-o-animation-duration: 1s;animation-iteration-count: infinite;-webkit-animation-iteration-count: infinite;-moz-animation-iteration-count: infinite;-ms-animation-iteration-count: infinite;-o-animation-iteration-count: infinite;}');
+			expect(css).toBe('@keyframes preloader {0%{font-size: 10px;padding: 20px;margin: 0;}50%{font-size: 20px;margin: 10px;}100%{font-size: 10px;padding: 22px;margin: 20px;}}@-webkit-keyframes preloader {0%{font-size: 10px;padding: 20px;margin: 0;}50%{font-size: 20px;margin: 10px;}100%{font-size: 10px;padding: 22px;margin: 20px;}}.preloader{animation-name: preloader;-webkit-animation-name: preloader;-moz-animation-name: preloader;-ms-animation-name: preloader;-o-animation-name: preloader;animation-duration: 1s;-webkit-animation-duration: 1s;-moz-animation-duration: 1s;-ms-animation-duration: 1s;-o-animation-duration: 1s;animation-iteration-count: infinite;-webkit-animation-iteration-count: infinite;-moz-animation-iteration-count: infinite;-ms-animation-iteration-count: infinite;-o-animation-iteration-count: infinite;}');
 			done();
 		}, { minify: true });
 	});
@@ -2382,7 +2409,7 @@ describe("Animations", function() {
 				animate: 'blink'
 			}
 		}).compile(function(err, css) {
-			expect(css).toBe('@keyframes blink {0%,100%{-s-filter: progid:DXImageTransform.Microsoft.Alpha(Opacity=0);filter: alpha(opacity=0);-m-opacity: 0;opacity: 0;-khtml-opacity: 0;}50%{-s-filter: progid:DXImageTransform.Microsoft.Alpha(Opacity=100);filter: alpha(opacity=100);-m-opacity: 1;opacity: 1;-khtml-opacity: 1;}}@-webkit-keyframes blink {0%,100%{-s-filter: progid:DXImageTransform.Microsoft.Alpha(Opacity=0);filter: alpha(opacity=0);-m-opacity: 0;opacity: 0;-khtml-opacity: 0;}50%{-s-filter: progid:DXImageTransform.Microsoft.Alpha(Opacity=100);filter: alpha(opacity=100);-m-opacity: 1;opacity: 1;-khtml-opacity: 1;}}div{animation-name: blink;-webkit-animation-name: blink;-moz-animation-name: blink;-ms-animation-name: blink;-o-animation-name: blink;animation-duration: 1s;-webkit-animation-duration: 1s;-moz-animation-duration: 1s;-ms-animation-duration: 1s;-o-animation-duration: 1s;}');
+			expect(css).toBe('@keyframes blink {0%{filter: alpha(opacity=0);-ms-filter: progid:DXImageTransform.Microsoft.Alpha(Opacity=0);opacity: 0;-moz-opacity: 0;-khtml-opacity: 0;}100%{filter: alpha(opacity=0);-ms-filter: progid:DXImageTransform.Microsoft.Alpha(Opacity=0);opacity: 0;-moz-opacity: 0;-khtml-opacity: 0;}50%{filter: alpha(opacity=100);-ms-filter: progid:DXImageTransform.Microsoft.Alpha(Opacity=100);opacity: 1;-moz-opacity: 1;-khtml-opacity: 1;}}@-webkit-keyframes blink {0%{filter: alpha(opacity=0);-ms-filter: progid:DXImageTransform.Microsoft.Alpha(Opacity=0);opacity: 0;-moz-opacity: 0;-khtml-opacity: 0;}100%{filter: alpha(opacity=0);-ms-filter: progid:DXImageTransform.Microsoft.Alpha(Opacity=0);opacity: 0;-moz-opacity: 0;-khtml-opacity: 0;}50%{filter: alpha(opacity=100);-ms-filter: progid:DXImageTransform.Microsoft.Alpha(Opacity=100);opacity: 1;-moz-opacity: 1;-khtml-opacity: 1;}}div{animation-name: blink;-webkit-animation-name: blink;-moz-animation-name: blink;-ms-animation-name: blink;-o-animation-name: blink;animation-duration: 1s;-webkit-animation-duration: 1s;-moz-animation-duration: 1s;-ms-animation-duration: 1s;-o-animation-duration: 1s;}');
 			done();
 		}, { minify: true });
 	});

@@ -1,4 +1,4 @@
-/* version: 0.2.84 */
+/* version: 0.2.85 */
 var Organic = (function(w){
 var o = {
 	helpers: {},
@@ -309,9 +309,9 @@ o.helpers.snippets = function() {
 	"tj:d": "text-justify:distribute",
 	"tj:k": "text-justify:kashida",
 	"tj:t": "text-justify:tibetan",
-	"to": "text-outline",
-	"to+": "text-outline:0 0 #000",
-	"to:n": "text-outline:none",
+	"tol": "text-outline",
+	"tol+": "text-outline:0 0 #000",
+	"tol:n": "text-outline:none",
 	"tr": "text-replace",
 	"tr:n": "text-replace:none",
 	"tt": "text-transform",
