@@ -353,14 +353,14 @@ api.__getAnimAndTransEndEventName = function(el) {
 }
 api.onAnimationEnd = function(el, func) {
 	var eventName = api.__getAnimAndTransEndEventName(el);
-	if(!eventName) return;
+	if(!eventName) { func({error: 'Animations not supported.'}); return; };
 	this.addEventListener(el, eventName[0], function(e) {
 		func(e);
 	});
 }
 api.onTransitionEnd = function(el, func) {
 	var eventName = api.__getAnimAndTransEndEventName(el);
-	if(!eventName) return;
+	if(!eventName) { func({error: 'Animations not supported.'}); return; };
 	this.addEventListener(el, eventName[1], function(e) {
 		func(e);
 	});

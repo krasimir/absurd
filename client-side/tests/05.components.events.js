@@ -166,14 +166,10 @@ describe("Testing components events", function() {
 				}
 			},
 			populated: function() {
-				if(this.__getAnimAndTransEndEventName(this.el)) {
-					this.onAnimationEnd(this.el, function(e) {
-						expect(e.animationName).toBe('bounce');
-						done();
-					});
-				} else {
+				this.onAnimationEnd(this.el, function(e) {
+					expect(e).toBeDefined();
 					done();
-				}
+				});
 			}
 		})().set('parent', document.querySelector('body')).populate();
 	});
@@ -194,18 +190,14 @@ describe("Testing components events", function() {
 				}
 			},
 			populated: function() {
-				if(this.__getAnimAndTransEndEventName(this.el)) {
-					var self = this;
-					this.onTransitionEnd(this.el, function(e) {
-						expect(e).toBeDefined();
-						done();
-					});
-					setTimeout(function() {
-						self.addClass('animTestTransit-animated', self.el);
-					}, 100);
-				} else {
+				var self = this;
+				this.onTransitionEnd(this.el, function(e) {
+					expect(e).toBeDefined();
 					done();
-				}
+				});
+				setTimeout(function() {
+					self.addClass('animTestTransit-animated', self.el);
+				}, 100);
 			}
 		})().set('parent', document.querySelector('body')).populate();
 	});
