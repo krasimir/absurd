@@ -125,7 +125,7 @@ describe("Testing components events", function() {
 		absurd.components.register("TestingEvents", {
 			css: {
 				'#testing-events-form3': {
-					display: 'block'
+					display: 'none'
 				}
 			},
 			html: {
@@ -151,6 +151,63 @@ describe("Testing components events", function() {
 	it("should broadcast a ready message", function(done) {
 		expect(isDomReady).toBe(true);
 		done();
+	});
+
+	it("should listen for onAnimationEnd", function(done) {
+		absurd.components.flush();
+		absurd.component('AnimationAndEnd', {
+			html: {
+				'div.animTest': '&nbsp;'
+			},
+			css: {
+				'.animTest': {
+					animate: 'bounce',
+					'-wmso-animation-duration': '200ms'
+				}
+			},
+			populated: function() {
+				if(this.__getAnimAndTransEndEventName(this.el)) {
+					this.onAnimationEnd(this.el, function(e) {
+						expect(e.animationName).toBe('bounce');
+						done();
+					});
+				} else {
+					done();
+				}
+			}
+		})().set('parent', document.querySelector('body')).populate();
+	});
+
+	it("should listen for onTransitionEnd", function(done) {
+		absurd.components.flush();
+		absurd.component('TransitionEnd', {
+			html: {
+				'div.animTestTransit': '&nbsp;'
+			},
+			css: {
+				'.animTestTransit': {
+					fz: '18px',
+					'-wmso-transition': 'all 100ms'
+				},
+				'.animTestTransit-animated': {
+					fz: '36px'
+				}
+			},
+			populated: function() {
+				if(this.__getAnimAndTransEndEventName(this.el)) {
+					var self = this;
+					this.onTransitionEnd(this.el, function(e) {
+						expect(e).toBeDefined();
+						done();
+					});
+					setTimeout(function() {
+						self.addClass('animTestTransit-animated', self.el);
+					}, 100);
+				} else {
+					done();
+				}
+			}
+		})().set('parent', document.querySelector('body')).populate();
 	});
 
 });

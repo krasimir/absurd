@@ -37,6 +37,8 @@ var require = function(v) {
         return lib.helpers.Clone;
     } else if(v == '../helpers/Prefixes' || v == '/../../../helpers/Prefixes') {
         return lib.helpers.Prefixes;
+    } else if(v == __dirname + '/../../../../') {
+        return Absurd;
     } else {
         return function() {}
     }

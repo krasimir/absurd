@@ -37,6 +37,8 @@ var require = function(v) {
         return lib.helpers.Clone;
     } else if(v == '../helpers/Prefixes' || v == '/../../../helpers/Prefixes') {
         return lib.helpers.Prefixes;
+    } else if(v == __dirname + '/../../../../') {
+        return Absurd;
     } else {
         return function() {}
     }
@@ -334,7 +336,35 @@ api.__handleEvents = function(next) {
 	}
 	next();
 	return this;
-}	
+}
+api.__getAnimAndTransEndEventName = function(el) {
+    var a;
+    var animations = {
+      'animation': ['animationend', 'transitionend'],
+      'OAnimation': ['oAnimationEnd', 'oTransitionEnd'],
+      'MozAnimation': ['animationend', 'transitionend'],
+      'WebkitAnimation': ['webkitAnimationEnd', 'webkitTransitionEnd']
+    }
+    for(a in animations){
+        if( el.style[a] !== undefined ){
+            return animations[a];
+        }
+    }
+}
+api.onAnimationEnd = function(el, func) {
+	var eventName = api.__getAnimAndTransEndEventName(el);
+	if(!eventName) return;
+	this.addEventListener(el, eventName[0], function(e) {
+		func(e);
+	});
+}
+api.onTransitionEnd = function(el, func) {
+	var eventName = api.__getAnimAndTransEndEventName(el);
+	if(!eventName) return;
+	this.addEventListener(el, eventName[1], function(e) {
+		func(e);
+	});
+}
 var	async = { funcs: {}, index: 0 };
 api.__handleAsyncFunctions = function(next) {
 	if(this.el) {
