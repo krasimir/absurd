@@ -1,4 +1,4 @@
-/* version: 0.2.87, born: 17-1-2014 17:20 */
+/* version: 0.2.87, born: 18-1-2014 0:32 */
 var Absurd = (function(w) {
 var lib = { 
     api: {},
@@ -675,14 +675,11 @@ var client = function() {
 				exports = {};
 
 			(function(fn) {
-				if (document.addEventListener) {
-					document.addEventListener('DOMContentLoaded', fn);
-				} else if(document.attachEvent) {
-					document.attachEvent('onreadystatechange', function() {
-						if (document.readyState === 'interactive') {
-							fn();
-						}
-					});
+				if(!window) return;
+				if (window.addEventListener) {
+					window.addEventListener('load', fn);
+				} else if(window.attachEvent) {
+					window.attachEvent('onload', fn);
 				}
 			})(function() {
 				exports.broadcast("ready");

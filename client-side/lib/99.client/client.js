@@ -81,14 +81,11 @@ var client = function() {
 				exports = {};
 
 			(function(fn) {
-				if (document.addEventListener) {
-					document.addEventListener('DOMContentLoaded', fn);
-				} else if(document.attachEvent) {
-					document.attachEvent('onreadystatechange', function() {
-						if (document.readyState === 'interactive') {
-							fn();
-						}
-					});
+				if(!window) return;
+				if (window.addEventListener) {
+					window.addEventListener('load', fn);
+				} else if(window.attachEvent) {
+					window.attachEvent('onload', fn);
 				}
 			})(function() {
 				exports.broadcast("ready");
