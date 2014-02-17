@@ -34,6 +34,7 @@ api.__handleEvents = function(next) {
 	return this;
 }
 api.__getAnimAndTransEndEventName = function(el) {
+	if(!el) return;
     var a;
     var animations = {
       'animation': ['animationend', 'transitionend'],

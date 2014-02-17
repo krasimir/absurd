@@ -83,7 +83,7 @@ var client = function() {
 			(function(fn) {
 				if (document.addEventListener) {
 					document.addEventListener('DOMContentLoaded', fn);
-				} else {
+				} else if(document.attachEvent) {
 					document.attachEvent('onreadystatechange', function() {
 						if (document.readyState === 'interactive') {
 							fn();

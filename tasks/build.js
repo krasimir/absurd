@@ -13,8 +13,11 @@ module.exports = function(grunt) {
             self = this,
             version = getVersion();
         
+        var d = new Date();
+        var created = d.getDate() + '-' + d.getMonth() + '-' + d.getFullYear() + ' ' + d.getHours() + ':' + d.getMinutes();
+
         // generating absurd        
-        content += "/* version: "  + version +  " */\n";
+        content += "/* version: "  + version +  ", born: " + created + " */\n";
     	content += "var Absurd = (function(w) {\n";
         content += grunt.file.read(__dirname + "/tmp/absurd-client-code.js", {});
         content += grunt.file.read(__dirname + "/tmp/absurd.js", {});
@@ -24,7 +27,7 @@ module.exports = function(grunt) {
 
         // generate organic css
         content = '';
-        content += "/* version: "  + version +  " */\n";
+        content += "/* version: "  + version +  ", born: " + created + " */\n";
         content += "var Organic = (function(w){\n";
         content += grunt.file.read(__dirname + "/tmp/absurd-organic-client-code.js", {});
         content += grunt.file.read(__dirname + "/tmp/absurd-organic.js", {}).replace('// client side port marker', 'return walkClientSide();');

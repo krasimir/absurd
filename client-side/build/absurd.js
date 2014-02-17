@@ -1,4 +1,4 @@
-/* version: 0.2.86 */
+/* version: 0.2.86, born: 17-1-2014 14:4 */
 var Absurd = (function(w) {
 var lib = { 
     api: {},
@@ -340,6 +340,7 @@ api.__handleEvents = function(next) {
 	return this;
 }
 api.__getAnimAndTransEndEventName = function(el) {
+	if(!el) return;
     var a;
     var animations = {
       'animation': ['animationend', 'transitionend'],
@@ -632,7 +633,7 @@ var client = function() {
 			(function(fn) {
 				if (document.addEventListener) {
 					document.addEventListener('DOMContentLoaded', fn);
-				} else {
+				} else if(document.attachEvent) {
 					document.attachEvent('onreadystatechange', function() {
 						if (document.readyState === 'interactive') {
 							fn();
