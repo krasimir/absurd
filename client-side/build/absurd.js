@@ -1,4 +1,4 @@
-/* version: 0.2.86, born: 17-1-2014 15:0 */
+/* version: 0.2.86, born: 17-1-2014 15:14 */
 var Absurd = (function(w) {
 var lib = { 
     api: {},
@@ -557,8 +557,8 @@ api.verify = function(selector, ok, fail) {
 	if(typeof selector == 'string') {
 		test.apply(this);
 	} else if(typeof selector == 'function') {
-		ok = selector;
 		fail = ok;
+		ok = selector;
 		selector = this.html;
 		test.apply(this);
 	}

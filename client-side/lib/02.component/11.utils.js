@@ -98,8 +98,8 @@ api.verify = function(selector, ok, fail) {
 	if(typeof selector == 'string') {
 		test.apply(this);
 	} else if(typeof selector == 'function') {
-		ok = selector;
 		fail = ok;
+		ok = selector;
 		selector = this.html;
 		test.apply(this);
 	}
