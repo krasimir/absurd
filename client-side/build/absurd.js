@@ -1,4 +1,4 @@
-/* version: 0.2.86, born: 17-1-2014 14:46 */
+/* version: 0.2.86, born: 17-1-2014 15:0 */
 var Absurd = (function(w) {
 var lib = { 
     api: {},
@@ -355,17 +355,19 @@ api.__getAnimAndTransEndEventName = function(el) {
     }
 }
 api.onAnimationEnd = function(el, func) {
+	var self = this;
 	var eventName = api.__getAnimAndTransEndEventName(el);
-	if(!eventName) { func({error: 'Animations not supported.'}); return; };
+	if(!eventName) { func.apply(this, [{error: 'Animations not supported.'}]); return; };
 	this.addEventListener(el, eventName[0], function(e) {
-		func(e);
+		func.apply(self, [e]);
 	});
 }
 api.onTransitionEnd = function(el, func) {
+	var self = this;
 	var eventName = api.__getAnimAndTransEndEventName(el);
-	if(!eventName) { func({error: 'Animations not supported.'}); return; };
+	if(!eventName) { func.apply(this, [{error: 'Animations not supported.'}]); return; };
 	this.addEventListener(el, eventName[1], function(e) {
-		func(e);
+		func.apply(self, [e]);
 	});
 }
 var	async = { funcs: {}, index: 0 };
@@ -547,9 +549,19 @@ api.toggleClass = function(className, el) {
 	return api;
 }
 api.verify = function(selector, ok, fail) {
-	var res = this.qs(selector) ? true : false;
-	if(res && ok) ok.apply(this);
-	else if(fail) fail.apply(this);
+	var test = function() {
+		var res = this.qs(selector) ? true : false;
+		if(res && ok) ok.apply(this);
+		else if(fail) fail.apply(this);
+	}
+	if(typeof selector == 'string') {
+		test.apply(this);
+	} else if(typeof selector == 'function') {
+		ok = selector;
+		fail = ok;
+		selector = this.html;
+		test.apply(this);
+	}
 }
 	return api;
 };

@@ -90,7 +90,17 @@ api.toggleClass = function(className, el) {
 	return api;
 }
 api.verify = function(selector, ok, fail) {
-	var res = this.qs(selector) ? true : false;
-	if(res && ok) ok.apply(this);
-	else if(fail) fail.apply(this);
+	var test = function() {
+		var res = this.qs(selector) ? true : false;
+		if(res && ok) ok.apply(this);
+		else if(fail) fail.apply(this);
+	}
+	if(typeof selector == 'string') {
+		test.apply(this);
+	} else if(typeof selector == 'function') {
+		ok = selector;
+		fail = ok;
+		selector = this.html;
+		test.apply(this);
+	}
 }

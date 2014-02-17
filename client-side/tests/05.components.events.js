@@ -167,6 +167,7 @@ describe("Testing components events", function() {
 			},
 			populated: function() {
 				this.onAnimationEnd(this.el, function(e) {
+					expect(this.__name).toBe('AnimationAndEnd');
 					expect(e).toBeDefined();
 					done();
 				});
@@ -192,6 +193,7 @@ describe("Testing components events", function() {
 			populated: function() {
 				var self = this;
 				this.onTransitionEnd(this.el, function(e) {
+					expect(this.__name).toBe('TransitionEnd');
 					expect(e).toBeDefined();
 					done();
 				});
