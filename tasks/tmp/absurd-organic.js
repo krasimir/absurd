@@ -719,19 +719,43 @@ o.lib.molecules.animate = function(value) {
 
 	var r = {};
 	r['-wmso-animation-name'] = '';
-	r['-wmso-animation-duration'] = '1s';
+	r['-wmso-animation-duration'] = '1s',
+	name = '';
 
 	if(typeof value === 'string') {
 		r['-wmso-animation-name'] = value;
 	} else if(typeof value === 'object') {
-		r['-wmso-animation-name'] = value.name;
-		value.duration ? r['-wmso-animation-duration'] = value.duration : '';
-		value.fillMode ? r['-wmso-animation-fill-mode'] = value.fillMode : '';
-		value.timingFunction ? r['-wmso-animation-timing-function'] = value.timingFunction : '';
-		value.iterationCount ? r['-wmso-animation-iteration-count'] = value.iterationCount : '';
-		value.delay ? r['-wmso-animation-delay'] = value.delay : '';
-		value.direction ? r['-wmso-animation-direction'] = value.direction : '';
-		value.playState ? r['-wmso-animation-play-state'] = value.playState : '';
+
+		if(value instanceof Array) {
+			if(value.length === 1) {
+				r['-wmso-animation-name'] = value[0];
+			} else if(value.length === 2) {
+				r = {
+					keyframes: {
+						name: value[0],
+						frames: value[1]
+					}
+				};
+			} else {
+				value = r = {};
+			}
+		} else {
+			r['-wmso-animation-name'] = value.name;
+			value.duration ? r['-wmso-animation-duration'] = value.duration : '';
+			value.fillMode ? r['-wmso-animation-fill-mode'] = value.fillMode : '';
+			value.timingFunction ? r['-wmso-animation-timing-function'] = value.timingFunction : '';
+			value.iterationCount ? r['-wmso-animation-iteration-count'] = value.iterationCount : '';
+			value.delay ? r['-wmso-animation-delay'] = value.delay : '';
+			value.direction ? r['-wmso-animation-direction'] = value.direction : '';
+			value.playState ? r['-wmso-animation-play-state'] = value.playState : '';
+			if(value.frames) {
+				r.keyframes = {
+					name: value.name,
+					frames: value.frames
+				}
+			}
+		}
+		
 	}
 
 	switch(r['-wmso-animation-name']) {

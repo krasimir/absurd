@@ -2381,7 +2381,7 @@ describe("Animations", function() {
 
 	it("should define an animation and apply it", function(done) {
 		api.flush().add({
-			'-w-keyframes': {
+			keyframes: {
 				name: "preloader",
 				frames: {
 					"0%": { fz: '10px', margin: 0, pad: '20px' },
@@ -2410,6 +2410,37 @@ describe("Animations", function() {
 			}
 		}).compile(function(err, css) {
 			expect(css).toBe('@keyframes blink {0%{filter: alpha(opacity=0);-ms-filter: progid:DXImageTransform.Microsoft.Alpha(Opacity=0);opacity: 0;-moz-opacity: 0;-khtml-opacity: 0;}100%{filter: alpha(opacity=0);-ms-filter: progid:DXImageTransform.Microsoft.Alpha(Opacity=0);opacity: 0;-moz-opacity: 0;-khtml-opacity: 0;}50%{filter: alpha(opacity=100);-ms-filter: progid:DXImageTransform.Microsoft.Alpha(Opacity=100);opacity: 1;-moz-opacity: 1;-khtml-opacity: 1;}}@-webkit-keyframes blink {0%{filter: alpha(opacity=0);-ms-filter: progid:DXImageTransform.Microsoft.Alpha(Opacity=0);opacity: 0;-moz-opacity: 0;-khtml-opacity: 0;}100%{filter: alpha(opacity=0);-ms-filter: progid:DXImageTransform.Microsoft.Alpha(Opacity=0);opacity: 0;-moz-opacity: 0;-khtml-opacity: 0;}50%{filter: alpha(opacity=100);-ms-filter: progid:DXImageTransform.Microsoft.Alpha(Opacity=100);opacity: 1;-moz-opacity: 1;-khtml-opacity: 1;}}div{animation-name: blink;-webkit-animation-name: blink;-moz-animation-name: blink;-ms-animation-name: blink;-o-animation-name: blink;animation-duration: 1s;-webkit-animation-duration: 1s;-moz-animation-duration: 1s;-ms-animation-duration: 1s;-o-animation-duration: 1s;}');
+			done();
+		}, { minify: true });
+	});
+
+	it("should define an animation with animate method", function(done) {
+		api.add({
+			div: {
+				animate: {
+					name: 'awesome-anim',
+					frames: {
+						'0%': { fz: '10px' },
+						'100%': { fz: '20px' }
+					}
+				}
+			}
+		}).compile(function(err, css) {
+			expect(css).toBe('@keyframes awesome-anim {0%{font-size: 10px;}100%{font-size: 20px;}}@-webkit-keyframes awesome-anim {0%{font-size: 10px;}100%{font-size: 20px;}}div{animation-name: awesome-anim;-webkit-animation-name: awesome-anim;-moz-animation-name: awesome-anim;-ms-animation-name: awesome-anim;-o-animation-name: awesome-anim;animation-duration: 1s;-webkit-animation-duration: 1s;-moz-animation-duration: 1s;-ms-animation-duration: 1s;-o-animation-duration: 1s;}');
+			done();
+		}, { minify: true });
+	});
+
+	it("should only define an animation with animate method", function(done) {
+		api.add({
+			div: {
+				animate: ['awesome-anim', {
+					'0%': { fz: '10px' },
+					'100%': { fz: '20px' }
+				}]
+			}
+		}).compile(function(err, css) {
+			expect(css).toBe('@keyframes awesome-anim {0%{font-size: 10px;}100%{font-size: 20px;}}@-webkit-keyframes awesome-anim {0%{font-size: 10px;}100%{font-size: 20px;}}');
 			done();
 		}, { minify: true });
 	});
