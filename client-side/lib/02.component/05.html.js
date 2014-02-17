@@ -85,3 +85,10 @@ api.__handleHTML = function(next) {
 	}
 	return this;
 };
+api.applyHTML = function(data, skipAutoPopulation) {
+	this.html = data;
+	if(!skipAutoPopulation) {
+		this.populate();
+	}
+	return this;
+};

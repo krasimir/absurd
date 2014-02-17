@@ -49,6 +49,10 @@ api.__getAnimAndTransEndEventName = function(el) {
     }
 }
 api.onAnimationEnd = function(el, func) {
+	if(arguments.length == 1) {
+		func = el;
+		el = this.el;
+	}
 	var self = this;
 	var eventName = api.__getAnimAndTransEndEventName(el);
 	if(!eventName) { func.apply(this, [{error: 'Animations not supported.'}]); return; };
@@ -57,6 +61,10 @@ api.onAnimationEnd = function(el, func) {
 	});
 }
 api.onTransitionEnd = function(el, func) {
+	if(arguments.length == 1) {
+		func = el;
+		el = this.el;
+	}
 	var self = this;
 	var eventName = api.__getAnimAndTransEndEventName(el);
 	if(!eventName) { func.apply(this, [{error: 'Animations not supported.'}]); return; };

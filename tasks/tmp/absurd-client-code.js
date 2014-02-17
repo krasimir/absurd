@@ -205,7 +205,19 @@ api.__handleCSS = function(next) {
 		next();
 	}
 	return this;
-}
+};
+api.applyCSS = function(data, skipAutoPopulation) {
+	if(this.html && typeof this.html === 'string') {
+		var res = {};
+		res[this.html] = data;
+		data = res;
+	}
+	this.css = data;
+	if(!skipAutoPopulation) {
+		this.populate();
+	}
+	return this;
+};
 var HTMLSource = false;
 
 api.__mergeDOMElements = function(e1, e2) {	
@@ -293,6 +305,13 @@ api.__handleHTML = function(next) {
 	}
 	return this;
 };
+api.applyHTML = function(data, skipAutoPopulation) {
+	this.html = data;
+	if(!skipAutoPopulation) {
+		this.populate();
+	}
+	return this;
+};
 var	appended = false
 api.__append = function(next) {
 	if(!appended && this.el && this.get("parent")) {
@@ -353,6 +372,10 @@ api.__getAnimAndTransEndEventName = function(el) {
     }
 }
 api.onAnimationEnd = function(el, func) {
+	if(arguments.length == 1) {
+		func = el;
+		el = this.el;
+	}
 	var self = this;
 	var eventName = api.__getAnimAndTransEndEventName(el);
 	if(!eventName) { func.apply(this, [{error: 'Animations not supported.'}]); return; };
@@ -361,6 +384,10 @@ api.onAnimationEnd = function(el, func) {
 	});
 }
 api.onTransitionEnd = function(el, func) {
+	if(arguments.length == 1) {
+		func = el;
+		el = this.el;
+	}
 	var self = this;
 	var eventName = api.__getAnimAndTransEndEventName(el);
 	if(!eventName) { func.apply(this, [{error: 'Animations not supported.'}]); return; };

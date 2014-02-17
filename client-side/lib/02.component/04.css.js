@@ -22,4 +22,16 @@ api.__handleCSS = function(next) {
 		next();
 	}
 	return this;
-}
+};
+api.applyCSS = function(data, skipAutoPopulation) {
+	if(this.html && typeof this.html === 'string') {
+		var res = {};
+		res[this.html] = data;
+		data = res;
+	}
+	this.css = data;
+	if(!skipAutoPopulation) {
+		this.populate();
+	}
+	return this;
+};
