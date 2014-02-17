@@ -816,6 +816,7 @@ lib.api.add = function(API) {
 	var checkAndExecutePlugin = function(selector, prop, value, stylesheet, parentSelector) {
 		var prefix = prefixes.nonPrefixProp(prop);
 		var plugin = API.getPlugins()[prefix.prop];
+		// console.log("\nChecking for plugin: " + prefix.prop + " (" + prop + ")");
 		if(typeof plugin !== 'undefined') {
 			var pluginResponse = plugin(API, value, prefix.prefix);
 			if(pluginResponse) {
@@ -833,6 +834,7 @@ lib.api.add = function(API) {
 
 		// catching null values
 		if(props === null || typeof props === 'undefined' || props === false) return;
+		if(!parentSelector && !selector) selector = '';
 
 		// multiple selectors
 		if(/, ?/g.test(selector) && options.combineSelectors) {
@@ -843,17 +845,17 @@ lib.api.add = function(API) {
 			return;
 		}
 
+		// check for plugin
+		if(checkAndExecutePlugin(null, selector, props, stylesheet, parentSelector)) {
+			return;	
+		}
+
 		// if array is passed
 		if(typeof props.length !== 'undefined' && typeof props === "object") {
 			for(var i=0; i<props.length, prop=props[i]; i++) {
 				addRule(selector, prop, stylesheet, parentSelector);
 			}
 			return;
-		}
- 
-		// check for plugin
-		if(checkAndExecutePlugin(null, selector, props, stylesheet, parentSelector)) {
-			return;	
 		}
 
 		var _props = {}, 
