@@ -1,4 +1,4 @@
-/* version: 0.2.86, born: 17-1-2014 14:4 */
+/* version: 0.2.86, born: 17-1-2014 14:46 */
 var Absurd = (function(w) {
 var lib = { 
     api: {},
@@ -545,6 +545,11 @@ api.toggleClass = function(className, el) {
 		el.className = classes.join(' ');
 	}
 	return api;
+}
+api.verify = function(selector, ok, fail) {
+	var res = this.qs(selector) ? true : false;
+	if(res && ok) ok.apply(this);
+	else if(fail) fail.apply(this);
 }
 	return api;
 };

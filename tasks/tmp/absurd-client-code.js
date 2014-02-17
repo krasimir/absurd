@@ -544,6 +544,11 @@ api.toggleClass = function(className, el) {
 	}
 	return api;
 }
+api.verify = function(selector, ok, fail) {
+	var res = this.qs(selector) ? true : false;
+	if(res && ok) ok.apply(this);
+	else if(fail) fail.apply(this);
+}
 	return api;
 };
 var client = function() {
