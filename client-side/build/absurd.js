@@ -1,4 +1,4 @@
-/* version: 0.2.88, born: 18-1-2014 21:28 */
+/* version: 0.2.88, born: 18-1-2014 23:22 */
 var Absurd = (function(w) {
 var lib = { 
     api: {},
@@ -292,8 +292,8 @@ api.__handleCSS = function(next) {
 	}
 	return this;
 };
-api.applyCSS = function(data, skipAutoPopulation) {
-	if(this.html && typeof this.html === 'string') {
+api.applyCSS = function(data, preventComposition, skipAutoPopulation) {
+	if(this.html && typeof this.html === 'string' && !preventComposition) {
 		var res = {};
 		res[this.html] = data;
 		data = res;

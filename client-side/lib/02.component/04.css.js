@@ -23,8 +23,8 @@ api.__handleCSS = function(next) {
 	}
 	return this;
 };
-api.applyCSS = function(data, skipAutoPopulation) {
-	if(this.html && typeof this.html === 'string') {
+api.applyCSS = function(data, preventComposition, skipAutoPopulation) {
+	if(this.html && typeof this.html === 'string' && !preventComposition) {
 		var res = {};
 		res[this.html] = data;
 		data = res;
