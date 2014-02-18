@@ -51,15 +51,6 @@ var queue  = function(funcs, scope) {
 		}
 	})();
 }
-var select = function(selector, parent) {
-	var result;
-	try {
-		result = (parent || document).querySelectorAll(selector);
-	} catch(err) {
-		result = document.querySelectorAll(selector);
-	}
-	return result;
-}
 var str2DOMElement = function(html) {
     /* code taken from jQuery */
    var wrapMap = {
@@ -71,6 +62,7 @@ var str2DOMElement = function(html) {
         tr: [ 2, "<table><tbody>", "</tbody></table>" ],
         col: [ 2, "<table><tbody></tbody><colgroup>", "</colgroup></table>" ],
         td: [ 3, "<table><tbody><tr>", "</tr></tbody></table>" ],
+        body: [0, "", ""],
 
         // IE6-8 can't serialize link, script, style, or any html5 (NoScope) tags,
         // unless wrapped in a div with non-breaking characters in front of it.
@@ -79,17 +71,24 @@ var str2DOMElement = function(html) {
     wrapMap.optgroup = wrapMap.option;
     wrapMap.tbody = wrapMap.tfoot = wrapMap.colgroup = wrapMap.caption = wrapMap.thead;
     wrapMap.th = wrapMap.td;
-    var element = document.createElement('div');
     var match = /<\s*\w.*?>/g.exec(html);
+    var element = document.createElement('div');
     if(match != null) {
         var tag = match[0].replace(/</g, '').replace(/>/g, '');
-        var map = wrapMap[tag] || wrapMap._default, element;
-        html = map[1] + html + map[2];
-        element.innerHTML = html;
-        // Descend through wrappers to the right content
-        var j = map[0]+1;
-        while(j--) {
-            element = element.lastChild;
+        if(tag.toLowerCase() === 'body') {
+            var dom = document.implementation.createDocument('http://www.w3.org/1999/xhtml', 'html', null);
+            var body = document.createElement("body");
+            body.innerHTML = html.replace(/\<body\>/ig, '').replace(/\<\/body\>/ig, '');
+            return body;
+        } else {
+            var map = wrapMap[tag] || wrapMap._default, element;
+            html = map[1] + html + map[2];
+            element.innerHTML = html;
+            // Descend through wrappers to the right content
+            var j = map[0]+1;
+            while(j--) {
+                element = element.lastChild;
+            }
         }
     } else {
         element.innerHTML = html;

@@ -198,6 +198,11 @@ var client = function() {
 			Organic.init(_api);
 		}
 
+		// attaching utils functions
+		_api.utils = {
+			str2DOMElement: str2DOMElement
+		}
+
 		return _api;
 
 	}

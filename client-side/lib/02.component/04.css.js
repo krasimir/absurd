@@ -10,7 +10,7 @@ api.__handleCSS = function(next) {
 					],
 					 css
 				);
-				(select("head") || select("body"))[0].appendChild(style);
+				(qs("head") || qs("body")).appendChild(style);
 				CSS = { raw: css, element: style };
 			} else if(CSS.raw !== css) {
 				CSS.raw = css;

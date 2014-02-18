@@ -67,9 +67,9 @@ api.__handleHTML = function(next) {
 	if(this.html) {
 		if(typeof this.html === 'string') {
 			if(!this.el) {
-				var element = select(this.html);
-				if(element.length > 0) {
-					this.el = element[0];
+				var element = qs(this.html);
+				if(element) {
+					this.el = element;
 					HTMLSource = {'': this.el.outerHTML.replace(/&lt;/g, '<').replace(/&gt;/g, '>') };
 				}
 			}
