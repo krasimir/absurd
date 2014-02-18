@@ -3,9 +3,11 @@ describe("Testing str2DOMElement", function() {
 	var elements = [
 		['<div>test</div>'],
 		['<div><h1>title</h1><a href="#">link</a></div>'],
+		['<div class="test"><h1>title</h1><a href="#">link</a></div>'],
 		['<table><tr><td>test</td></tr></table>', '<table><tbody><tr><td>test</td></tr></tbody></table>'],
-		['<tr><td>row</td></tr>'],
+		['<tr class="row"><td>row</td></tr>'],
 		['<td>column</td>'],
+		['<td class="col">column</td>'],
 		['<td>\
 		<p>\
 			<a href="#">Label <span>of the link</span></a>\

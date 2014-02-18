@@ -74,7 +74,7 @@ var str2DOMElement = function(html) {
     var match = /<\s*\w.*?>/g.exec(html);
     var element = document.createElement('div');
     if(match != null) {
-        var tag = match[0].replace(/</g, '').replace(/>/g, '');
+        var tag = match[0].replace(/</g, '').replace(/>/g, '').split(' ')[0];
         if(tag.toLowerCase() === 'body') {
             var dom = document.implementation.createDocument('http://www.w3.org/1999/xhtml', 'html', null);
             var body = document.createElement("body");
