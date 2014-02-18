@@ -1,4 +1,4 @@
-/* version: 0.2.88, born: 18-1-2014 23:22 */
+/* version: 0.2.88, born: 19-1-2014 0:29 */
 var Absurd = (function(w) {
 var lib = { 
     api: {},
@@ -571,12 +571,6 @@ api.populate = function(options) {
 api.str2DOMElement = str2DOMElement;
 api.addEventListener = addEventListener;
 api.queue = queue;
-api.compileHTML = function(HTML, callback, data) {
-	absurd.flush().morph("html").add(HTML).compile(callback, data);
-};
-api.compileCSS = function(CSS, callback, options) {
-	absurd.flush().add(CSS).compile(callback, options);
-};
 api.qs = qs;
 api.qsa = qsa;
 api.getStyle = getStyle;
@@ -584,6 +578,18 @@ api.addClass = addClass;
 api.removeClass = removeClass;
 api.replaceClass = replaceClass;
 api.toggleClass = toggleClass;
+api.compileHTML = function(HTML, callback, data) {
+	absurd.flush().morph("html").add(HTML).compile(callback, data);
+};
+api.compileCSS = function(CSS, callback, options) {
+	absurd.flush().add(CSS).compile(callback, options);
+};
+api.delay = function(time, fn, args) {
+	var self = this;
+	setTimeout(function() {
+		fn.apply(self, args);
+	}, time);
+}
 	return api;
 };
 var injecting = function(absurd) {
