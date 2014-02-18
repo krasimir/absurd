@@ -146,6 +146,7 @@ var client = function() {
 
 		// dependency injector
 		_api.di = lib.DI(_api);
+		injecting(_api);
 
 		/******************************************* Copied directly from /lib/API.js */
 

@@ -1,4 +1,4 @@
-/* version: 0.2.87, born: 18-1-2014 0:32 */
+/* version: 0.2.88, born: 18-1-2014 15:43 */
 var Absurd = (function(w) {
 var lib = { 
     api: {},
@@ -132,6 +132,89 @@ var createNode = function(type, attrs, content) {
 	}
 	node.innerHTML = content;
 	return node;
+}
+
+var qs = function(selector, parent) {
+    if(parent === false) { parent = document; }
+    else { parent = parent || this.el || document; }
+    return parent.querySelector(selector);
+};
+var qsa = function(selector, parent) {
+    if(parent === false) { parent = document; }
+    else { parent = parent || this.el || document; }
+    return parent.querySelectorAll(selector);
+};
+var getStyle = function(styleProp, el) {
+    el = el || this.el;
+    if(el && el.currentStyle) {
+        return el.currentStyle[styleProp];
+    } else if (window.getComputedStyle) {
+        return document.defaultView.getComputedStyle(el, null).getPropertyValue(styleProp);
+    }
+    return null;
+};
+var addClass = function(className, el) {
+    el = el || this.el;
+    if(el.classList) {
+        el.classList.add(className);
+    } else {
+        var current = el.className;
+        if(current.indexOf(className) < 0) {
+            if(current == '') el.className = className;
+            else el.className += ' ' + className;
+        }
+    }
+    return this;
+};
+var removeClass = function(className, el) {
+    el = el || this.el;
+    if (el.classList) {
+        el.classList.remove(className);
+    } else {
+        var current = el.className.split(' ');
+        var newClasses = [];
+        for(var i=0; i<current.length; i++) {
+            if(current[i] != className) newClasses.push(current[i]);
+        }
+        el.className = newClasses.join(' ');
+    }
+    return this;
+}
+var replaceClass = function(classNameA, classNameB, el) {
+    el = el || this.el;
+    var current = el.className.split(' '), found = false;
+    for(var i=0; i<current.length; i++) {
+        if(current[i] == classNameA) {
+            found = true;
+            current[i] = classNameB;
+        }
+    }
+    if(!found) {
+        return addClass(classNameB, el);
+    }
+    el.className = current.join(' ');
+    return this;
+}
+var toggleClass = function(className, el) {
+    el = el || this.el;
+    if (el.classList) {
+        el.classList.toggle(className);
+    } else {
+        var classes = el.className.split(' ');
+        var existingIndex = -1;
+        for (var i = classes.length; i--;) {
+            if (classes[i] === className)
+                existingIndex = i;
+        }
+        
+        if(existingIndex >= 0)
+            classes.splice(existingIndex, 1);
+        else
+            classes.push(className);
+
+        el.className = classes.join(' ');
+    }
+    return this;
 }
 var Component = function(componentName, absurd, eventBus, cls) {
 	var api = lib.helpers.Extend({
@@ -493,105 +576,23 @@ api.compileHTML = function(HTML, callback, data) {
 api.compileCSS = function(CSS, callback, options) {
 	absurd.flush().add(CSS).compile(callback, options);
 };
-api.qs = function(selector, parent) {
-	if(parent === false) { parent = document; }
-	else { parent = parent || this.el || document; }
-	return parent.querySelector(selector);
-};
-api.qsa = function(selector, parent) {
-	if(parent === false) { parent = document; }
-	else { parent = parent || this.el || document; }
-	return parent.querySelectorAll(selector);
-};
-api.getStyle = function(styleProp, el) {
-	el = el || this.el;
-	if(el && el.currentStyle) {
-		return el.currentStyle[styleProp];
-	} else if (window.getComputedStyle) {
-		return document.defaultView.getComputedStyle(el, null).getPropertyValue(styleProp);
-	}
-	return null;
-};
-api.addClass = function(className, el) {
-	el = el || this.el;
-	if(el.classList) {
-		el.classList.add(className);
-	} else {
-		var current = el.className;
-		if(current.indexOf(className) < 0) {
-			if(current == '') el.className = className;
-			else el.className += ' ' + className;
-		}
-	}
+api.qs = qs;
+api.qsa = qsa;
+api.getStyle = getStyle;
+api.addClass = addClass;
+api.removeClass = removeClass;
+api.replaceClass = replaceClass;
+api.toggleClass = toggleClass;
 	return api;
 };
-api.removeClass = function(className, el) {
-	el = el || this.el;
-	if (el.classList) {
-		el.classList.remove(className);
-	} else {
-		var current = el.className.split(' ');
-		var newClasses = [];
-		for(var i=0; i<current.length; i++) {
-			if(current[i] != className) newClasses.push(current[i]);
-		}
-		el.className = newClasses.join(' ');
+var injecting = function(absurd) {
+absurd.di.register('is', {
+	appended: function(selector) {
+		if(typeof selector == 'undefined') selector = this.host.html;
+		return qs(selector) ? true : false;
 	}
-	return api;
+});
 }
-api.replaceClass = function(classNameA, classNameB, el) {
-	el = el || this.el;
-	var current = el.className.split(' '), found = false;
-	for(var i=0; i<current.length; i++) {
-		if(current[i] == classNameA) {
-			found = true;
-			current[i] = classNameB;
-		}
-	}
-	if(!found) {
-		return api.addClass(classNameB, el);
-	}
-	el.className = current.join(' ');
-	return api;
-}
-api.toggleClass = function(className, el) {
-	el = el || this.el;
-	if (el.classList) {
-		el.classList.toggle(className);
-	} else {
-		var classes = el.className.split(' ');
-		var existingIndex = -1;
-		for (var i = classes.length; i--;) {
-	  		if (classes[i] === className)
-	    		existingIndex = i;
-		}
-		
-		if(existingIndex >= 0)
-	  		classes.splice(existingIndex, 1);
-		else
-	  		classes.push(className);
-
-		el.className = classes.join(' ');
-	}
-	return api;
-}
-api.verify = function(selector, ok, fail) {
-	var test = function() {
-		var res = this.qs(selector) ? true : false;
-		if(res && ok) ok.apply(this);
-		else if(fail) fail.apply(this);
-	}
-	if(typeof selector == 'string') {
-		test.apply(this);
-	} else if(typeof selector == 'function') {
-		fail = ok;
-		ok = selector;
-		selector = this.html;
-		test.apply(this);
-	}
-}
-	return api;
-};
 var client = function() {
 	return function(arg) {
 
@@ -740,6 +741,7 @@ var client = function() {
 
 		// dependency injector
 		_api.di = lib.DI(_api);
+		injecting(_api);
 
 		/******************************************* Copied directly from /lib/API.js */
 
@@ -821,7 +823,17 @@ var client = function() {
 		            var a = Array.prototype.slice.call(arguments, 0);
 		            for(var i=0; i<deps.length; i++) {
 		                var d = deps[i];
-		                args.push(self.dependencies[d] && d != '' ? self.dependencies[d] : a.shift());
+		                if(typeof self.dependencies[d] != 'undefined') {
+		                	var diModule = self.dependencies[d];
+		                	if(typeof diModule == 'function') {
+		                		diModule.prototype.host = scope;
+		                	} else if(typeof diModule == 'object') {
+		                		diModule.host = scope;
+		                	}
+							args.push(diModule);
+		                } else {
+		                	args.push(a.shift())
+		                }
 		            }
 		            return func.apply(scope, args);
 		        }

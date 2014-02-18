@@ -142,4 +142,43 @@ describe("Dependency injector", function() {
 		);
 	});
 
+	it("should be able to pass a boolean", function(done) {
+		api.di.register("BooleanValue", false);
+		var doSomething = api.di.resolve(function(BooleanValue) {
+			expect(BooleanValue).toBeDefined();
+			expect(typeof BooleanValue).toBe('boolean');
+			expect(BooleanValue).toBe(false);
+			done();
+		});
+		doSomething();
+	});
+
+	it("should use the host", function(done) {
+		var ExternalService = {
+			gogo: function() {
+				return this.host.name;
+			}
+		}
+		api.di.register("es", ExternalService);
+		var doSomething = api.di.resolve(function(es) {
+			this.name = 42;
+			expect(es.gogo()).toBe(42);
+			done();
+		});
+		doSomething();
+	});
+
+	it("should use the host while a function is injected", function(done) {
+		var ExternalService = function() {
+			return { name: this.host.name };
+		}
+		api.di.register("es", ExternalService);
+		var doSomething = api.di.resolve(function(es) {
+			this.name = 42;
+			expect((new es()).name).toBe(42);
+			done();
+		});
+		doSomething();
+	});
+
 });

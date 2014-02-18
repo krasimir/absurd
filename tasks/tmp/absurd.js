@@ -25,7 +25,17 @@ lib.DI = function(api) {
 		            var a = Array.prototype.slice.call(arguments, 0);
 		            for(var i=0; i<deps.length; i++) {
 		                var d = deps[i];
-		                args.push(self.dependencies[d] && d != '' ? self.dependencies[d] : a.shift());
+		                if(typeof self.dependencies[d] != 'undefined') {
+		                	var diModule = self.dependencies[d];
+		                	if(typeof diModule == 'function') {
+		                		diModule.prototype.host = scope;
+		                	} else if(typeof diModule == 'object') {
+		                		diModule.host = scope;
+		                	}
+							args.push(diModule);
+		                } else {
+		                	args.push(a.shift())
+		                }
 		            }
 		            return func.apply(scope, args);
 		        }

@@ -75,28 +75,4 @@ describe("Testing components (utils)", function() {
 		})();
 	});
 
-	it("should use verify", function(done) {
-		absurd.component("GetStyleTest", {
-			html: '#HTMLReporter',
-			andAgain: function() {
-				this.verify(function() {
-					expect(this.__name).toBe("GetStyleTest");
-					done();
-				});
-			},
-			testAgain: function() {
-				this.verify('.no-such-element', function() {}, function() {
-					expect(this.__name).toBe("GetStyleTest");
-					this.andAgain();
-				});
-			},
-			constructor: function() {
-				this.verify('body', function() {
-					expect(this.__name).toBe("GetStyleTest");
-					this.testAgain();
-				});
-			}
-		})();
-	});
-
 });

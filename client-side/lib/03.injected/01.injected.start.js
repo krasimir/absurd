@@ -1,0 +1,1 @@
+var injecting = function(absurd) {
