@@ -13,7 +13,8 @@ describe("Testing str2DOMElement", function() {
 			<a href="#">Label <span>of the link</span></a>\
 		</p>\
 		</td>'],
-		['<body><section>Section</section></body>']
+		['<body><section>Section</section></body>'],
+		['<body class="blah" data-attr="some value"><section>Section</section></body>'],
 	]
 
 	for(var i=0; i<elements.length; i++) {

@@ -1,4 +1,4 @@
-/* version: 0.2.88, born: 18-1-2014 21:3 */
+/* version: 0.2.88, born: 18-1-2014 21:28 */
 var Absurd = (function(w) {
 var lib = { 
     api: {},
@@ -54,7 +54,6 @@ var queue  = function(funcs, scope) {
 	})();
 }
 var str2DOMElement = function(html) {
-    /* code taken from jQuery */
    var wrapMap = {
         option: [ 1, "<select multiple='multiple'>", "</select>" ],
         legend: [ 1, "<fieldset>", "</fieldset>" ],
@@ -65,9 +64,6 @@ var str2DOMElement = function(html) {
         col: [ 2, "<table><tbody></tbody><colgroup>", "</colgroup></table>" ],
         td: [ 3, "<table><tbody><tr>", "</tr></tbody></table>" ],
         body: [0, "", ""],
-
-        // IE6-8 can't serialize link, script, style, or any html5 (NoScope) tags,
-        // unless wrapped in a div with non-breaking characters in front of it.
         _default: [ 1, "<div>", "</div>"  ]
     };
     wrapMap.optgroup = wrapMap.option;
@@ -80,7 +76,13 @@ var str2DOMElement = function(html) {
         if(tag.toLowerCase() === 'body') {
             var dom = document.implementation.createDocument('http://www.w3.org/1999/xhtml', 'html', null);
             var body = document.createElement("body");
-            body.innerHTML = html.replace(/\<body\>/ig, '').replace(/\<\/body\>/ig, '');
+            // keeping the attributes
+            element.innerHTML = html.replace(/<body/g, '<div').replace(/<\/body>/g, '</div>');
+            var attrs = element.firstChild.attributes;
+            body.innerHTML = html;
+            for(var i=0; i<attrs.length; i++) {
+                body.setAttribute(attrs[i].name, attrs[i].value);
+            }
             return body;
         } else {
             var map = wrapMap[tag] || wrapMap._default, element;
