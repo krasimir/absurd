@@ -52,7 +52,6 @@
 				e && e.preventDefault();
 				this.css['.tests'].d = 'b';
 				this.populate();
-				console.clear();
 				console.log('=== Using History API ===');
 				router.config({ mode: 'history'});
 				console.log('Mode: ', router.mode);
@@ -64,7 +63,6 @@
 				e && e.preventDefault();
 				this.css['.tests'].d = 'b';
 				this.populate();
-				console.clear();
 				console.log('=== Using Hash ===');
 				router.config({ mode: 'hash' });
 				console.log('Mode: ', router.mode);
