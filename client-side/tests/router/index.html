@@ -48,26 +48,12 @@
 				// this.useHistoryAPI();
 				// this.useHash();
 			},
-			useHistoryAPI: function(e, router) {
+			use: function(e, router, mode) {
+				console.log('=== Using ' + mode + ' ===');
 				e && e.preventDefault();
 				this.css['.tests'].d = 'b';
 				this.populate();
-				console.log('=== Using History API ===');
-				router.config({ mode: 'history'});
-				console.log('Mode: ', router.mode);
-				console.log('root: ', router.root);
-				console.log('Fragment: ', router.getFragment());
-				router.listen().check();
-			},
-			useHash: function(e, router) {
-				e && e.preventDefault();
-				this.css['.tests'].d = 'b';
-				this.populate();
-				console.log('=== Using Hash ===');
-				router.config({ mode: 'hash' });
-				console.log('Mode: ', router.mode);
-				console.log('root: ', router.root);
-				console.log('Fragment: ', router.getFragment());
+				router.config({ mode: mode });
 				router.listen().check();
 			},
 			navigate: function(e, router, path) {
@@ -79,19 +65,19 @@
 	<div class="testing">
 		<ul>
 			<li>
-				<a href="#" data-absurd-event="click:useHistoryAPI">Use History API</a>
+				<a href="#" data-absurd-event="click:use:history">Use History API</a>
 			</li>
 			<li>
-				<a href="#" data-absurd-event="click:useHash">Use Hash</a>
+				<a href="#" data-absurd-event="click:use:hash">Use Hash</a>
 			</li>
 		</ul>
 		<hr />
 		<ul class="tests">
 			<li><a href="#" data-absurd-event="click:navigate:">Navigate to /</a></li>
-			<li><a href="#" data-absurd-event="click:navigate:about">Navigate to /about</a></li>
-			<li><a href="#" data-absurd-event="click:navigate:products">Navigate to /products</a></li>
-			<li><a href="#" data-absurd-event="click:navigate:products/32">Navigate to /products/32</a></li>
-			<li><a href="#" data-absurd-event="click:navigate:/products/32/edit/up/high/">Navigate to /products/32/edit/up/high</a></li>
+			<li><a href="#" data-absurd-event="click:navigate:about">Navigate to /about ( /about\/?$/ )</a></li>
+			<li><a href="#" data-absurd-event="click:navigate:products">Navigate to /products ( /products\/?$/ )</a></li>
+			<li><a href="#" data-absurd-event="click:navigate:products/32">Navigate to /products/32 ( /products\/(.*)\/?$/ )</a></li>
+			<li><a href="#" data-absurd-event="click:navigate:/products/32/edit/up/high/">Navigate to /products/32/edit/up/high ( /products\/(.*)\/edit\/(.*)\/(.*)?$/ )</a></li>
 		</ul>
 		<small>* Check the console.</small>
 		
