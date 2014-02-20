@@ -47,4 +47,48 @@ describe("Testing components (async)", function() {
 		})().populate();
 	});
 
+	it("should use several same async function but several times", function(done) {
+		absurd.components.flush().register("Async test 3", {
+			html: {
+				'.content': [
+					{ p: '<% this.async("getValue", this.data[0]) %>' }, 
+					{ p: '<% this.async("getValue", this.data[1]) %>' },
+					{ p: '<% this.async("getValue", this.data[2]) %>' }
+				]
+			},
+			getValue: function(callback, value) {
+				setTimeout(function() {
+					callback("v: " + value);
+				}, 10);				
+			},
+			data: [10, 20, 30],
+			populated: function(data) {
+				expect(data.html.element.outerHTML).toBe('<div class="content"><p>v: 10</p><p>v: 20</p><p>v: 30</p></div>');
+				done();
+			}
+		})().populate();
+	});
+
+	it("should wait till the populate execution ends", function(done) {
+		absurd.components.flush().register("Async test 4", {
+			html: {
+				'.content': [
+					{ p: '<% this.async("getValue", this.data[0]) %>' }, 
+					{ p: '<% this.async("getValue", this.data[1]) %>' },
+					{ p: '<% this.async("getValue", this.data[2]) %>' }
+				]
+			},
+			getValue: function(callback, value) {
+				setTimeout(function() {
+					callback("v: " + value);
+				}, 100);				
+			},
+			data: ['a', 'b', 'c'],
+			populated: function(data) {
+				expect(data.html.element.outerHTML).toBe('<div class="content"><p>v: a</p><p>v: b</p><p>v: c</p></div>');
+				done();
+			}
+		})().populate().populate();
+	});
+
 });

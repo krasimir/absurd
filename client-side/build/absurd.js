@@ -1,4 +1,4 @@
-/* version: 0.2.88, born: 19-1-2014 0:29 */
+/* version: 0.2.88, born: 20-1-2014 15:18 */
 var Absurd = (function(w) {
 var lib = { 
     api: {},
@@ -547,7 +547,10 @@ api.wire = function(event) {
 	absurd.components.events.on(event, this[event] || function() {}, this);
 	return this;
 };
-api.populate = function(options) {	
+var isPopulateInProgress = false;
+api.populate = function(options) {
+	if(isPopulateInProgress) return;
+	isPopulateInProgress = true;
 	queue([
 		api.__handleCSS,
 		api.__handleHTML,
@@ -555,6 +558,7 @@ api.populate = function(options) {
 		api.__handleEvents,
 		api.__handleAsyncFunctions,
 		function() {
+			isPopulateInProgress = false;
 			async = { funcs: {}, index: 0 }
 			var data = {
 				css: CSS, 
@@ -563,7 +567,7 @@ api.populate = function(options) {
 				}
 			};
 			this.dispatch("populated", data);
-			if(options && typeof options.callback === 'function') { options.callback(data); }	
+			if(options && typeof options.callback === 'function') { options.callback(data); }
 		}
 	], this);
 	return this;
