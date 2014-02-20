@@ -1,4 +1,4 @@
-describe("Testing components (injected utils)", function() {
+describe("Testing components (is)", function() {
 
 	it("should use is.appended", function(done) {
 		absurd.component('TestingIsAppended', {

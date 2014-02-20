@@ -1,0 +1,6 @@
+RewriteEngine On
+
+#RewriteBase /
+
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteRule ^(.*)$ index.html?slug=$1 [QSA,L]

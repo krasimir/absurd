@@ -47,7 +47,7 @@ describe("Testing components (utils)", function() {
 		absurd.component("GetStyleTest", {			
 			css: {
 				'.content-manage-class-test': {
-					display: 'block'
+					display: 'none'
 				}
 			},
 			html: {

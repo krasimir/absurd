@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<title>AbsurdJS routing</title>
+	<script src="http://absurdjs.com/builds/absurd.organic.js"></script>
+	<script src="http://absurd.dev/client-side/build/absurd.js"></script>
+	<!--<script src="http://absurdjs.com/builds/absurd.js"></script>-->
+</head>
+<body>	
+	<script>
+		var css = {
+			a: {
+				color: '#000',
+				fz: '20px',
+				ff: 'Verdana',
+				ted: 'n',
+				'&:hover': { color: '#999' }
+			},
+			'.tests': { d: 'n', a: { fz: '14px' } }
+		};
+		var absurd = Absurd();
+		absurd.component('TestingRouter', {
+			css: css,
+			html: '.testing',
+			ready: function(router) {
+				this.populate();
+				router
+				.add(/about\/?$/, function(args) {
+					console.log("%c> matched: about", 'color: #009f00');
+					console.log(args);
+				})
+				.add(/products\/(.*)\/edit\/(.*)\/(.*)?$/, function(args) {
+					console.log("%c> matched: products/id/edit/a/b", 'color: #009f00');
+					console.log(args);
+				})
+				.add(/products\/(.*)\/?$/, function(args) {
+					console.log("%c> matched: products/id", 'color: #009f00');
+					console.log(args);
+				})
+				.add(/products\/?$/, function(args) {
+					console.log("%c> matched: products", 'color: #009f00');
+					console.log(args);
+				})
+				.add('', function() {
+					console.log("%c> matched: default", 'color: #009f00');
+				})
+				// this.useHistoryAPI();
+				// this.useHash();
+			},
+			useHistoryAPI: function(e, router) {
+				e && e.preventDefault();
+				this.css['.tests'].d = 'b';
+				this.populate();
+				console.clear();
+				console.log('=== Using History API ===');
+				router.config({ mode: 'history'});
+				console.log('Mode: ', router.mode);
+				console.log('root: ', router.root);
+				console.log('Fragment: ', router.getFragment());
+				router.listen().check();
+			},
+			useHash: function(e, router) {
+				e && e.preventDefault();
+				this.css['.tests'].d = 'b';
+				this.populate();
+				console.clear();
+				console.log('=== Using Hash ===');
+				router.config({ mode: 'hash' });
+				console.log('Mode: ', router.mode);
+				console.log('root: ', router.root);
+				console.log('Fragment: ', router.getFragment());
+				router.listen().check();
+			},
+			navigate: function(e, router, path) {
+				e && e.preventDefault();
+				router.navigate(path);
+			}
+		})();
+	</script>
+	<div class="testing">
+		<ul>
+			<li>
+				<a href="#" data-absurd-event="click:useHistoryAPI">Use History API</a>
+			</li>
+			<li>
+				<a href="#" data-absurd-event="click:useHash">Use Hash</a>
+			</li>
+		</ul>
+		<hr />
+		<ul class="tests">
+			<li><a href="#" data-absurd-event="click:navigate:">Navigate to /</a></li>
+			<li><a href="#" data-absurd-event="click:navigate:about">Navigate to /about</a></li>
+			<li><a href="#" data-absurd-event="click:navigate:products">Navigate to /products</a></li>
+			<li><a href="#" data-absurd-event="click:navigate:products/32">Navigate to /products/32</a></li>
+			<li><a href="#" data-absurd-event="click:navigate:/products/32/edit/up/high/">Navigate to /products/32/edit/up/high</a></li>
+		</ul>
+		<small>* Check the console.</small>
+		
+	</div>
+</body>
+</html>

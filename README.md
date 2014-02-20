@@ -1,7 +1,6 @@
 # AbsurdJS
 
-[![Build Status](https://travis-ci.org/krasimir/absurd.png?branch=master)](https://travis-ci.org/krasimir/absurd) [![Bitdeli Badge](https://d2weczhvl823v0.cloudfront.net/krasimir/absurd/trend.png)](https://bitdeli.com/free "Bitdeli Badge")
-
+[![Build Status](https://travis-ci.org/krasimir/absurd.png?branch=master)](https://travis-ci.org/krasimir/absurd)
 ## Overview
 
 Javascript based preprocessor. No new language, no new syntax. Write everything in plain JavaScript. 
