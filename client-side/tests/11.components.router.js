@@ -34,6 +34,39 @@ describe("Testing components (router)", function() {
 				done();
 			}
 		})();
-	})
+	});
+
+	it("should keep the scope", function(done) {
+		absurd.component('TestingRouter', {
+			constructor: function(router) {
+				router.flush().add(function() {
+					expect(this.__name).toBe('TestingRouter');
+					done();
+				}).check();
+			}
+		})();
+	});
+
+	it("should get params and back to home", function(done) {
+		var productId = 567, action = 'edit';
+		absurd.component('TestingRouterCrazy', {
+			goBackToHome: function(router, id, action) {
+				expect(parseInt(id)).toBe(productId);
+				expect(action).toBe(action);
+				router.navigate().check();
+			},
+			home: function() {
+				expect(this.__name).toBe('TestingRouterCrazy');
+				done();
+			},
+			constructor: function(router) {
+				router.flush().add(/products\/(.*)\/(.*)$/, this.goBackToHome).add(this.home);
+				if(window.location.href.indexOf('#/products') < 0) {
+					window.location.href = window.location.href + '#/products/' + productId + '/' + action + '/';
+				}
+				router.check();
+			}
+		})();
+	});
 
 });

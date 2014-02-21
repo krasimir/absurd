@@ -20,6 +20,10 @@ absurd.di.register('router', {
     	return path.toString().replace(/\/$/, '').replace(/^\//, '');
     },
 	add: function(re, handler) {
+		if(typeof re == 'function') {
+			handler = re;
+			re = '';
+		}
 		this.routes.push({ re: re, handler: handler});
 		return this;
 	},
@@ -30,6 +34,7 @@ absurd.di.register('router', {
 				return this;
 			}
 		}
+		return this;
 	},
 	flush: function() {
 		this.routes = [];
@@ -61,18 +66,20 @@ absurd.di.register('router', {
 			var match = fragment.match(this.routes[i].re);
 			if(match) {
 				match.shift();
-				this.routes[i].handler(match);
+				this.routes[i].handler.apply(this.host || {}, match);
 				return this;
 			}			
 		}
 		return this;
 	},
 	navigate: function(path) {
+		path = path ? path : '';
 		if(this.mode === 'history') {
 			history.pushState(null, null, this.root + this.clearSlashes(path));
 		} else {
 			window.location.href.match(/#(.*)$/);
 			window.location.href = window.location.href.replace(/#(.*)$/, '') + '#' + path;
 		}
+		return this;
 	}
 });
