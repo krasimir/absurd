@@ -26,21 +26,21 @@
 			ready: function(router) {
 				this.populate();
 				router
-				.add(/about\/?$/, function(args) {
+				.add(/about\/?$/, function() {
 					console.log("%c> matched: about", 'color: #009f00');
-					console.log(args);
+					console.log(arguments);
 				})
-				.add(/products\/(.*)\/edit\/(.*)\/(.*)?$/, function(args) {
+				.add(/products\/(.*)\/edit\/(.*)\/(.*)?$/, function() {
 					console.log("%c> matched: products/id/edit/a/b", 'color: #009f00');
-					console.log(args);
+					console.log(arguments);
 				})
-				.add(/products\/(.*)\/?$/, function(args) {
+				.add(/products\/(.*)\/?$/, function() {
 					console.log("%c> matched: products/id", 'color: #009f00');
-					console.log(args);
+					console.log(arguments);
 				})
-				.add(/products\/?$/, function(args) {
+				.add(/products\/?$/, function() {
 					console.log("%c> matched: products", 'color: #009f00');
-					console.log(args);
+					console.log(arguments);
 				})
 				.add('', function() {
 					console.log("%c> matched: default", 'color: #009f00');
