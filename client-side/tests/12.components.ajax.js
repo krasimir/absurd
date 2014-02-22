@@ -47,10 +47,10 @@ describe("Testing components (ajax)", function() {
 		absurd.component('TestingAjax', {
 			constructor: function(ajax) {
 				ajax
-				.request({url: 'data/data.txt', method: 'post'})
+				.request({url: 'data/data-post.php', method: 'post'})
 				.done(function(data) {
 					expect(this.__name).toBe('TestingAjax');
-					expect(data).toBe('That\'s a text file');
+					expect(data).toBe(' ');
 					done();
 				});
 			}
