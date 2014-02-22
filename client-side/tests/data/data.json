@@ -1,0 +1,6 @@
+{
+	"library": "absurdjs",
+	"tags": ["javascript", "css preprocessor", "template engine"],
+	"nodejs": true,
+	"browser": true
+}
