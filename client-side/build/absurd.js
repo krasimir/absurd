@@ -1,4 +1,4 @@
-/* version: 0.3.0, born: 22-1-2014 23:33 */
+/* version: 0.3.0, born: 23-1-2014 10:22 */
 var Absurd = (function(w) {
 var lib = { 
     api: {},
@@ -722,27 +722,27 @@ absurd.di.register('ajax', {
 							if(ops.json === true && typeof JSON != 'undefined') {
 								result = JSON.parse(result);
 							}
-							self.doneCallback && self.doneCallback.apply(self.host, [result]);
+							self.doneCallback && self.doneCallback.apply(self.host, [result, self.xhr]);
 						} else if(self.xhr.readyState == 4) {
 							self.failCallback && self.failCallback.apply(self.host, [self.xhr]);
 						}
 						self.alwaysCallback && self.alwaysCallback.apply(self.host, [self.xhr]);
 					}
 					
-					if(ops.method == 'post') {
-						this.xhr.open("POST", ops.url, true);
+					if(ops.method == 'get') {
+						this.xhr.open("GET", ops.url + getParams(ops.data, ops.url), true);
+					} else {
+						this.xhr.open(ops.method, ops.url, true);
 						this.setHeaders({
 							'X-Requested-With': 'XMLHttpRequest',
 							'Content-type': 'application/x-www-form-urlencoded'
 						});
-					} else {
-						this.xhr.open("GET", ops.url + getParams(ops.data, ops.url), true);
 					}
 					if(ops.headers && typeof ops.headers == 'object') {
 						this.setHeaders(ops.headers);
 					}		
 					setTimeout(function() { 
-						ops.method == 'post' ? self.xhr.send(getParams(ops.data)) : self.xhr.send(); 
+						ops.method == 'get' ? self.xhr.send() : self.xhr.send(getParams(ops.data)); 
 					}, 20);	
 				}
 				return this;

@@ -1,6 +1,6 @@
 describe("Testing components (ajax)", function() {
 
-	it("should perform a GET request", function(done) {
+	it("should perform GET request", function(done) {
 		absurd.component('TestingAjax', {
 			constructor: function(ajax) {
 				ajax
@@ -14,7 +14,7 @@ describe("Testing components (ajax)", function() {
 		})();
 	});
 
-	it("should perform a GET request which fails", function(done) {
+	it("should perform GET request which fails", function(done) {
 		absurd.component('TestingAjax', {
 			constructor: function(ajax) {
 				ajax
@@ -29,7 +29,7 @@ describe("Testing components (ajax)", function() {
 		})();
 	});
 
-	it("should perform a GET request with parameters", function(done) {
+	it("should perform GET request with parameters", function(done) {
 		absurd.component('TestingAjax', {
 			constructor: function(ajax) {
 				ajax
@@ -43,7 +43,7 @@ describe("Testing components (ajax)", function() {
 		})();
 	});
 
-	it("should perform a POST request", function(done) {
+	it("should perform POST request", function(done) {
 		absurd.component('TestingAjax', {
 			constructor: function(ajax) {
 				ajax
@@ -57,7 +57,7 @@ describe("Testing components (ajax)", function() {
 		})();
 	});
 
-	it("should perform a POST request which fails", function(done) {
+	it("should perform POST request which fails", function(done) {
 		absurd.component('TestingAjax', {
 			constructor: function(ajax) {
 				ajax
@@ -72,7 +72,7 @@ describe("Testing components (ajax)", function() {
 		})();
 	});
 
-	it("should perform a POST request with parameters", function(done) {
+	it("should perform POST request with parameters", function(done) {
 		absurd.component('TestingAjax', {
 			constructor: function(ajax) {
 				ajax
@@ -86,7 +86,7 @@ describe("Testing components (ajax)", function() {
 		})();
 	});
 
-	it("should perform a GET request with custom header set", function(done) {
+	it("should perform GET request with custom header set", function(done) {
 		absurd.component('TestingAjax', {
 			constructor: function(ajax) {
 				ajax
@@ -100,7 +100,7 @@ describe("Testing components (ajax)", function() {
 		})();
 	});
 
-	it("should perform a POST request with custom header set", function(done) {
+	it("should perform POST request with custom header set", function(done) {
 		absurd.component('TestingAjax', {
 			constructor: function(ajax) {
 				ajax
@@ -140,6 +140,82 @@ describe("Testing components (ajax)", function() {
 					if(called == 2) {
 						done();
 					}
+				});
+			}
+		})();
+	});
+
+	it("should perform PUT request", function(done) {
+		absurd.component('TestingAjax', {
+			constructor: function(ajax) {
+				ajax
+				.request({ url: 'data/data-method.php', method: 'put' })
+				.done(function(data) {
+					expect(data.toUpperCase()).toBe('PUT');
+					done();
+				});
+			}
+		})();
+	});
+
+	it("should perform PUT request with parameters", function(done) {
+		absurd.component('TestingAjax', {
+			constructor: function(ajax) {
+				ajax
+				.request({ url: 'data/data-method.php', method: 'put', data: { id: '123' } })
+				.done(function(data) {
+					expect(data.toUpperCase()).toBe('PUT123');
+					done();
+				});
+			}
+		})();
+	});
+
+	it("should perform DELETE request", function(done) {
+		absurd.component('TestingAjax', {
+			constructor: function(ajax) {
+				ajax
+				.request({ url: 'data/data-method.php', method: 'delete' })
+				.done(function(data) {
+					expect(data.toUpperCase()).toBe('DELETE');
+					done();
+				});
+			}
+		})();
+	});
+
+	it("should perform DELETE request with parameters", function(done) {
+		absurd.component('TestingAjax', {
+			constructor: function(ajax) {
+				ajax
+				.request({ url: 'data/data-method.php', method: 'delete', data: { id: '123' } })
+				.done(function(data) {
+					expect(data.toUpperCase()).toBe('DELETE123');
+					done();
+				});
+			}
+		})();
+	});
+
+	it("should use everything", function(done) {
+		absurd.component('TestingAjax', {
+			constructor: function(ajax) {
+				ajax
+				.request({ 
+					url: 'data/complex.php', 
+					json: true,
+					method: 'put', 
+					data: { 
+						data: JSON.stringify({
+							library: 'AbsurdJS',
+							type: 'library',
+							language: 'JavaScript'
+						})
+					}
+				})
+				.done(function(data) {
+					expect(data.result).toBe('AbsurdJS is a library written in JavaScript.');
+					done();
 				});
 			}
 		})();
