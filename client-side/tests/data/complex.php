@@ -3,7 +3,7 @@
 	$params = null;
 	parse_str(file_get_contents('php://input'), $params);
 
-	$data = json_decode($params['data']);
+	$data = json_decode(stripslashes($params['data']));
 
 	$result = (object) array(
 		"result" => $data->library.' is a '.$data->type.' written in '.$data->language.'.'
