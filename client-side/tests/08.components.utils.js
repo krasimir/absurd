@@ -75,4 +75,73 @@ describe("Testing components (utils)", function() {
 		})();
 	});
 
+	it("should use `val`", function(done) {
+		absurd.flush().component('TestingVal', {
+			html: '.form',
+			constructor: function() {
+				this.populate();
+				expect(this.val('.input')).toBe('blah');
+				expect(this.val(this.qs('.input'))).toBe('blah');
+				expect(this.val('.textarea')).toBe('blah in textarea');
+				expect(this.val('.select')).toBe('B');
+				this.qsa('[name="radio"]')[1].setAttribute('checked', 'checked');
+				expect(this.val('[name="radio"]')).toBe('blah2');
+				this.qsa('[name="check-options"]')[1].setAttribute('checked', 'checked');
+				expect(this.val('[name="check-options"]')).toBe('check2');
+				expect(this.val('.div')).toBe('div blah');
+				expect(this.val('.span')).toBe('I\'m an inline');
+				expect(this.val('.link')).toBe('I\'m a link');
+				expect(this.val('.section')).toBe('Title hereVery long text with link inside.');
+				done();
+			}
+		})();
+	});
+
+	it("should use `val` with dom element", function(done) {
+		absurd.flush().component('TestingVal', {
+			html: '.form',
+			constructor: function() {
+				this.populate();
+				expect(this.val(this.qs('.div'))).toBe('div blah');
+				done();
+			}
+		})();
+	});
+
+	it("should use `val` with parent", function(done) {
+		absurd.flush().component('TestingVal', {
+			html: '.form',
+			constructor: function() {
+				this.populate();
+				expect(this.val('p', this.qs('.section'))).toBe('Very long text with link inside.');
+				done();
+			}
+		})();
+	});
+
+	it("should use `val` with hash", function(done) {
+		absurd.flush().component('TestingVal2', {
+			html: '.form',
+			constructor: function() {
+				this.populate();
+				var values = this.val({
+					textarea: '.textarea',
+					check: '[name="check-options"]',
+					select: '.select',
+					input: '.input',
+					div: '.div',
+					span: '.span',
+					more: {
+						section: '.section',
+						andmore: {
+							title: '.section h1'
+						}
+					}
+				})
+				expect(JSON.stringify(values)).toBe('{"textarea":"blah in textarea","check":"check2","select":"B","input":"blah","div":"div blah","span":"I\'m an inline","more":{"section":"Title hereVery long text with link inside.","andmore":{"title":"Title here"}}}');
+				done();
+			}
+		})();
+	});
+
 });

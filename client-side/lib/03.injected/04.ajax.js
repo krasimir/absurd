@@ -21,7 +21,7 @@ absurd.di.register('ajax', {
 		var api = {
 			host: this.host || {},
 			process: function(ops) {
-				var postBody = '', self = this;
+				var self = this;
 				this.xhr = null;
 				if(window.ActiveXObject) { this.xhr = new ActiveXObject('Microsoft.XMLHTTP'); }
 				else if(window.XMLHttpRequest) { this.xhr = new XMLHttpRequest(); }

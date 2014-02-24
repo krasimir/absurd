@@ -132,7 +132,6 @@ var createNode = function(type, attrs, content) {
 	node.innerHTML = content;
 	return node;
 }
-
 var qs = function(selector, parent) {
     if(parent === false) { parent = document; }
     else { parent = parent || this.el || document; }
@@ -214,6 +213,50 @@ var toggleClass = function(className, el) {
         el.className = classes.join(' ');
     }
     return this;
+}
+var val = function(selector, parent) {
+    var el;
+    if(typeof selector == 'object') {
+        if(typeof selector.nodeName != 'undefined') {
+            el = selector;
+        } else {
+            var r = {};
+            for(var key in selector) {
+                r[key] = val.apply(this, [selector[key], parent]);
+            }
+            return r;
+        }
+    } else if(typeof selector == 'string') {
+        el = qs.apply(this, [selector, parent]);
+    } else {
+        el = this.el;
+    }
+    if(el) {
+        var nodeName = el.nodeName.toLowerCase();
+        if(nodeName == 'input' || nodeName == 'textarea' || nodeName == 'select') {
+            if(el.getAttribute('type') == 'radio' || el.getAttribute('type') == 'checkbox') {
+                var els = qsa.apply(this, ['[name="' + el.getAttribute('name') + '"]']);
+                for(var i=0; i<els.length; i++) {
+                    if(els[i].checked) {
+                        return els[i].value;
+                    }
+                }
+                return null;
+            } else {
+                return el.value;
+            }
+        } else {
+            if(typeof el.textContent != 'undefined') {
+                return el.textContent;
+            } else if(typeof el.innerText != 'undefined') {
+                return typeof el.innerText;
+            } else {
+                return el.innerHTML;
+            }
+        }
+    } else {
+        return null;
+    }
 }
 var Component = function(componentName, absurd, eventBus, cls) {
 	var api = lib.helpers.Extend({
@@ -580,6 +623,7 @@ api.addClass = addClass;
 api.removeClass = removeClass;
 api.replaceClass = replaceClass;
 api.toggleClass = toggleClass;
+api.val = val;
 api.compileHTML = function(HTML, callback, data) {
 	absurd.flush().morph("html").add(HTML).compile(callback, data);
 };
@@ -709,7 +753,7 @@ absurd.di.register('ajax', {
 		var api = {
 			host: this.host || {},
 			process: function(ops) {
-				var postBody = '', self = this;
+				var self = this;
 				this.xhr = null;
 				if(window.ActiveXObject) { this.xhr = new ActiveXObject('Microsoft.XMLHTTP'); }
 				else if(window.XMLHttpRequest) { this.xhr = new XMLHttpRequest(); }

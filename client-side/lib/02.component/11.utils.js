@@ -8,6 +8,7 @@ api.addClass = addClass;
 api.removeClass = removeClass;
 api.replaceClass = replaceClass;
 api.toggleClass = toggleClass;
+api.val = val;
 api.compileHTML = function(HTML, callback, data) {
 	absurd.flush().morph("html").add(HTML).compile(callback, data);
 };
