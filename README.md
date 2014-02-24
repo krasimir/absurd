@@ -1,7 +1,7 @@
 # AbsurdJS
 
 [![Build Status](https://travis-ci.org/krasimir/absurd.png?branch=master)](https://travis-ci.org/krasimir/absurd)
-[![Dependencies](https://david-dm.org/krasimir/absurd.png)](https://david-dm.org/krasimir/absurd)
+[![Dependency Status](https://david-dm.org/krasimir/absurd.png?theme=shields.io)](https://david-dm.org/krasimir/absurd)
 ## Overview
 
 Javascript based preprocessor. No new language, no new syntax. Write everything in plain JavaScript. 
