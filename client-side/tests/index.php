@@ -1,3 +1,4 @@
+<?php $rand = rand(0, 1000000000); ?>
 <!DOCTYPE html>
 <html>
 <head>
@@ -7,7 +8,7 @@
 		body {
 			background: #E3E3E3;
 		}
-		.form {
+		.form, .hidden {
 			display: none;
 		}
 	</style>
@@ -29,6 +30,7 @@
 	<script src="00.str2DOMElement.js"></script>
 	<script src="01.components.js"></script>
 	<script src="02.components.css.js"></script>
+	<script src="13.components.dom.js"></script>
 	<script src="03.components.html.js"></script>
 	<script src="04.components.complex.js"></script>
 	<script src="05.components.events.js"></script>
@@ -68,6 +70,8 @@
 		})();
 	</script>
 
+	<p class="hidden">Nothing</p>
+
 	<div id="banner-A" class="<% this.theme %>" style="display: none;">
 		<input type="text" />
 		<p><% this.text %></p>
@@ -75,25 +79,34 @@
 	</div>
 
 	<div class="form">
-		<textarea class="textarea">blah in textarea</textarea>
-		<input type="radio" name="radio" value="blah1">
-		<input type="radio" name="radio" value="blah2">
-		<input type="checkbox" name="check-options" value="check1">
-		<input type="checkbox" name="check-options" value="check2">
-		<input type="checkbox" name="check-options" value="check3">
-		<select class="select">
-			<option value="A">A</option>
-			<option value="B" selected="selected">B</option>
-		</select>
-		<input type="text" value="blah" class="input" />
-		<div class="div">div blah</div>
-		<span class="span">I'm an inline</span>
-		<a class="link" href="#">I'm a link</a>
-		<p>A paragraph</p>
-		<section class="section">
-			<h1>Title here</h1>
-			<p>Very long text with <a href='#'>link</a> inside.</p>
-		</section>
+		<form AUTOCOMPLETE="off" id="form<?php echo $rand; ?>">
+			<textarea class="textarea" >blah in textarea</textarea>
+			<input type="radio" name="radio" value="blah1">
+			<input type="radio" name="radio" value="blah2">
+			<input type="checkbox" name="check-options" value="check1">
+			<input type="checkbox" name="check-options" value="check2">
+			<input type="checkbox" name="check-options" value="check3">
+			<select class="select">
+				<option value="A">A</option>
+				<option value="B" selected="selected">B</option>
+				<option value="C">C</option>
+				<option value="D">D</option>
+			</select>
+			<input type="text" value="blah" class="input" />
+			<div class="div">div blah</div>
+			<span class="span">I'm an inline</span>
+			<a class="link" href="#">I'm a link</a>
+			<p>A paragraph</p>
+			<section class="section">
+				<h1>Title here</h1>
+				<p>Very long text with <a href='#'>link</a> inside.</p>
+			</section>
+			<ul class="list">
+				<li>option A</li>
+				<li>option B</li>
+				<li>option C</li>
+			</li>
+		</form>
 	</div>
 
 	<script>
