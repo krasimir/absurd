@@ -109,6 +109,16 @@
 		</form>
 	</div>
 
+	<div class="hidden dom-test">
+		<form>
+		    <input type="radio" value="oA" name="options"> option A
+		    <input type="radio" value="oB" name="options" checked> option B
+		    <input type="checkbox" value="f1" name="features"> feature 1
+		    <input type="checkbox" value="f2" checked name="features"> feature 2
+		    <input type="checkbox" value="f3" checked name="features"> feature 2
+		</form>
+	</div>
+
 	<script>
       (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
       (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),

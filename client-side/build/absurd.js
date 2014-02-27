@@ -1,4 +1,4 @@
-/* version: 0.3.12, born: 27-1-2014 11:31 */
+/* version: 0.3.12, born: 27-1-2014 14:40 */
 var Absurd = (function(w) {
 var lib = { 
     api: {},
@@ -815,8 +815,10 @@ var dom = function(el, parent) {
 		}
         switch(this.el.nodeName.toLowerCase()) {
         	case 'input':
-        		if(this.el.getAttribute('type') == 'radio' || this.el.getAttribute('type') == 'checkbox') {
+        		var type = this.el.getAttribute('type');
+        		if(type == 'radio' || type == 'checkbox') {
 	                var els = qsa('[name="' + this.el.getAttribute('name') + '"]', parent);
+	                var values = [];
 	                for(var i=0; i<els.length; i++) {
 	                    if(set && els[i].checked && els[i].value !== value) {
 	                        els[i].removeAttribute('checked');
@@ -824,9 +826,10 @@ var dom = function(el, parent) {
 	                    	els[i].setAttribute('checked', 'checked');
 	                    	els[i].checked = 'checked';
 	                    } else if(els[i].checked) {
-	                    	return els[i].value;
+	                    	values.push(els[i].value);
 	                    }
 	                }
+	                if(!set) { return type == 'radio' ? values[0] : values; }
 	            } else {
 	            	return useValueProperty.apply(this, [value]);
 	            }

@@ -52,7 +52,7 @@ describe("Testing components (dom)", function() {
 				this.qsa('[name="radio"]')[1].setAttribute('checked', 'checked');
 				expect(dom('[name="radio"]').val()).toBe('blah2');
 				this.qsa('[name="check-options"]')[1].setAttribute('checked', 'checked');
-				expect(dom('[name="check-options"]').val()).toBe('check2');
+				expect(dom('[name="check-options"]').val().join('')).toBe('check2');
 				expect(dom('.div').val()).toBe('div blah');
 				expect(dom('.span').val()).toBe('I\'m an inline');
 				expect(dom('.link').val()).toBe('I\'m a link');
@@ -60,7 +60,7 @@ describe("Testing components (dom)", function() {
 
 				expect(dom('textarea').val('new text').val()).toBe('new text');
 				expect(dom('[name="radio"]').val('blah1').val()).toBe('blah1');
-				expect(dom('[type="checkbox"]').val('check3').val()).toBe('check3');
+				expect(dom('[type="checkbox"]').val('check3').val().join('')).toBe('check3');
 				expect(dom('select').val('C').val()).toBe('C');
 				expect(dom('.input').val('dom').val()).toBe('dom');
 				expect(dom('.div').val('new content').val()).toBe('new content');
@@ -98,7 +98,7 @@ describe("Testing components (dom)", function() {
 						c: '[name="check-options"]'
 					}
 				}, '.form').val();
-				expect(JSON.stringify(values)).toBe('{"text":"new text","options":{"r":"blah1","c":"check3"}}');
+				expect(JSON.stringify(values)).toBe('{"text":"new text","options":{"r":"blah1","c":["check3"]}}');
 				done();
 			}
 		})();
@@ -113,5 +113,17 @@ describe("Testing components (dom)", function() {
 			}
 		})();
 	});	
+
+	it("should work with radio and checkboxes", function(done) {
+		absurd.component('TestingDOM', {
+			html: '.dom-test',
+		    constructor: function(dom) {
+		    	this.populate();
+		        expect(dom('[type="radio"]').val()).toBe('oB');
+		        expect(dom('[type="checkbox"]').val().join(',')).toBe('f2,f3');
+		        done();
+		    }
+		})();
+	});
 
 });
