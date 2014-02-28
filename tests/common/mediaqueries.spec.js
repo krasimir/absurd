@@ -30,7 +30,7 @@ describe("Media queries", function() {
 		}).compile(function(err, css) {
 			expect(err).toBe(null);
 			expect(css).toBeDefined();
-			expect(css).toBe('body{line-height: 20px;}body p{margin: 10px;padding: 4px;}@media all (max-width: 950px) {body{line-height: 40px;color: #BADA55;}body p{color: #9fA;padding: 12px;}}@media all (min-width: 550px) {body{line-height: 32px;}}');
+			expect(css).toBe('body{line-height: 20px;}body p{margin: 10px;padding: 4px;}@media all (max-width: 950px){body{line-height: 40px;color: #BADA55;}body p{color: #9fA;padding: 12px;}}@media all (min-width: 550px){body{line-height: 32px;}}');
 			done();
 		}, {minify: true});		
 	});

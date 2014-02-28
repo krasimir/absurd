@@ -6,27 +6,27 @@ describe("Test case (media)", function() {
 		Absurd(__dirname + '/code.js').compile(function(err, css) {
 			expect(err).toBe(null);
 			expect(css).toBeDefined();
-			expect(css).toBe('header {\n  font-size: 20px;\n}\n@media print {\nheader {\n  font-size: 30px;\n}\n}\n');
+			expect(css).toBe('header{font-size: 20px;}@media print{header{font-size: 30px;}}');
 			done();
-		});
+		}, { minify: true });
 	});
 
 	it("media / json", function(done) {
 		Absurd(__dirname + '/code.json').compile(function(err, css) {
 			expect(err).toBe(null);
 			expect(css).toBeDefined();
-			expect(css).toBe('header {\n  font-size: 20px;\n}\n@media print {\nheader {\n  font-size: 30px;\n}\n}\n');
+			expect(css).toBe('header{font-size: 20px;}@media print{header{font-size: 30px;}}');
 			done();
-		});
+		}, { minify: true });
 	});
 
 	it("media / css", function(done) {
 		Absurd(__dirname + '/code.css').compile(function(err, css) {
 			expect(err).toBe(null);
 			expect(css).toBeDefined();
-			expect(css).toBe('header {\n  font-size: 20px;\n}\n@media all (max-width: 950px) {\nheader {\n  font-size: 30px;\n}\n}\n');
+			expect(css).toBe('header{font-size: 20px;}@media all (max-width: 950px) {header{font-size: 30px;}}');
 			done();
-		});
+		}, { minify: true });
 	});
 
 });

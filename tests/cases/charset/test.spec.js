@@ -6,9 +6,9 @@ describe("Test case (charset)", function() {
 		Absurd(__dirname + '/code.js').compile(function(err, css) {
 			expect(err).toBe(null);
 			expect(css).toBeDefined();
-			expect(css).toBe('@charset: "UTF-8";\nbody {\n  width: 100%;\n}\n');
+			expect(css).toBe('@charset: "UTF-8";body{width: 100%;}');
 			done();
-		});
+		}, { minify: true });
 	});
 
 	it("charset / json", function(done) {

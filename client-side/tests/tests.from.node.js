@@ -299,7 +299,7 @@ describe("Media queries", function() {
 		}).compile(function(err, css) {
 			expect(err).toBe(null);
 			expect(css).toBeDefined();
-			expect(css).toBe('body{line-height: 20px;}body p{margin: 10px;padding: 4px;}@media all (max-width: 950px) {body{line-height: 40px;color: #BADA55;}body p{color: #9fA;padding: 12px;}}@media all (min-width: 550px) {body{line-height: 32px;}}');
+			expect(css).toBe('body{line-height: 20px;}body p{margin: 10px;padding: 4px;}@media all (max-width: 950px){body{line-height: 40px;color: #BADA55;}body p{color: #9fA;padding: 12px;}}@media all (min-width: 550px){body{line-height: 32px;}}');
 			done();
 		}, {minify: true});		
 	});
@@ -1133,7 +1133,7 @@ describe("Media queries bugs", function() {
 		}).compile(function(err, css) {
 			expect(err).toBe(null);
 			expect(css).toBeDefined();
-			expect(css).toBe("@media screen and (max-width: 767px) {a{color: red;}div{color: blue;}.some-class{color: green;}}");
+			expect(css).toBe("@media screen and (max-width: 767px){a{color: red;}div{color: blue;}.some-class{color: green;}}");
 			done();
 		}, { minify: true });
 	});
@@ -1164,7 +1164,7 @@ describe("Media queries bugs", function() {
 		}).compile(function(err, css) {
 			expect(err).toBe(null);
 			expect(css).toBeDefined();
-			expect(css).toBe("section .widget{font-size: 20px;}@media screen and (max-width: 767px) {section .widget{font-size: 30px;}section p a,a{color: red;}div{color: blue;}.some-class{color: green;}}@media screen and (max-width: 200px) {section p span{line-height: 10px;}}");
+			expect(css).toBe("section .widget{font-size: 20px;}@media screen and (max-width: 767px){section .widget{font-size: 30px;}section p a,a{color: red;}div{color: blue;}.some-class{color: green;}}@media screen and (max-width: 200px){section p span{line-height: 10px;}}");
 			done();
 		}, { minify: true });
 	});
@@ -1620,7 +1620,7 @@ describe("Nested components", function() {
 			expect(err).toBe(null);
 			expect(css).toBeDefined();
 			expect(html).toBeDefined();
-			expect(css).toBe("body{margin: 10px;width: 100%;height: 100%;padding: 0px;}body section{margin-top: 20px;}h1{font-weight: normal;}p,.title{font-size: 24px;}p{line-height: 28px;}@media all and (max-width: 640px) {body section{margin-top: 10px;}}");
+			expect(css).toBe("body{margin: 10px;width: 100%;height: 100%;padding: 0px;}body section{margin-top: 20px;}h1{font-weight: normal;}p,.title{font-size: 24px;}p{line-height: 28px;}@media all and (max-width: 640px){body section{margin-top: 10px;}}");
 			expect(html).toBe('<!DOCTYPE html><html><head><title>That\'s my page</title></head><body><h1 class="title">Hello world</h1><p>Text of the <b>page</b>.</p></body></html>');
 			done();
 		}, { minify: true })
