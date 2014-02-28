@@ -1,4 +1,4 @@
-/* version: 0.3.13, born: 27-1-2014 16:17 */
+/* version: 0.3.132, born: 28-1-2014 17:27 */
 var Absurd = (function(w) {
 var lib = { 
     api: {},
@@ -1205,7 +1205,7 @@ lib.api.add = function(API) {
 		// processing props
 		for(var prop in props) {
 			var type = typeof props[prop];
-			if(type !== 'object' && type !== 'function' && props[prop] !== false) {
+			if(type !== 'object' && type !== 'function' && props[prop] !== false && props[prop] !== true) {
 				if(checkAndExecutePlugin(selector, prop, props[prop], stylesheet, parentSelector) === false) {
 					// moving the selector to the top of the chain
 					if(_selector.indexOf("^") === 0) {
@@ -1217,6 +1217,10 @@ lib.api.add = function(API) {
 					prefixes.addPrefixes(prop, _props);
 				}
 			} else if(type === 'object') {
+				// classify
+				if(props[prop] && typeof props[prop].classify != 'undefined' && props[prop].classify === true) {
+					props[prop] = typeof props[prop].toJSON != 'undefined' ? props[prop].toJSON() : props[prop].toString();
+				}
 				_objects[prop] = props[prop];
 			} else if(type === 'function') {
 				_functions[prop] = props[prop];
