@@ -121,6 +121,10 @@ lib.api.add = function(API) {
 
 		// processing props
 		for(var prop in props) {
+			// classify
+			if(props[prop] && typeof props[prop].classify != 'undefined' && props[prop].classify === true) {
+				props[prop] = typeof props[prop].toJSON != 'undefined' ? props[prop].toJSON() : props[prop].toString();
+			}
 			var type = typeof props[prop];
 			if(type !== 'object' && type !== 'function' && props[prop] !== false && props[prop] !== true) {
 				if(checkAndExecutePlugin(selector, prop, props[prop], stylesheet, parentSelector) === false) {
@@ -134,10 +138,6 @@ lib.api.add = function(API) {
 					prefixes.addPrefixes(prop, _props);
 				}
 			} else if(type === 'object') {
-				// classify
-				if(props[prop] && typeof props[prop].classify != 'undefined' && props[prop].classify === true) {
-					props[prop] = typeof props[prop].toJSON != 'undefined' ? props[prop].toJSON() : props[prop].toString();
-				}
 				_objects[prop] = props[prop];
 			} else if(type === 'function') {
 				_functions[prop] = props[prop];

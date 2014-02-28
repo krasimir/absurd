@@ -18,7 +18,7 @@ describe("Using class as property", function() {
 		};
 		absurd.add({
 			body: {
-				wid: px(40).add(10)
+				width: px(40).add(10)
 			}
 		}).compile(function(err, css) {
 			expect(css).toBe('body{width: 50px;}');
