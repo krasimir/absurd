@@ -1,4 +1,4 @@
-/* version: 0.3.134, born: 28-1-2014 18:30 */
+/* version: 0.3.135, born: 2-2-2014 1:55 */
 var Absurd = (function(w) {
 var lib = { 
     api: {},
@@ -1149,7 +1149,8 @@ lib.api.add = function(API) {
 		prefixes = require("../helpers/Prefixes"),
 		toRegister = [],
 		options = {
-			combineSelectors: true
+			combineSelectors: true,
+			preventCombining: ['@font-face']
 		};
 
 	var checkAndExecutePlugin = function(selector, prop, value, stylesheet, parentSelector) {
@@ -1285,14 +1286,20 @@ lib.api.add = function(API) {
 		API.numOfAddedRules += 1;
 
 		if(typeof stylesheet === 'object' && typeof opts === 'undefined') {
-			options = stylesheet;
+			options = {
+				combineSelectors: typeof stylesheet.combineSelectors != 'undefined' ? stylesheet.combineSelectors : options.combineSelectors,
+				preventCombining: options.preventCombining.concat(stylesheet.preventCombining || [])
+			};
 			stylesheet = null;
 		}
 		if(typeof opts != 'undefined') {
-			options = opts;
+			options = {
+				combineSelectors: opts.combineSelectors || options.combineSelectors,
+				preventCombining: options.preventCombining.concat(opts.preventCombining || [])
+			};
 		}
 
-		var typeOfPreprocessor = API.defaultProcessor.type;
+		var typeOfPreprocessor = API.defaultProcessor.type, uid;
 
 		for(var selector in rules) {
 			addRule(selector, rules[selector], stylesheet || "mainstream");
@@ -1304,10 +1311,13 @@ lib.api.add = function(API) {
 				selector = toRegister[i].selector,
 				props = toRegister[i].props,
 				allRules = API.getRules(stylesheet);
+			var pc = options && options.preventCombining ? '|' + options.preventCombining.join('|') : '';
+			var uid = pc.indexOf('|' + selector) >= 0 ? '~~' + API.numOfAddedRules + '~~' : '';
 			// overwrite already added value
-			var current = allRules[selector] || {};
+			var current = allRules[uid + selector] || {};
 			for(var propNew in props) {
 				var value = props[propNew];
+				propNew = uid + propNew;
 				if(typeof value != 'object') {
 					if(typeOfPreprocessor == "css") {
 						// appending values
@@ -1332,7 +1342,7 @@ lib.api.add = function(API) {
 					
 				}
 			}
-			allRules[selector] = current;
+			allRules[uid + selector] = current;
 		}
 
 		return API;
@@ -1793,13 +1803,13 @@ var toCSS = function(rules, options, indent) {
 			css += rules[selector][selector] + newline;
 		// handling normal styles
 		} else {
-			var entity = indent[0] + selector + ' {' + newline;
+			var entity = indent[0] + selector.replace(/~~(.+)~~/, '') + ' {' + newline;
 			for(var prop in rules[selector]) {
 				var value = rules[selector][prop];
 				if(value === "") {
 					value = '""';
 				}
-				prop = prop.replace(/^%(.*)+?%/, '');
+				prop = prop.replace(/^%(.*)+?%/, '').replace(/~~(.+)~~/, '');
 				if(options && options.keepCamelCase === true) {
 					entity += indent[1] + prop + ': ' + value + ';' + newline;
 				} else {
@@ -1814,29 +1824,69 @@ var toCSS = function(rules, options, indent) {
 }
 
 // combining selectors
-var combineSelectors = function(rules) {
-	var map = {},
-		arr = {};
-	// creating the map
+var combineSelectors = function(rules, preventCombining) {
+
+	var map = [], arr = {};
+	var preventCombining = [].concat(preventCombining || []);
+	preventCombining.splice(0, 0, '');
+	preventCombining = preventCombining.join('|');
+
+	// extracting every property
 	for(var selector in rules) {
 		var props = rules[selector];
 		for(var prop in props) {
-			var value = props[prop];
-			if(!map[prop]) map[prop] = {};
-			if(!map[prop][value]) map[prop][value] = [];
-			map[prop][value].push(selector);
+			map.push({
+				selector: selector, 
+				prop: prop, 
+				value: props[prop], 
+				combine: preventCombining.indexOf('|' + prop) < 0
+			});
 		}
 	}
-	// converting the map to usual rules object
-	for(var prop in map) {
-		var values = map[prop];
-		for(var value in values) {
-			var selectors = values[value];
-			if(!arr[selectors.join(", ")]) arr[selectors.join(", ")] = {}
-			var selector = arr[selectors.join(", ")];
-			selector[prop] = value;	
-		}		
+
+	// combining
+	for(var i=0; i<map.length; i++) {
+		if(map[i].combine === true && map[i].selector !== false) {
+			for(var j=i+1;j<map.length; j++) {
+				if(map[i].prop === map[j].prop && map[i].value === map[j].value) {
+					map[i].selector += ', ' + map[j].selector;
+					map[j].selector = false; // marking for removal
+				}
+			}
+		}
 	}
+
+	// preparing the result
+	for(var i=0; i<map.length; i++) {
+		if(map[i].selector !== false) {
+			if(!arr[map[i].selector]) arr[map[i].selector] = {}
+			arr[map[i].selector][map[i].prop] = map[i].value;
+		}
+	}
+
+	// // creating the map
+	// for(var selector in rules) {
+	// 	var props = rules[selector];
+	// 	for(var prop in props) {
+	// 		if(preventCombining.indexOf(prop) < 0) {
+	// 			var value = props[prop];
+	// 			if(!map[prop]) map[prop] = {};
+	// 			if(!map[prop][value]) map[prop][value] = [];
+	// 			map[prop][value].push(selector);
+	// 		}
+	// 	}
+	// }
+	// // converting the map to usual rules object
+	// for(var prop in map) {
+	// 	var values = map[prop];
+	// 	for(var value in values) {
+	// 		var selectors = values[value];
+	// 		if(!arr[selectors.join(", ")]) arr[selectors.join(", ")] = {}
+	// 		var selector = arr[selectors.join(", ")];
+	// 		selector[prop] = value;	
+	// 	}		
+	// }
+	
 	return arr;
 }
 
@@ -1873,7 +1923,7 @@ lib.processors.css.CSS = function() {
 		var css = '';
 		for(var stylesheet in rules) {
 			var r = rules[stylesheet];
-			r = options.combineSelectors ? combineSelectors(r) : r;
+			r = options.combineSelectors ? combineSelectors(r, options.preventCombining) : r;
 			if(stylesheet === "mainstream") {
 				css += toCSS(r, options);
 			} else {

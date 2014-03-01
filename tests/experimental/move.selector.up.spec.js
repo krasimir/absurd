@@ -43,7 +43,7 @@ describe("Moving a selector to the top of the chain", function() {
 		        }
 		    }
 		}).compile(function(err, css) {
-			expect(css).toBe(".a .b{font-size: 10px;}.bg .a .b{font-size: 20px;}.de .a .b{font-size: 30px;}.a .b p{margin: 4px;}.en .a .b p{margin: 12px;}.en .a .b p small{width: 30%;}");
+			expect(css).toBe(".a .b{font-size: 10px;}.bg .a .b{font-size: 20px;}.a .b p{margin: 4px;}.en .a .b p{margin: 12px;}.en .a .b p small{width: 30%;}.de .a .b{font-size: 30px;}");
 			done();
 		}, { minify: true });
 	});

@@ -26,7 +26,7 @@ describe("Wrong handling of Array of Objects in Comma Separated Nested-Selectors
 		    }
 		});
 		api.compile(function(err, css) {
-			expect(css).toBe('body{background: red;}body section a,body section div{background: #e6e6e6;color: #999;margin-top: 20px;font-size: 16px;}');
+			expect(css).toBe('body{background: red;}body section a,body section div{color: #999;background: #e6e6e6;margin-top: 20px;font-size: 16px;}');
 			done();
 		}, {minify: true})
 	});
