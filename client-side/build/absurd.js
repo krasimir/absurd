@@ -1,4 +1,4 @@
-/* version: 0.3.137, born: 3-2-2014 15:49 */
+/* version: 0.3.138, born: 3-2-2014 18:19 */
 var Absurd = (function(w) {
 var lib = { 
     api: {},
@@ -872,6 +872,46 @@ var dom = function(el, parent) {
 	return api;
 }
 absurd.di.register('dom', dom);
+var mq = function(query, callback, usePolyfill) {
+	var host = mq.prototype.host;
+	var isMatchMediaSupported = !!(window && window.matchMedia) && !usePolyfill;
+	if(isMatchMediaSupported) {
+		var res = window.matchMedia(query);
+		callback.apply(host, [res.matches, res.media]);
+		res.addListener(function(changed) {
+			callback.apply(host, [changed.matches, changed.media]);
+		});
+	} else {
+		var id = ".match-media-" + absurd.components.numOfComponents;
+		var css = {}, html = {};
+		css[id] = { display: 'block' };
+		css[id]['@media ' + query] = { display: 'none' };
+		html['span' + id] = '';
+		absurd.component(id + '-component', {
+			css: css,
+			html: html,
+			intervaliTime: 30,
+			status: '',
+			loop: function(dom) {
+				var self = this;
+				if(this.el) {
+					var d = this.getStyle('display');
+					if(this.status != d) {
+						this.status = d;
+						callback.apply(host, [d === 'none'])
+					}
+				}
+				setTimeout(function() { self.loop(); }, this.intervaliTime);
+			},
+			constructor: ['dom', function(dom) {
+				var self = this;
+				this.set('parent', dom('body').el).populate();
+				setTimeout(function() { self.loop(); }, this.intervaliTime);
+			}]
+		})();
+	}
+};
+absurd.di.register('mq', mq);
 }
 var client = function() {
 	return function(arg) {
@@ -967,8 +1007,10 @@ var client = function() {
 			})
 
 			return exports = {
+				numOfComponents: 0,
 				events: events,
 				register: function(name, cls) {
+					this.numOfComponents += 1;
 					return comps[name] = function() {
 						var c = extend({}, Component(name, api, events, clone(cls)));
 						api.di.resolveObject(c);

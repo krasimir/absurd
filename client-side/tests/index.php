@@ -43,6 +43,7 @@
 	<script src="10.components.is.js"></script>
 	<script src="11.components.router.js"></script>
 	<script src="12.components.ajax.js"></script>
+	<script src="14.components.mediaqueries.js"></script>
 </head>
 <body>
 	<div id="content"></div>	

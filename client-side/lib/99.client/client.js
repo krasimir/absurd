@@ -92,8 +92,10 @@ var client = function() {
 			})
 
 			return exports = {
+				numOfComponents: 0,
 				events: events,
 				register: function(name, cls) {
+					this.numOfComponents += 1;
 					return comps[name] = function() {
 						var c = extend({}, Component(name, api, events, clone(cls)));
 						api.di.resolveObject(c);
