@@ -720,7 +720,8 @@ var toCSS = function(rules, options, indent) {
 			css += rules[selector][selector] + newline;
 		// handling normal styles
 		} else {
-			var entity = indent[0] + selector.replace(/~~(.+)~~/, '') + ' {' + newline;
+			var entityStyle = indent[0] + selector.replace(/~~(.+)~~/, '') + ' {' + newline;
+			var entity = '';
 			for(var prop in rules[selector]) {
 				var value = rules[selector][prop];
 				if(value === "") {
@@ -733,8 +734,11 @@ var toCSS = function(rules, options, indent) {
 					entity += indent[1] + transformUppercase(prop) + ': ' + value + ';' + newline;
 				}
 			}
-			entity += indent[0] + '}' + newline;
-			css += entity;
+			if(entity != '') {
+				entityStyle += entity;
+				entityStyle += indent[0] + '}' + newline;
+				css += entityStyle;
+			}
 		}
 	}
 	return css;
