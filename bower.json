@@ -1,0 +1,27 @@
+{
+  "name": "absurd",
+  "version": "0.3.138",
+  "main": "client-side/build/absurd.js",
+  "license": "MIT",
+  "ignore": [
+    "client-side/lib",
+    "client-side/lib-organic",
+    "client-side/tests",
+    "lib",
+    "tasks",
+    "tests",
+    "*.md",
+    "Gruntfile.js",
+    "package.json"
+  ],
+  "devDependencies": {
+    
+  },
+  "keywords": [
+    "absurd",
+    "absurdjs",
+    "preprocessor",
+    "javascript",
+    "library"
+  ]
+}
