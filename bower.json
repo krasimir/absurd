@@ -1,6 +1,6 @@
 {
   "name": "absurd",
-  "version": "0.3.138",
+  "version": "0.3.139",
   "main": "client-side/build/absurd.js",
   "license": "MIT",
   "ignore": [
@@ -11,8 +11,12 @@
     "tasks",
     "tests",
     "*.md",
+    "*.json",
     "Gruntfile.js",
-    "package.json"
+    "index.js",
+    ".travis.yml",
+    ".gitignore",
+    "benchmarks"
   ],
   "devDependencies": {
     
