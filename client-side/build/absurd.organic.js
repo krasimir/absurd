@@ -1,4 +1,4 @@
-/* version: 0.3.139, born: 4-2-2014 22:44 */
+/* version: 0.3.140, born: 5-2-2014 20:57 */
 var Organic = (function(w){
 var o = {
 	helpers: {},
@@ -1941,6 +1941,24 @@ break;
 	}
 	return r;
 }
+o.lib.molecules.blur = function(value) {
+	return {
+		'-wms-filter': 'blur(' + value + 'px)'
+	}
+}
+o.lib.molecules.brightness = function(value) {
+	return {
+		'-wms-filter': 'brightness(' + value + ')'
+	}
+}
+o.lib.molecules.calc = function(value) {
+	var args = require('../../helpers/args')(value), r = {};
+	r['LhProperty'] = '0';
+	r['~~1~~' + args[0]] = '-webkit-calc(' + args[1] + ')';
+	r['~~2~~' + args[0]] = '-moz-calc(' + args[1] + ')';
+	r['~~3~~' + args[0]] = 'calc(' + args[1] + ')';
+	return r;	
+}
 o.lib.molecules.cf = function(value) {
 	var r = {}, clearing = {
 		content: '" "',
@@ -1961,6 +1979,68 @@ o.lib.molecules.cf = function(value) {
 	}
 	return r;
 }
+o.lib.molecules.contrast = function(value) {
+	return {
+		'-wms-filter': 'contrast(' + value + '%)'
+	}
+}
+o.lib.molecules.dropshadow = function(value) {
+	return {
+		'-wms-filter': 'drop-shadow(' + value + ')'
+	}
+}
+var getMSColor = function(color) {
+	color = color.toString().replace('#', '');
+	if(color.length == 3) {
+		var tmp = '';
+		for(var i=0; i<color.length; i++) {
+			tmp += color[i] + color[i];
+		}
+		color = tmp;
+	}
+	return '#FF' + color.toUpperCase();
+}
+o.lib.molecules.gradient = function(value) {
+	var r = {},
+		args = require('../../helpers/args')(value);
+	switch(typeof value) {
+		case 'string':
+			var deg = args[args.length-1];
+			if(deg.indexOf('deg') > 0) {
+				deg = parseInt(args.pop().replace('deg', ''));
+			} else {
+				deg = 0;
+			}
+			var numOfStops = args.length,
+				stepsPercents = Math.floor(100 / (numOfStops-1)).toFixed(2),
+				gradientValue = [],
+				msGradientType = (deg >= 45 && deg <= 135) || (deg >= 225 && deg <= 315) ? 1 : 0,
+				msStartColor = msGradientType === 0 ? getMSColor(args[args.length-1]) : getMSColor(args[0]),
+				msEndColor = msGradientType === 0 ? getMSColor(args[0]) : getMSColor(args[args.length-1]);
+
+			for(var i=0; i<numOfStops; i++) {
+				if(args[i].indexOf('%') > 0) {
+					gradientValue.push(args[i]);
+				} else {
+					gradientValue.push(args[i] + ' ' + (i*stepsPercents) + '%');
+				}
+			}
+			gradientValue = deg + 'deg, ' + gradientValue.join(', ');
+			
+			return [
+				{ 'background': '-webkit-linear-gradient(' + gradientValue + ')' },
+				{ '~~1~~background': '-moz-linear-gradient(' + gradientValue + ')' },
+				{ '~~2~~background': '-ms-linear-gradient(' + gradientValue + ')' },
+				{ '~~3~~background': '-o-linear-gradient(' + gradientValue + ')' },
+				{ '~~4~~background': 'linear-gradient(' + gradientValue + ')' },
+				{ 'filter': 'progid:DXImageTransform.Microsoft.gradient(startColorstr=\'' + msStartColor + '\', endColorstr=\'' + msEndColor + '\',GradientType=' + msGradientType + ')' },
+				{ 'MsFilter': 'progid:DXImageTransform.Microsoft.gradient(startColorstr=\'' + msStartColor + '\',endColorstr=\'' + msEndColor + '\',GradientType=' + msGradientType + ')' }
+			]
+
+		break;
+	}
+	return {};
+}
 o.lib.molecules.grid = function(value) {
 	var args = require('../../helpers/args')(value);
 	if(args.length == 2) {
@@ -1975,6 +2055,11 @@ o.lib.molecules.grid = function(value) {
 		return res;
 	} else {
 		return {};
+	}
+}
+o.lib.molecules.invert = function(value) {
+	return {
+		'-wms-filter': 'invert(' + value + '%)'
 	}
 }
 o.lib.molecules.moveto = function(value) {
@@ -1996,12 +2081,22 @@ o.lib.molecules.rotateto = function(value) {
 		return {"-ws-trf": ">rotate(" + units(args[0], 'deg') + ")"};
 	}	
 }
+o.lib.molecules.saturate = function(value) {
+	return {
+		'-wms-filter': 'saturate(' + value + 'deg)'
+	}
+}
 o.lib.molecules.scaleto = function(value) {
 	var args = require('../../helpers/args')(value),
 		x = !args[0] || args[0] == '' ? 0 : args[0],
 		y = !args[1] || args[1] == '' ? 0 : args[1];
 	if(args.length == 2) {
 		return {"-ws-trf": ">scale(" + x + "," + y + ")"};
+	}
+}
+o.lib.molecules.sepia = function(value) {
+	return {
+		'-wms-filter': 'sepia(' + value + '%)'
 	}
 }
 o.lib.molecules.size = function(value) {

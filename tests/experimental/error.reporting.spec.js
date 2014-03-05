@@ -14,7 +14,7 @@ describe("Should report errors properly", function() {
 				done();
 			}, { minify: false });
 		} catch(err) {
-			expect(err.toString()).toBe('Error: Error adding: {"body":{"padding":"20px"}}');
+			expect(err.toString().indexOf('Error: Error adding: {"rules":{"body":{"padding":"20px"}}') >= 0).toBe(true);
 			done();
 		}
 	});

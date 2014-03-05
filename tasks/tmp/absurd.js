@@ -267,7 +267,7 @@ lib.api.add = function(API) {
 		return API;
 
 		} catch(err) {
-			throw new Error("Error adding: " + JSON.stringify(rules));
+			throw new Error("Error adding: " + JSON.stringify({rules: rules, error: err.toString()}));
 		}
 	}
 	return add;
