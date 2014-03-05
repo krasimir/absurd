@@ -154,17 +154,6 @@ describe("Testing molecules", function() {
 		}, { minify: true });
 	});
 
-	it("should use brightness", function(done) {
-		api.add({
-			'.container': {
-				calc: 'width/100% - 45px'
-			}
-		}).compile(function(err, css) {
-			expect(css).toBe(".container{-lh-property: 0;width: -webkit-calc(100% - 45px);width: -moz-calc(100% - 45px);width: calc(100% - 45px);}");
-			done();
-		}, { minify: true });
-	});
-
 	it("should use contrast", function(done) {
 		api.add({
 			'.container': {
@@ -172,28 +161,6 @@ describe("Testing molecules", function() {
 			}
 		}).compile(function(err, css) {
 			expect(css).toBe(".container{filter: contrast(230%);-webkit-filter: contrast(230%);-moz-filter: contrast(230%);-ms-filter: contrast(230%);}");
-			done();
-		}, { minify: true });
-	});
-
-	it("should use contrast", function(done) {
-		api.add({
-			'.container': {
-				dropshadow: '16px 16px 10px #000000'
-			}
-		}).compile(function(err, css) {
-			expect(css).toBe(".container{filter: drop-shadow(16px 16px 10px #000000);-webkit-filter: drop-shadow(16px 16px 10px #000000);-moz-filter: drop-shadow(16px 16px 10px #000000);-ms-filter: drop-shadow(16px 16px 10px #000000);}");
-			done();
-		}, { minify: true });
-	});
-
-	it("should use invert", function(done) {
-		api.add({
-			'.container': {
-				invert: 80
-			}
-		}).compile(function(err, css) {
-			expect(css).toBe(".container{filter: invert(80%);-webkit-filter: invert(80%);-moz-filter: invert(80%);-ms-filter: invert(80%);}");
 			done();
 		}, { minify: true });
 	});
@@ -227,6 +194,28 @@ describe("Testing molecules", function() {
 			}
 		}).compile(function(err, css) {
 			expect(css).toBe(".container{filter: sepia(80%);-webkit-filter: sepia(80%);-moz-filter: sepia(80%);-ms-filter: sepia(80%);}");
+			done();
+		}, { minify: true });
+	});
+
+	it("should use calc", function(done) {
+		api.add({
+			'.container': {
+				calc: 'width/100% - 45px'
+			}
+		}).compile(function(err, css) {
+			expect(css).toBe(".container{-lh-property: 0;width: -webkit-calc(100% - 45px);width: -moz-calc(100% - 45px);width: calc(100% - 45px);}");
+			done();
+		}, { minify: true });
+	});
+
+	it("should use dropshadow", function(done) {
+		api.add({
+			'.container': {
+				dropshadow: '16px 16px 10px #000000'
+			}
+		}).compile(function(err, css) {
+			expect(css).toBe(".container{filter: drop-shadow(16px 16px 10px #000000);-webkit-filter: drop-shadow(16px 16px 10px #000000);-moz-filter: drop-shadow(16px 16px 10px #000000);-ms-filter: drop-shadow(16px 16px 10px #000000);}");
 			done();
 		}, { minify: true });
 	});
