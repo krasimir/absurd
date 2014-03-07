@@ -1,4 +1,4 @@
-/* version: 0.3.140, born: 5-2-2014 20:57 */
+/* version: 0.3.141, born: 7-2-2014 19:2 */
 var Absurd = (function(w) {
 var lib = { 
     api: {},
@@ -2223,7 +2223,7 @@ var process = function(tagName, obj) {
 				switch(typeof value) {
 					case "string": addToChilds(process(directiveName, value)); break;
 					case "object": 
-						if(value.length && value.length > 0) {
+						if(value && value.length && value.length > 0) {
 							var tmp = '';
 							for(var i=0; v=value[i]; i++) {
 								tmp += process('', typeof v == "function" ? v() : v);

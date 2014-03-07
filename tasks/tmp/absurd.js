@@ -1098,7 +1098,7 @@ var process = function(tagName, obj) {
 				switch(typeof value) {
 					case "string": addToChilds(process(directiveName, value)); break;
 					case "object": 
-						if(value.length && value.length > 0) {
+						if(value && value.length && value.length > 0) {
 							var tmp = '';
 							for(var i=0; v=value[i]; i++) {
 								tmp += process('', typeof v == "function" ? v() : v);
