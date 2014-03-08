@@ -1,4 +1,4 @@
-/* version: 0.3.142, born: 8-2-2014 11:46 */
+/* version: 0.3.142, born: 8-2-2014 11:48 */
 var Absurd = (function(w) {
 var lib = { 
     api: {},
@@ -586,8 +586,8 @@ api.getStyle = getStyle;
 api.addClass = addClass;
 api.removeClass = removeClass;
 api.replaceClass = replaceClass;
-api.toggleClass = toggleClass;
 api.bind = bind;
+api.toggleClass = toggleClass;
 api.compileHTML = function(HTML, callback, data) {
 	absurd.flush().morph("html").add(HTML).compile(callback, data);
 };

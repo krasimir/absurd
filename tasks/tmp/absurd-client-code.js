@@ -584,8 +584,8 @@ api.getStyle = getStyle;
 api.addClass = addClass;
 api.removeClass = removeClass;
 api.replaceClass = replaceClass;
-api.toggleClass = toggleClass;
 api.bind = bind;
+api.toggleClass = toggleClass;
 api.compileHTML = function(HTML, callback, data) {
 	absurd.flush().morph("html").add(HTML).compile(callback, data);
 };
