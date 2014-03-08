@@ -416,23 +416,27 @@ api.__handleEvents = function(next) {
 		var self = this;
 		var registerEvent = function(el) {
 			var attrValue = el.getAttribute('data-absurd-event');
-			attrValue = attrValue.split(":");
-			if(attrValue.length >= 2) {
-				var eventType = attrValue[0];
-				var methodName = attrValue[1];
-				attrValue.splice(0, 2);
-				var args = attrValue;
-				if(!cache.events[eventType] || cache.events[eventType].indexOf(el) < 0) {
-					if(!cache.events[eventType]) cache.events[eventType] = [];
-					cache.events[eventType].push(el);
-					addEventListener(el, eventType, function(e) {
-						if(typeof self[methodName] === 'function') {
-							var f = self[methodName];
-							f.apply(self, [e].concat(args));
-						}
-					});
+			var processAttributes = function(attrValue) {
+				attrValue = attrValue.split(":");
+				if(attrValue.length >= 2) {
+					var eventType = attrValue[0];
+					var methodName = attrValue[1];
+					attrValue.splice(0, 2);
+					var args = attrValue;
+					if(!cache.events[eventType] || cache.events[eventType].indexOf(el) < 0) {
+						if(!cache.events[eventType]) cache.events[eventType] = [];
+						cache.events[eventType].push(el);
+						addEventListener(el, eventType, function(e) {
+							if(typeof self[methodName] === 'function') {
+								var f = self[methodName];
+								f.apply(self, [e].concat(args));
+							}
+						});
+					}
 				}
 			}
+			attrValue = attrValue.split(/, ?/g);
+			for(var i=0; i<attrValue.length; i++) processAttributes(attrValue[i]);
 		}
 		if(this.el.hasAttribute && this.el.hasAttribute('data-absurd-event')) {
 			registerEvent(this.el);
