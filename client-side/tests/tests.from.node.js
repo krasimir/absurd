@@ -2060,6 +2060,35 @@ describe("Metamorphosis (to html preprocessor)", function() {
 		});
 	});
 
+	it("should use expressioninside the tag", function(done) {
+		var html = '\
+			<ul id="todo-list">\
+				<% for(var i=0; todo = this.todos[i]; i++) { %>\
+				<li class="<% todo.completed ? \'completed\' : \'\' %>">\
+					<div class="view">\
+						<input class="toggle" type="checkbox" <% todo.completed ? \'checked\' : \'\'%>>\
+						<label><% todo.title %></label>\
+						<button class="destroy"></button>\
+					</div>\
+					<input class="edit" value="">\
+				</li>\
+				<% } %>\
+			</ul>\
+		';
+		api.morph("html").add(html).compile(function(err, html) {
+			expect(err).toBe(null);
+			expect(html).toBeDefined();
+			expect(html).toBe('<ul id="todo-list"><li class=""><div class="view"><input class="toggle" type="checkbox" ><label>A</label><button class="destroy"></button></div><input class="edit" value=""></li><li class="completed"><div class="view"><input class="toggle" type="checkbox" checked><label>B</label><button class="destroy"></button></div><input class="edit" value=""></li></ul>');
+			done();
+		}, {
+			minify: true,
+			todos: [
+				{ title: 'A', completed: false },
+				{ title: 'B', completed: true }
+			]
+		});
+	});
+
 });
 describe("Metamorphosis (to html preprocessor)", function() {
 
