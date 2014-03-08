@@ -262,6 +262,48 @@ describe("Testing components events", function() {
 		a.doSomething();
 	});
 
+	it("should use bind method with predefined args", function(done) {
+		absurd.components.flush();
+		var a = absurd.component('BindMethod2', {
+			doSomething: function() {
+				this.dispatch('bind-event', { data: 'Test' });
+			}
+		})();
+		absurd.component('BindMethod1', {
+			constructor: function() {
+				a.on('bind-event', this.bind(this.updateHandler, this, [42]));
+			},
+			updateHandler: function(answer, data) {
+				expect(this.__name).toBe('BindMethod1');
+				expect(data.data).toBe('Test');
+				expect(answer).toBe(42);
+				done();
+			}
+		})();
+		a.doSomething();
+	});
+
+	it("should use bind method with predefined args without scope", function(done) {
+		absurd.components.flush();
+		var a = absurd.component('BindMethod2', {
+			doSomething: function() {
+				this.dispatch('bind-event', { data: 'Test' });
+			}
+		})();
+		absurd.component('BindMethod1', {
+			constructor: function() {
+				a.on('bind-event', this.bind(this.updateHandler, [42]));
+			},
+			updateHandler: function(answer, data) {
+				expect(this.__name).toBe('BindMethod1');
+				expect(data.data).toBe('Test');
+				expect(answer).toBe(42);
+				done();
+			}
+		})();
+		a.doSomething();
+	});
+
 	it("should allow two events", function(done) {
 		absurd.components.register("TestingEvents", {
 			css: {

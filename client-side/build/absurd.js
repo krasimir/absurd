@@ -1,4 +1,4 @@
-/* version: 0.3.143, born: 8-2-2014 14:50 */
+/* version: 0.3.144, born: 8-2-2014 15:35 */
 var Absurd = (function(w) {
 var lib = { 
     api: {},
@@ -216,10 +216,11 @@ var toggleClass = function(className, el) {
     }
     return this;
 }
-var bind = function(func, scope) {
+var bind = function(func, scope, args) {
+    if(scope instanceof Array) { args = scope; scope = this; }
     if(!scope) scope = this;
     return function() {
-        func.apply(scope, Array.prototype.slice.call(arguments, 0));
+        func.apply(scope, (args || []).concat(Array.prototype.slice.call(arguments, 0)));
     }
 }
 var Component = function(componentName, absurd, eventBus, cls) {

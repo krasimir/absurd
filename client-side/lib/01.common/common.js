@@ -214,9 +214,10 @@ var toggleClass = function(className, el) {
     }
     return this;
 }
-var bind = function(func, scope) {
+var bind = function(func, scope, args) {
+    if(scope instanceof Array) { args = scope; scope = this; }
     if(!scope) scope = this;
     return function() {
-        func.apply(scope, Array.prototype.slice.call(arguments, 0));
+        func.apply(scope, (args || []).concat(Array.prototype.slice.call(arguments, 0)));
     }
 }
