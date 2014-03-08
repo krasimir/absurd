@@ -120,6 +120,14 @@
 		</form>
 	</div>
 
+	<div class="hidden">
+		<div class="content-events">
+			<% for(var i=0; i&lt;this.data.length; i++) { %>
+			<div class="text" data-absurd-event="click:remove:<% i %>">label <% this.data[i] %></div>
+			<% } %>
+		</div>
+	</div>
+
 	<script>
       (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
       (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
