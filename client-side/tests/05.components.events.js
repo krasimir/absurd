@@ -252,7 +252,6 @@ describe("Testing components events", function() {
 		absurd.component('BindMethod1', {
 			constructor: function() {
 				a.on('bind-event', this.bind(this.updateHandler));
-				done();
 			},
 			updateHandler: function(data) {
 				expect(this.__name).toBe('BindMethod1');
