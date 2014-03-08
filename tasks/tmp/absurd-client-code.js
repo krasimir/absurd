@@ -214,6 +214,12 @@ var toggleClass = function(className, el) {
     }
     return this;
 }
+var bind = function(func, scope) {
+    if(!scope) scope = this;
+    return function() {
+        func.apply(scope, Array.prototype.slice.call(arguments, 0));
+    }
+}
 var Component = function(componentName, absurd, eventBus, cls) {
 	var api = lib.helpers.Extend({
 		__name: componentName
@@ -579,6 +585,7 @@ api.addClass = addClass;
 api.removeClass = removeClass;
 api.replaceClass = replaceClass;
 api.toggleClass = toggleClass;
+api.bind = bind;
 api.compileHTML = function(HTML, callback, data) {
 	absurd.flush().morph("html").add(HTML).compile(callback, data);
 };

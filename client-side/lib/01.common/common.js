@@ -214,3 +214,9 @@ var toggleClass = function(className, el) {
     }
     return this;
 }
+var bind = function(func, scope) {
+    if(!scope) scope = this;
+    return function() {
+        func.apply(scope, Array.prototype.slice.call(arguments, 0));
+    }
+}

@@ -1,4 +1,4 @@
-/* version: 0.3.141, born: 7-2-2014 23:54 */
+/* version: 0.3.142, born: 8-2-2014 11:46 */
 var Absurd = (function(w) {
 var lib = { 
     api: {},
@@ -215,6 +215,12 @@ var toggleClass = function(className, el) {
         el.className = classes.join(' ');
     }
     return this;
+}
+var bind = function(func, scope) {
+    if(!scope) scope = this;
+    return function() {
+        func.apply(scope, Array.prototype.slice.call(arguments, 0));
+    }
 }
 var Component = function(componentName, absurd, eventBus, cls) {
 	var api = lib.helpers.Extend({
@@ -581,6 +587,7 @@ api.addClass = addClass;
 api.removeClass = removeClass;
 api.replaceClass = replaceClass;
 api.toggleClass = toggleClass;
+api.bind = bind;
 api.compileHTML = function(HTML, callback, data) {
 	absurd.flush().morph("html").add(HTML).compile(callback, data);
 };

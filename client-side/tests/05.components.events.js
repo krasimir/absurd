@@ -242,6 +242,27 @@ describe("Testing components events", function() {
 		})();
 	});
 
+	it("should use bind method", function(done) {
+		absurd.components.flush();
+		var a = absurd.component('BindMethod2', {
+			doSomething: function() {
+				this.dispatch('bind-event', { data: 'Test' });
+			}
+		})();
+		absurd.component('BindMethod1', {
+			constructor: function() {
+				a.on('bind-event', this.bind(this.updateHandler));
+				done();
+			},
+			updateHandler: function(data) {
+				expect(this.__name).toBe('BindMethod1');
+				expect(data.data).toBe('Test');
+				done();
+			}
+		})();
+		a.doSomething();
+	});
+
 });
 
 var absurd = Absurd();
