@@ -19,4 +19,17 @@ describe("Testing components (is)", function() {
 		})();
 	});
 
+	it("should use is.hidden", function(done) {
+		absurd.component('TestingIsAppended', {
+			html: {
+				p: 'Test'
+			},
+			constructor: function(is) {
+				this.populate();
+				expect(is.hidden()).toBe(true);
+				done();
+			}
+		})();
+	});
+
 });
