@@ -47,7 +47,7 @@ absurd.di.register('router', {
 		this.root = options && options.root ? '/' + this.clearSlashes(options.root) + '/' : '/';
 		return this;
 	},
-	listen: function() {
+	listen: function(loopInterval) {
 		var self = this;
 		var current = self.getFragment();
 		var fn = function() {
@@ -57,7 +57,7 @@ absurd.di.register('router', {
 			}
 		}
 		clearInterval(this.interval);
-		this.interval = setInterval(fn, 50);
+		this.interval = setInterval(fn, loopInterval || 50);
 		return this;
 	},
 	check: function(f) {
