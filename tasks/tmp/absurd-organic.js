@@ -2076,3 +2076,8 @@ o.lib.molecules.transparent = function(value) {
 	r['KhtmlOpacity'] = value;
 	return r;
 }
+o.lib.molecules.trsform = function(value) {
+	return {
+		'-wmso-transform': value
+	}
+}

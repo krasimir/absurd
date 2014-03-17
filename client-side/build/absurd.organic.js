@@ -1,4 +1,4 @@
-/* version: 0.3.145, born: 10-2-2014 16:20 */
+/* version: 0.3.147, born: 17-2-2014 23:10 */
 var Organic = (function(w){
 var o = {
 	helpers: {},
@@ -2128,6 +2128,11 @@ o.lib.molecules.transparent = function(value) {
 	r['opacity'] = value;
 	r['KhtmlOpacity'] = value;
 	return r;
+}
+o.lib.molecules.trsform = function(value) {
+	return {
+		'-wmso-transform': value
+	}
 };
 return o.index;
 })(window);

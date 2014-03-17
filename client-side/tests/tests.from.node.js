@@ -3053,6 +3053,17 @@ describe("Testing molecules", function() {
 		}, { minify: true });
 	});
 
+	it("should use trsform", function(done) {
+		api.add({
+			'.container': {
+				trsform: 'rotate(-20deg) scale(1.2, 1.2)'
+			}
+		}).compile(function(err, css) {
+			expect(css).toBe(".container{transform: rotate(-20deg) scale(1.2,1.2);-webkit-transform: rotate(-20deg) scale(1.2,1.2);-moz-transform: rotate(-20deg) scale(1.2,1.2);-ms-transform: rotate(-20deg) scale(1.2,1.2);-o-transform: rotate(-20deg) scale(1.2,1.2);}");
+			done();
+		}, { minify: true });
+	});
+
 });
 describe("Moving a selector to the top of the chain", function() {
 
