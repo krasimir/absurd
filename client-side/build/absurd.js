@@ -1,4 +1,4 @@
-/* version: 0.3.147, born: 17-2-2014 23:10 */
+/* version: 0.3.148, born: 19-2-2014 20:10 */
 var Absurd = (function(w) {
 var lib = { 
     api: {},
@@ -2376,7 +2376,11 @@ lib.processors.html.helpers.PropAnalyzer = function(prop) {
 	return res;
 }
 lib.processors.html.helpers.TemplateEngine = function(html, options) {
-	var re = /<%(.+?)%>/g, reExp = /(^( )?(var|if|for|else|switch|case|break|{|}|;))(.*)?/g, code = 'var r=[];\n', cursor = 0, result;
+	var re = /<%(.+?)%>/g, 
+		reExp = /(^( )?(var|if|for|else|switch|case|break|{|}|;))(.*)?/g, 
+		code = 'with(obj) { var r=[];\n', 
+		cursor = 0, 
+		result;
 	var add = function(line, js) {
 		js? (code += line.match(reExp) ? line + '\n' : 'r.push(' + line + ');\n') :
 			(code += line != '' ? 'r.push("' + line.replace(/"/g, '\\"') + '");\n' : '');
@@ -2387,8 +2391,8 @@ lib.processors.html.helpers.TemplateEngine = function(html, options) {
 		cursor = match.index + match[0].length;
 	}
 	add(html.substr(cursor, html.length - cursor));
-	code = (code + 'return r.join("");').replace(/[\r\t\n]/g, '');
-	try { result = new Function(code).apply(options); }
+	code = (code + 'return r.join(""); }').replace(/[\r\t\n]/g, '');
+	try { result = new Function('obj', code).apply(options, [options]); }
 	catch(err) { console.error("'" + err.message + "'", " in \n\nCode:\n", code, "\n"); }
 	return result;
 };
