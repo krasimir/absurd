@@ -1,4 +1,4 @@
-/* version: 0.3.148, born: 19-2-2014 20:10 */
+/* version: 0.3.149, born: 19-2-2014 23:51 */
 var Absurd = (function(w) {
 var lib = { 
     api: {},
@@ -1233,6 +1233,11 @@ lib.api.add = function(API) {
 		// catching null values
 		if(props === null || typeof props === 'undefined' || props === false) return;
 		if(!parentSelector && !selector) selector = '';
+
+		// classify
+		if(typeof props.classify != 'undefined' && props.classify === true) {
+			props = typeof props.toJSON != 'undefined' ? props.toJSON() : props.toString();
+		}
 
 		// multiple selectors
 		if(/, ?/g.test(selector) && options.combineSelectors) {

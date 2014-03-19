@@ -93,6 +93,11 @@ lib.api.add = function(API) {
 		if(props === null || typeof props === 'undefined' || props === false) return;
 		if(!parentSelector && !selector) selector = '';
 
+		// classify
+		if(typeof props.classify != 'undefined' && props.classify === true) {
+			props = typeof props.toJSON != 'undefined' ? props.toJSON() : props.toString();
+		}
+
 		// multiple selectors
 		if(/, ?/g.test(selector) && options.combineSelectors) {
 			var parts = selector.replace(/, /g, ',').split(',');
