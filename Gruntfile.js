@@ -14,6 +14,7 @@ module.exports = function(grunt) {
 					'!lib/api/handlecssrule.js',
 					'!lib/api/handlecssimport.js',
 					'!lib/api/import.js',
+					'!lib/api/importCSS.js',
 					'!lib/processors/css/organic/**/*.*',
 					'!lib/helpers/CSS2JSON.js'
 				],
@@ -82,6 +83,7 @@ module.exports = function(grunt) {
 					'!tests/common/variables-and-functions.spec.js',
 					'!tests/common/adding-raw-external-data.spec.js',
 					'!tests/common/define.external.css.spec.js',
+					'!tests/common/api-importCSS.spec.js',
 					'!tests/metamorphosis/html/morph.html.import.spec.js',
 					'!tests/metamorphosis/html/morph.html.indentation.spec.js',
 					'!tests/bugs/css.import.multiple.classes.spec.js',
