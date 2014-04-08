@@ -39,6 +39,8 @@ var require = function(v) {
         return lib.helpers.Prefixes;
     } else if(v == __dirname + '/../../../../') {
         return Absurd;
+    } else if(v == '../helpers/CSSParse') {
+        return lib.helpers.CSSParse;
     } else {
         return function() {}
     }

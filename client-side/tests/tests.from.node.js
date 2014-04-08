@@ -25,6 +25,36 @@ describe("Adding raw data", function() {
 	});
 	
 });
+describe("Should use import CSS", function() {
+
+	var api = require('../../index.js')();
+	var css = '\
+	.header {\
+		margin: 0;\
+		font-size: 20px;\
+	}\
+	.header p {\
+		line-height: 22px;\
+	}\
+	@media all and (max-width: 460px) {\
+		.header p {\
+			line-height: 33px;\
+			color: #000;\
+		}\
+	}';
+
+	it("should compile properly", function(done) {
+		api
+		.importCSS(css)
+		.add({ '.header': { mar: '10px 20px' }})
+		.add({ '.header p': { color: '#FFF' }})
+		.compile(function(err, css) {
+			expect(css).toBe('.header{margin: 10px 20px;font-size: 20px;}.header p{line-height: 22px;color: #FFF;}@media all and (max-width: 460px) {.header p{line-height: 33px;color: #000;}}');
+			done();
+		}, { minify: true });
+	});
+
+});
 describe("API(add)", function() {
 
 	var Absurd = require('../../index.js');
@@ -2511,6 +2541,73 @@ describe("Metamorphosis (to html preprocessor)", function() {
 			expect(html).toBe('<div class="content">test</div>');
 			done();
 		}, { minify: true });
+	});
+
+});
+describe("Should use jsonify", function() {
+
+	var api = require('../../index.js')();
+	var api2 = require('../../index.js')();
+	var css = '@keyframes NAME-YOUR-ANIMATION {\n\
+0% {\n\
+  opacity: 0;\n\
+}\n\
+100% {\n\
+  opacity: 1;\n\
+}\n\
+}\n\
+@-webkit-keyframes NAME-YOUR-ANIMATION {\n\
+0% {\n\
+  opacity: 0;\n\
+}\n\
+100% {\n\
+  opacity: 1;\n\
+}\n\
+}\n\
+.header {\n\
+  margin: 0;\n\
+  font-size: 20px;\n\
+}\n\
+.header p {\n\
+  line-height: 22px;\n\
+  box-sizing: border-box;\n\
+}\n\
+@media all and (max-width: 460px) {\n\
+  .header p {\n\
+    line-height: 33px;\n\
+    color: #000;\n\
+    padding-top: 10px;\n\
+  }\n\
+}\n';
+
+	it("should compile properly by using jsonify", function(done) {
+		api
+		.morph('jsonify')
+		.add({
+			body: {
+				p: { fz: '20px'},
+				a: { ted: 'n'}
+			},
+			'@media all and (max-width: 330px)': {
+				p: { fz: '22px' }
+			}
+		})
+		.compile(function(err, json) {
+			expect(JSON.stringify(json)).toBe('{"body":{"p":{"fz":"20px"},"a":{"ted":"n"}},"@media all and (max-width: 330px)":{"p":{"fz":"22px"}}}');
+			done();
+		});
+	});	
+
+	it("should compile properly by using jsonify and importCSS", function(done) {
+		api
+		.morph('jsonify')
+		.importCSS(css)
+		.compile(function(err, json) {
+			api2.add(json).compile(function(err, cssFinal) {
+				expect(css).toBe(cssFinal);
+				done();
+			});
+		});
 	});
 
 });

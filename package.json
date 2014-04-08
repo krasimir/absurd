@@ -1,6 +1,6 @@
 {
   "name": "absurd",
-  "version": "0.3.152",
+  "version": "0.3.154",
   "homepage": "http://absurdjs.com/",
   "description": "JavaScript library with superpowers - http://absurdjs.com/",
   "main": "./index.js",
@@ -16,8 +16,7 @@
     "gaze": "0.5.1",
     "glob": "3.2.8",
     "js-yaml": "3.0.1",
-    "js-beautify": "1.4.2",
-    "css-parse": "1.7.0"
+    "js-beautify": "1.4.2"
   },
   "devDependencies": {
     "grunt": "0.4.2",
