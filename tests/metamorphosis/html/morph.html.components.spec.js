@@ -41,7 +41,7 @@ describe("Metamorphosis (to html preprocessor)", function() {
 		}).compile(function(err, html) {
 			expect(err).toBe(null);
 			expect(html).toBeDefined();
-			expect(html).toBe('<html><head><title>html page</title></head><body><form><label>Please fill the form</label><input type="text" placeholder="Please type your username" name="username"/><input type="text" placeholder="Please type your email" name="email"/><input type="submit" value="submit the data"/></form></body></html>');
+			expect(html).toBe('<html><head><title>html page</title></head><body><form><label>Please fill the form</label><input type="text" placeholder="Please type your username" name="username"></input><input type="text" placeholder="Please type your email" name="email"></input><input type="submit" value="submit the data"></input></form></body></html>');
 			done();
 		}, { minify: true });
 	});

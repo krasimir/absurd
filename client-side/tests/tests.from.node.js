@@ -1459,6 +1459,18 @@ describe("Should allow the usage of null param in the HTML morphing", function()
 		}, { minify: true });
 	});
 
+	it("should compile properly (diff between null and empty string)", function(done) {
+		api.morph('html').add({
+			'form' : {
+			    'input#myId.clas1.clas2': null,
+			    'i.fa.fa-home': ''
+			}
+		}).compile(function(err, html) {
+			expect(html).toBe('<form><input class="clas1 clas2" id="myId"/><i class="fa fa-home"></i></form>');
+			done();
+		}, { minify: true });
+	});
+
 });
 describe("Should call animate without holder", function() {
 
@@ -1843,7 +1855,7 @@ describe("Metamorphosis (to html preprocessor)", function() {
 		}).compile(function(err, html) {
 			expect(err).toBe(null);
 			expect(html).toBeDefined();
-			expect(html).toBe('<html><head><title>page title</title><style/></head><body/></html>');
+			expect(html).toBe('<html><head><title>page title</title><style></style></head><body></body></html>');
 			done();
 		}, { minify: true });
 	});
@@ -1911,7 +1923,7 @@ describe("Metamorphosis (to html preprocessor)", function() {
 		}).compile(function(err, html) {
 			expect(err).toBe(null);
 			expect(html).toBeDefined();
-			expect(html).toBe('<!DOCTYPE html><html><head><title>html page</title><meta http-equiv="Content-Type" content="text/html; charset=utf-8"/></head><body class="home-page"><section><h1>that\'s html page</h1></section></body></html>');
+			expect(html).toBe('<!DOCTYPE html><html><head><title>html page</title><meta http-equiv="Content-Type" content="text/html; charset=utf-8"></meta></head><body class="home-page"><section><h1>that\'s html page</h1></section></body></html>');
 			done();
 		}, { minify: true });
 	});
@@ -1960,7 +1972,7 @@ describe("Metamorphosis (to html preprocessor)", function() {
 		}).compile(function(err, html) {
 			expect(err).toBe(null);
 			expect(html).toBeDefined();
-			expect(html).toBe('<html><head><title>html page</title></head><body><form><label>Please fill the form</label><input type="text" placeholder="Please type your username" name="username"/><input type="text" placeholder="Please type your email" name="email"/><input type="submit" value="submit the data"/></form></body></html>');
+			expect(html).toBe('<html><head><title>html page</title></head><body><form><label>Please fill the form</label><input type="text" placeholder="Please type your username" name="username"></input><input type="text" placeholder="Please type your email" name="email"></input><input type="submit" value="submit the data"></input></form></body></html>');
 			done();
 		}, { minify: true });
 	});
@@ -2189,7 +2201,7 @@ describe("Metamorphosis (to html preprocessor)", function() {
 		}
 		var logo = {
 			".logo": {
-				'img[src="#"]': {}
+				'img[src="#"]': null
 			}
 		}
 		var nav = {
@@ -2231,7 +2243,7 @@ describe("Metamorphosis (to html preprocessor)", function() {
 				section: [
 					{ p: "test" },
 					{ p: "lorem ipsum" },
-					{ img: {} }
+					{ img: null }
 				]
 			}
 		}).compile(function(err, html) {
@@ -2272,7 +2284,7 @@ describe("Metamorphosis (to html preprocessor)", function() {
 
 	it("should compile an empty tag", function(done) {
 		api.morph("html").add({
-			body: {}
+			body: null
 		}).compile(function(err, html) {
 			expect(err).toBe(null);
 			expect(html).toBeDefined();
@@ -2300,7 +2312,7 @@ describe("Metamorphosis (to html preprocessor)", function() {
 		}).compile(function(err, html) {
 			expect(err).toBe(null);
 			expect(html).toBeDefined();
-			expect(html).toBe('<body class="black"/>');
+			expect(html).toBe('<body class="black"></body>');
 			done();
 		}, { minify: true });
 	});
@@ -2351,7 +2363,7 @@ describe("Metamorphosis (to html preprocessor)", function() {
 				head: {
 					title: "title"
 				},
-				body: {}
+				body: null
 			}
 		}).compile(function(err, html) {
 			expect(err).toBe(null);
@@ -2505,7 +2517,7 @@ describe("Metamorphosis (to html preprocessor)", function() {
 	it("should pass attributes", function(done) {
 		var tags = {
 			'.content[data-behaviour="clickable" title="test" style="position: absolute; top: 20px; left: 30px;"]#home': {
-				'img[alt="that\'s my image" some__data="1"]': {}
+				'img[alt="that\'s my image" some__data="1"]': null
 			}
 		}
 		api.morph("html").add(tags).compile(function(err, html) {

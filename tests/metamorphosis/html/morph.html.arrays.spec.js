@@ -15,7 +15,7 @@ describe("Metamorphosis (to html preprocessor)", function() {
 		}).compile(function(err, html) {
 			expect(err).toBe(null);
 			expect(html).toBeDefined();
-			expect(html).toBe('<html><head><title>page title</title><style/></head><body/></html>');
+			expect(html).toBe('<html><head><title>page title</title><style></style></head><body></body></html>');
 			done();
 		}, { minify: true });
 	});

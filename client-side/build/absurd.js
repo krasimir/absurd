@@ -1,4 +1,4 @@
-/* version: 0.3.154, born: 9-3-2014 0:16 */
+/* version: 0.3.156, born: 13-3-2014 1:29 */
 var Absurd = (function(w) {
 var lib = { 
     api: {},
@@ -2837,7 +2837,7 @@ var process = function(tagName, obj) {
 		attrs += " " + tagAnalized.attrs;
 	}
 
-	if(typeof obj === "string") {
+	if(typeof obj === "string" || obj === null) {
 		return packTag(tagName, attrs, obj);
 	}
 
@@ -2925,7 +2925,7 @@ var packTag = function(tagName, attrs, childs) {
 		return childs;
 	}
 	tagName = tagName == '' ? 'div' : tagName;
-	if(childs !== '') {
+	if(childs !== null) {
 		html += '<' + prepareProperty(tagName, passedOptions) + attrs + '>' + newline + childs + newline + '</' + prepareProperty(tagName, passedOptions) + '>';
 	} else {
 		html += '<' + prepareProperty(tagName, passedOptions) + attrs + '/>';

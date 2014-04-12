@@ -12,7 +12,7 @@ describe("Metamorphosis (to html preprocessor)", function() {
 		}
 		var logo = {
 			".logo": {
-				'img[src="#"]': {}
+				'img[src="#"]': null
 			}
 		}
 		var nav = {

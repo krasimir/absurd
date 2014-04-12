@@ -9,7 +9,7 @@ describe("Metamorphosis (to html preprocessor)", function() {
 				section: [
 					{ p: "test" },
 					{ p: "lorem ipsum" },
-					{ img: {} }
+					{ img: null }
 				]
 			}
 		}).compile(function(err, html) {

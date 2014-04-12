@@ -75,7 +75,7 @@ describe("Metamorphosis (to html preprocessor)", function() {
 	it("should pass attributes", function(done) {
 		var tags = {
 			'.content[data-behaviour="clickable" title="test" style="position: absolute; top: 20px; left: 30px;"]#home': {
-				'img[alt="that\'s my image" some__data="1"]': {}
+				'img[alt="that\'s my image" some__data="1"]': null
 			}
 		}
 		api.morph("html").add(tags).compile(function(err, html) {

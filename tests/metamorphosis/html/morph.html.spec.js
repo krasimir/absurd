@@ -4,7 +4,7 @@ describe("Metamorphosis (to html preprocessor)", function() {
 
 	it("should compile an empty tag", function(done) {
 		api.morph("html").add({
-			body: {}
+			body: null
 		}).compile(function(err, html) {
 			expect(err).toBe(null);
 			expect(html).toBeDefined();
@@ -32,7 +32,7 @@ describe("Metamorphosis (to html preprocessor)", function() {
 		}).compile(function(err, html) {
 			expect(err).toBe(null);
 			expect(html).toBeDefined();
-			expect(html).toBe('<body class="black"/>');
+			expect(html).toBe('<body class="black"></body>');
 			done();
 		}, { minify: true });
 	});
@@ -83,7 +83,7 @@ describe("Metamorphosis (to html preprocessor)", function() {
 				head: {
 					title: "title"
 				},
-				body: {}
+				body: null
 			}
 		}).compile(function(err, html) {
 			expect(err).toBe(null);
