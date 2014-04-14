@@ -2,7 +2,6 @@
 
 [![Build Status](https://travis-ci.org/krasimir/absurd.png?branch=master)](https://travis-ci.org/krasimir/absurd)
 [![Dependency Status](https://david-dm.org/krasimir/absurd.png?theme=shields.io)](https://david-dm.org/krasimir/absurd)
-[![Analytics](https://ga-beacon.appspot.com/UA-1621908-3/absurd/readme)](https://github.com/krasimir/absurd)
 
 ## Overview
 
