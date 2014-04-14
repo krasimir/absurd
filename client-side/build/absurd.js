@@ -1,4 +1,4 @@
-/* version: 0.3.156, born: 13-3-2014 1:29 */
+/* version: 0.3.157, born: 14-3-2014 18:31 */
 var Absurd = (function(w) {
 var lib = { 
     api: {},
@@ -2485,7 +2485,8 @@ var toCSS = function(rules, options, indent) {
 				if(value === "") {
 					value = '""';
 				}
-				prop = prop.replace(/^%(.*)+?%/, '').replace(/~~(.+)~~/, '');
+				prop = prop.replace(/~~(.+)~~/, '');
+				prop = prop.replace(/^%(.*)+?%/, '');
 				if(options && options.keepCamelCase === true) {
 					entity += indent[1] + prop + ': ' + value + ';' + newline;
 				} else {

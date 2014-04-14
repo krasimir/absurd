@@ -1303,7 +1303,8 @@ var toCSS = function(rules, options, indent) {
 				if(value === "") {
 					value = '""';
 				}
-				prop = prop.replace(/^%(.*)+?%/, '').replace(/~~(.+)~~/, '');
+				prop = prop.replace(/~~(.+)~~/, '');
+				prop = prop.replace(/^%(.*)+?%/, '');
 				if(options && options.keepCamelCase === true) {
 					entity += indent[1] + prop + ': ' + value + ';' + newline;
 				} else {

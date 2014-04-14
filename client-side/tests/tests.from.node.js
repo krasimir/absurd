@@ -3304,6 +3304,19 @@ describe("Should allow setting styles with same names", function() {
 		}, { minify: true });
 	});
 
+	it("should compile properly", function(done) {
+		api.add({
+		    '@font-face': [
+		        { fontFamily: "'gethuman'" },
+		        { '%1%src': "url('../fonts/gh2.eot')"},
+		        { '%%src': "url('../fonts/gh2.eot?#iefix')"		        }
+		    ]
+		}).compile(function(err, css) {
+			expect(css).toBe("@font-face{font-family: 'gethuman';src: url('../fonts/gh2.eot');src: url('../fonts/gh2.eot?#iefix');}");
+			done();
+		}, { minify: true });
+	});
+
 });
 describe("Should report errors properly", function() {
 
