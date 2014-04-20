@@ -1133,12 +1133,13 @@ var client = function() {
 				api: _api
 			};
 			options = extend(defaultOptions, options || {});
-			options.processor(
+			var res = options.processor(
 				_api.getRules(),
 				callback || function() {},
 				options
 			);
 			_api.flush();
+			return res;
 		}
 
 		// registering api methods
