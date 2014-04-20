@@ -1,4 +1,4 @@
-/* version: 0.3.157, born: 14-3-2014 18:31 */
+/* version: 0.3.16, born: 20-3-2014 23:31 */
 var Absurd = (function(w) {
 var lib = { 
     api: {},
@@ -1135,12 +1135,13 @@ var client = function() {
 				api: _api
 			};
 			options = extend(defaultOptions, options || {});
-			options.processor(
+			var res = options.processor(
 				_api.getRules(),
 				callback || function() {},
 				options
 			);
 			_api.flush();
+			return res;
 		}
 
 		// registering api methods
@@ -1468,7 +1469,7 @@ var extend = require("../helpers/Extend");
 
 lib.api.compile = function(api) {
 	return function() {
-		var path = null, callback = null, options = null;
+		var path = null, callback = function() {}, options = null;
 		for(var i=0; i<arguments.length; i++) {
 			switch(typeof arguments[i]) {
 				case "function": callback = arguments[i]; break;
@@ -1486,7 +1487,7 @@ lib.api.compile = function(api) {
 		};
 		options = extend(_defaultOptions, options || {});
 
-		options.processor(
+		return options.processor(
 			api.getRules(),
 			function(err, result) {
 				if(path != null) {
@@ -1507,6 +1508,7 @@ lib.api.compile = function(api) {
 		
 	}
 }
+
 lib.api.compileFile = function(api) {
 	return api.compile;
 }

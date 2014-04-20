@@ -286,7 +286,7 @@ var extend = require("../helpers/Extend");
 
 lib.api.compile = function(api) {
 	return function() {
-		var path = null, callback = null, options = null;
+		var path = null, callback = function() {}, options = null;
 		for(var i=0; i<arguments.length; i++) {
 			switch(typeof arguments[i]) {
 				case "function": callback = arguments[i]; break;
@@ -304,7 +304,7 @@ lib.api.compile = function(api) {
 		};
 		options = extend(_defaultOptions, options || {});
 
-		options.processor(
+		return options.processor(
 			api.getRules(),
 			function(err, result) {
 				if(path != null) {
@@ -325,6 +325,7 @@ lib.api.compile = function(api) {
 		
 	}
 }
+
 lib.api.compileFile = function(api) {
 	return api.compile;
 }

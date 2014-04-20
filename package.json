@@ -1,6 +1,6 @@
 {
   "name": "absurd",
-  "version": "0.3.158",
+  "version": "0.3.16",
   "homepage": "http://absurdjs.com/",
   "description": "JavaScript library with superpowers - http://absurdjs.com/",
   "main": "./index.js",
