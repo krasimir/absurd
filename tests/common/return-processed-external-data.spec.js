@@ -1,4 +1,4 @@
-describe("Should return the processed data", function() {
+describe("Should return the processed external data", function() {
 
 	var api = require('../../index.js')();
 
