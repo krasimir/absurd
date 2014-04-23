@@ -46,7 +46,7 @@ AbsurdJS was started as CSS preprocessor, but later it was expanded to a HTML pr
 ## Contributton and feedback
 
 * [Issues](https://github.com/krasimir/absurd/issues)
-* [#absurdjs IRC channel at freenode](irc://irc.freenode.net/absurdjs)
+* IRC channel at freenode.net: #absurdjs
 
 ## Resources
 
