@@ -48,6 +48,7 @@ AbsurdJS was started as CSS preprocessor, but later it was expanded to a HTML pr
 * [Issues](https://github.com/krasimir/absurd/issues)
 * IRC channel at freenode.net: #absurdjs
 
+=======
 ## Extended
 
 Middleware
@@ -70,8 +71,10 @@ Frameworks
 CMSs
 * [Techy](https://github.com/krasimir/techy) Super-Simple Flat CMS utilising Markdown as the geeky way of writing articles
 
+=======
 ## Resources
 
   - AbsurdJS fundamentals - [link](http://krasimirtsonev.com/blog/article/AbsurdJS-fundamentals)
   - Writing your CSS with JavaScript - [link](http://davidwalsh.name/write-css-javascript)
+  - Componentizing the Web - [link](http://code.tutsplus.com/tutorials/componentizing-the-web--cms-20602)
 
