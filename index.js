@@ -22,6 +22,6 @@ module.exports = absurd = function(func) {
 process.on('uncaughtException', function (err) {
     console.log("Error packing", err);
 });
-
+ 
 // cli
 cli(argv, absurd);
