@@ -14,6 +14,7 @@ module.exports = function(grunt) {
 					'!lib/api/handlecssrule.js',
 					'!lib/api/handlecssimport.js',
 					'!lib/api/import.js',
+					'!lib/api/express.js',
 					'!lib/processors/css/organic/**/*.*',
 					'!lib/helpers/CSS2JSON.js'
 				],

@@ -1,0 +1,4 @@
+{
+	"h1": "<% data.title %>",
+	"p": "Welcome to <% data.title %>"
+}
