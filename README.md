@@ -70,12 +70,6 @@ Frameworks
 CMSs
 * [Techy](https://github.com/krasimir/techy) Super-Simple Flat CMS utilising Markdown as the geeky way of writing articles
 
-## Resources
-
-  - AbsurdJS fundamentals - [link](http://krasimirtsonev.com/blog/article/AbsurdJS-fundamentals)
-  - Writing your CSS with JavaScript - [link](http://davidwalsh.name/write-css-javascript)
-  - Componentizing the Web - [link](http://code.tutsplus.com/tutorials/componentizing-the-web--cms-20602)
-
 ## Contributors
 
 * [Krasimir Tsonev](https://github.com/krasimir) Creator of AbsurdJS
@@ -84,4 +78,14 @@ CMSs
 * [Matias Lescano](https://github.com/mjlescano)
 * [Volkan Altınbaş](https://github.com/valtinbas)
 * [John-David Dalton](https://github.com/jdalton)
+
+## Resources
+
+  - AbsurdJS fundamentals - [link](http://krasimirtsonev.com/blog/article/AbsurdJS-fundamentals)
+  - Writing your CSS with JavaScript - [link](http://davidwalsh.name/write-css-javascript)
+  - Componentizing the Web - [link](http://code.tutsplus.com/tutorials/componentizing-the-web--cms-20602)
+
+## Who's Using Absurd?
+
+* [Crimasi](https://github.com/Crimasi) - [Ascend-Web](https://github.com/Crimasi/Ascend-Web)
 
