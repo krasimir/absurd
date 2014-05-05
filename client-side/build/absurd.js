@@ -1,4 +1,4 @@
-/* version: 0.3.19, born: 27-3-2014 12:56 */
+/* version: 0.3.20, born: 5-4-2014 23:3 */
 var Absurd = (function(w) {
 var lib = { 
     api: {},
@@ -2321,7 +2321,7 @@ lib.helpers.Extend = function() {
 // http://docs.emmet.io/css-abbreviations/vendor-prefixes/ (w: webkit, m: moz, s: ms, o: o)
 var prefixExtract = function(prop) {
 	var result, match;
-	if(match = prop.match(/^\-(w|m|s|o)+\-/) || prop.charAt(0) === '-') {
+	if((match = prop.match(/^\-(w|m|s|o)+\-/) || prop.charAt(0) === '-') && !prop.match(/^\-(webkit|moz|ms)+\-/)) {
 		if(match !== null && match[0]) {
 			result = { prefix: match[0].replace(/-/g, '') }
 			result.prop = prop.replace(match[0], '');
