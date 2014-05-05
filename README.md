@@ -17,15 +17,15 @@ Javascript based preprocessor. No new language, no new syntax. Write everything 
 
 	<script src="absurd.min.js"></script>
 
-## What it does
+## About
 
 AbsurdJS was started as CSS preprocessor, but later it was expanded to a HTML preprocessor. So, at the moment you could transform:
 
   - JavaScript, JSON, YAML, CSS to CSS
   - JavaScript, JSON, YAML to HTML
 
-## How
-
+## Usage
+```
 	var api = Absurd();
 	api.add({
 		body: {
@@ -38,7 +38,7 @@ AbsurdJS was started as CSS preprocessor, but later it was expanded to a HTML pr
 	api.compile(function(err, css) {
 		// use the compiled css
 	});
-
+```
 ## Official site, documentation and online compilator
 
 [http://absurdjs.com/](http://absurdjs.com/)
@@ -48,7 +48,6 @@ AbsurdJS was started as CSS preprocessor, but later it was expanded to a HTML pr
 * [Issues](https://github.com/krasimir/absurd/issues)
 * IRC channel at freenode.net: #absurdjs
 
-=======
 ## Extended
 
 Middleware
@@ -71,10 +70,22 @@ Frameworks
 CMSs
 * [Techy](https://github.com/krasimir/techy) Super-Simple Flat CMS utilising Markdown as the geeky way of writing articles
 
-=======
+## Contributors
+
+* [Krasimir Tsonev](https://github.com/krasimir) Creator of AbsurdJS
+* [RayoGundead](https://github.com/RayoGundead) 
+* [Daniel Beauchamp](https://github.com/Xulai) 
+* [Matias Lescano](https://github.com/mjlescano)
+* [Volkan Altınbaş](https://github.com/valtinbas)
+* [John-David Dalton](https://github.com/jdalton)
+
 ## Resources
 
   - AbsurdJS fundamentals - [link](http://krasimirtsonev.com/blog/article/AbsurdJS-fundamentals)
   - Writing your CSS with JavaScript - [link](http://davidwalsh.name/write-css-javascript)
   - Componentizing the Web - [link](http://code.tutsplus.com/tutorials/componentizing-the-web--cms-20602)
+
+## Who's Using Absurd?
+
+* [Crimasi](https://github.com/Crimasi) - [Ascend-Web](https://github.com/Crimasi/Ascend-Web)
 
