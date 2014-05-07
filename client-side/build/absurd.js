@@ -1,4 +1,4 @@
-/* version: 0.3.20, born: 5-4-2014 23:3 */
+/* version: 0.3.21, born: 7-4-2014 19:39 */
 var Absurd = (function(w) {
 var lib = { 
     api: {},
@@ -2484,15 +2484,14 @@ var toCSS = function(rules, options, indent) {
 			css += rules[selector][selector] + newline;
 		// handling normal styles
 		} else {
-			var entityStyle = indent[0] + selector.replace(/~~(.+)~~/, '') + ' {' + newline;
+			var entityStyle = indent[0] + selector.replace(/~~(.+)~~/, '').replace(/^%(.*)+?%/, '') + ' {' + newline;
 			var entity = '';
 			for(var prop in rules[selector]) {
 				var value = rules[selector][prop];
 				if(value === "") {
 					value = '""';
 				}
-				prop = prop.replace(/~~(.+)~~/, '');
-				prop = prop.replace(/^%(.*)+?%/, '');
+				prop = prop.replace(/~~(.+)~~/, '').replace(/^%(.*)+?%/, '');
 				if(options && options.keepCamelCase === true) {
 					entity += indent[1] + prop + ': ' + value + ';' + newline;
 				} else {
