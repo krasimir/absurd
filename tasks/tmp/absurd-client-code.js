@@ -29,7 +29,7 @@ var require = function(v) {
         return lib.processors.html.helpers.PropAnalyzer;
     } else if(v == '../../helpers/TransformUppercase') {
         return lib.helpers.TransformUppercase;
-    } else if(v == './helpers/TemplateEngine') {
+    } else if(v == './helpers/TemplateEngine' || v == '../html/helpers/TemplateEngine') {
         return lib.processors.html.helpers.TemplateEngine;
     } else if(v == '../helpers/Extend') {
         return lib.helpers.Extend;
@@ -292,7 +292,7 @@ api.__handleCSS = function(next) {
 				CSS.element.innerHTML = css;
 			}
 			next();
-		});
+		}, this);
 	} else {
 		next();
 	}

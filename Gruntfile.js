@@ -72,6 +72,7 @@ module.exports = function(grunt) {
 					'tests/experimental/move.selector.up.spec.js',
 					'tests/experimental/same.property.diff.value.spec.js',
 					'tests/experimental/error.reporting.spec.js',
+					'tests/experimental/dynamic.css.spec.js',
 					'!tests/common/api.import.spec.js',
 					'!tests/common/compile-and-save.spec.js',
 					'!tests/common/minify.spec.js',

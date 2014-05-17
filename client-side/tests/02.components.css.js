@@ -41,4 +41,24 @@ describe("Testing components (CSS compilation)", function() {
 		})().populate();
 	});
 
+	it("should compile css containing dynamic parts", function(done) {
+		absurd.components.flush().register("class-CC2014", {
+			css: {
+				'<% cssClass %>': {
+					margin: '0 0 0 <% mar %>',
+					padding: 0
+				}
+			},
+			cssClass: '.class-CC2014-el',
+			mar: '20px',
+			populated: function(data) {
+				var styleTag = document.getElementById("class-CC2014-css");
+				console.log(data.css.raw);
+				expect(styleTag).toBeDefined();
+				expect(styleTag.innerHTML).toBe(data.css.raw);
+				done();
+			}
+		})().populate();
+	});
+
 });

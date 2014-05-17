@@ -426,6 +426,9 @@ var metamorphosis = {
 	},
 	jsonify: function(api) {
 		api.jsonify = true;
+	},
+	'dynamic-css': function(api) {
+		api.dynamicCSS = true;
 	}
 }
 lib.api.morph = function(api) {
@@ -1462,6 +1465,10 @@ lib.processors.css.CSS = function() {
 			}		
 		}
 		css = replaceDefined(css, options);
+		// Dynamic CSS
+		if(options && options.api && options.api.dynamicCSS) {
+			css = require("../html/helpers/TemplateEngine")(css, options);
+		}
 		// Minification
 		if(options.minify) {
 			css = minimize(css);

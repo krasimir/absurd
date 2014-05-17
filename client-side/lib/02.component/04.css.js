@@ -17,7 +17,7 @@ api.__handleCSS = function(next) {
 				CSS.element.innerHTML = css;
 			}
 			next();
-		});
+		}, this);
 	} else {
 		next();
 	}
