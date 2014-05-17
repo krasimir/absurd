@@ -1,4 +1,4 @@
-/* version: 0.3.23, born: 17-4-2014 23:8 */
+/* version: 0.3.24, born: 17-4-2014 23:16 */
 var Absurd = (function(w) {
 var lib = { 
     api: {},
@@ -278,7 +278,7 @@ api.get = function(key) {
 var CSS = false;
 api.__handleCSS = function(next) {
 	if(this.css) {
-		absurd.flush().add(this.css).compile(function(err, css) {
+		absurd.flush().morph('dynamic-css').add(this.css).compile(function(err, css) {
 			if(!CSS) {
 				var style = createNode(
 					'style', [

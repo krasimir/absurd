@@ -53,9 +53,8 @@ describe("Testing components (CSS compilation)", function() {
 			mar: '20px',
 			populated: function(data) {
 				var styleTag = document.getElementById("class-CC2014-css");
-				console.log(data.css.raw);
 				expect(styleTag).toBeDefined();
-				expect(styleTag.innerHTML).toBe(data.css.raw);
+				expect(styleTag.innerHTML).toBe('.class-CC2014-el {  margin: 0 0 0 20px;  padding: 0;}');
 				done();
 			}
 		})().populate();

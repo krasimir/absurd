@@ -1,7 +1,7 @@
 var CSS = false;
 api.__handleCSS = function(next) {
 	if(this.css) {
-		absurd.flush().add(this.css).compile(function(err, css) {
+		absurd.flush().morph('dynamic-css').add(this.css).compile(function(err, css) {
 			if(!CSS) {
 				var style = createNode(
 					'style', [
