@@ -24,4 +24,4 @@ process.on('uncaughtException', function (err) {
 });
  
 // cli
-cli(argv, absurd);
+cli(argv, absurd); 
