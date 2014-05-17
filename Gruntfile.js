@@ -122,25 +122,14 @@ module.exports = function(grunt) {
 				],
 				tasks: ['concat', 'build', 'uglify']
 			}
-		},
-		lineending: {
-			dist: {
-				options: {
-					eol: 'crlf'
-				},
-				files: {
-					'./index.js': ['./index.js']
-				}
-			}
 		}
 	});
 
 	grunt.loadNpmTasks('grunt-contrib-concat');
 	grunt.loadNpmTasks('grunt-contrib-watch');
 	grunt.loadNpmTasks('grunt-contrib-uglify');
-	grunt.loadNpmTasks('grunt-lineending');
 	grunt.loadTasks('tasks');
 
-	grunt.registerTask('default', ['concat', 'build', 'uglify', 'lineending', 'watch']);
+	grunt.registerTask('default', ['concat', 'build', 'uglify', 'watch']);
 
 }
