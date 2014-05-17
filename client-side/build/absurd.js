@@ -1,4 +1,4 @@
-/* version: 0.3.22, born: 17-4-2014 8:53 */
+/* version: 0.3.22, born: 17-4-2014 16:16 */
 var Absurd = (function(w) {
 var lib = { 
     api: {},
@@ -337,6 +337,9 @@ api.__mergeDOMElements = function(e1, e2) {
 				if(a1.name === a2.name) {
 					e1.setAttribute(a1.name, a2.value);
 					found[a1.name] = true;
+					if(a1.name === 'value') {
+						e1.value = a2.value;
+					}
 				}
 			}
 			if(!found[a1.name]) {
@@ -346,6 +349,9 @@ api.__mergeDOMElements = function(e1, e2) {
 		for(var i=0; i<attr2.length, a2=attr2[i]; i++) {
 			if(!found[a2.name]) {
 				e1.setAttribute(a2.name, a2.value);
+				if(a2.name === 'value') {
+					e1.value = a2.value;
+				}
 			}
 		}
 	}
