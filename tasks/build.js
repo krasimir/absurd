@@ -14,7 +14,7 @@ module.exports = function(grunt) {
             version = getVersion();
         
         var d = new Date();
-        var created = d.getDate() + '-' + d.getMonth() + '-' + d.getFullYear() + ' ' + d.getHours() + ':' + d.getMinutes();
+        var created = d.getDate() + '-' + (d.getMonth()+1) + '-' + d.getFullYear() + ' ' + d.getHours() + ':' + d.getMinutes();
 
         // generating absurd        
         content += "/* version: "  + version +  ", born: " + created + " */\n";
