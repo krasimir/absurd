@@ -1378,7 +1378,7 @@ var combineSelectors = function(rules, preventCombining) {
 		if(map[i].combine === true && map[i].selector !== false) {
 			for(var j=i+1;j<map.length; j++) {
 				if(map[i].prop === map[j].prop && map[i].value === map[j].value) {
-					map[i].selector += ', ' + map[j].selector;
+					map[i].selector += ', ' + map[j].selector.replace(/~~(.+)~~/, '').replace(/^%(.*)+?%/, '');
 					map[j].selector = false; // marking for removal
 				}
 			}
@@ -1481,6 +1481,7 @@ lib.processors.css.CSS = function() {
 	processor.type = "css";
 	return processor;
 }
+
 lib.processors.css.plugins.charset = function() {	
 	return function(api, charsetValue) {
 		if(typeof charsetValue === "string") {
