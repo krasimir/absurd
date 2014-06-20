@@ -1293,6 +1293,30 @@ describe("Should add two @font-face", function() {
 			done();
 		}, { minify: true });
 	});
+	
+	it("should compile properly with three font faces", function(done) {
+		api.add({
+			'%1%@font-face': {
+			  'font-family': '\'Titillium\'',
+			  src: 'url(\'type/titillium-light-webfont.eot\')',
+			  'font-style': 'normal'
+			},
+			'%2%@font-face': {
+			  'font-family': '\'Titillium\'',
+			  src: 'url(\'type/titillium-lightitalic-webfont.eot\')',
+			  'font-style': 'italic'
+			},
+			'%3%@font-face': {
+			  'font-family': '\'Titillium\'',
+			  src: 'url(\'type/titillium-semibold-webfont.eot\')',
+			  'font-weight': '600',
+			  'font-style': 'normal'
+			}
+		}).compile(function(err, css) {
+			expect(css).toBe("@font-face{font-family: 'Titillium';src: url('type/titillium-light-webfont.eot');font-style: normal;}@font-face{font-family: 'Titillium';src: url('type/titillium-lightitalic-webfont.eot');font-style: italic;}@font-face{font-family: 'Titillium';src: url('type/titillium-semibold-webfont.eot');font-weight: 600;font-style: normal;}");
+			done();
+		}, { minify: true });
+	});
 
 });
 describe("Allow usage of keepCamelCase", function() {
@@ -1639,6 +1663,22 @@ describe("Support comma separated selectors", function() {
 			expect(css).toBe("body,section,h1{padding: 20px;}body b,body i,section b,section i,h1 b,h1 i{font-size: 20px;}");
 			done();
 		}, {minify: true});
+	});
+
+});
+describe("Should skip the processing of null values", function() {
+
+	var api = require('../../index.js')();
+
+	it("should compile properly", function(done) {
+		api.add({
+			'%0%.grandparent .parent .child': {
+				color: '#fff'
+			}
+		}).compile(function(err, css) {
+			expect(css).toBe('.grandparent .parent .child{color: #fff;}');
+			done();
+		}, { minify: true });
 	});
 
 });

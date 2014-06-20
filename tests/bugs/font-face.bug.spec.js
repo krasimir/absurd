@@ -17,5 +17,29 @@ describe("Should add two @font-face", function() {
 			done();
 		}, { minify: true });
 	});
+	
+	it("should compile properly with three font faces", function(done) {
+		api.add({
+			'%1%@font-face': {
+			  'font-family': '\'Titillium\'',
+			  src: 'url(\'type/titillium-light-webfont.eot\')',
+			  'font-style': 'normal'
+			},
+			'%2%@font-face': {
+			  'font-family': '\'Titillium\'',
+			  src: 'url(\'type/titillium-lightitalic-webfont.eot\')',
+			  'font-style': 'italic'
+			},
+			'%3%@font-face': {
+			  'font-family': '\'Titillium\'',
+			  src: 'url(\'type/titillium-semibold-webfont.eot\')',
+			  'font-weight': '600',
+			  'font-style': 'normal'
+			}
+		}).compile(function(err, css) {
+			expect(css).toBe("@font-face{font-family: 'Titillium';src: url('type/titillium-light-webfont.eot');font-style: normal;}@font-face{font-family: 'Titillium';src: url('type/titillium-lightitalic-webfont.eot');font-style: italic;}@font-face{font-family: 'Titillium';src: url('type/titillium-semibold-webfont.eot');font-weight: 600;font-style: normal;}");
+			done();
+		}, { minify: true });
+	});
 
 });

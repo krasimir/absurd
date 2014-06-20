@@ -1,4 +1,4 @@
-/* version: 0.3.25, born: 19-6-2014 0:6 */
+/* version: 0.3.26, born: 21-6-2014 0:54 */
 var Organic = (function(w){
 var o = {
 	helpers: {},

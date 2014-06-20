@@ -241,7 +241,7 @@ lib.api.add = function(API) {
 					props = toRegister[i].props,
 					allRules = API.getRules(stylesheet);
 				var pc = options && options.preventCombining ? '|' + options.preventCombining.join('|') : '';
-				var uid = pc.indexOf('|' + selector) >= 0 ? '~~' + API.numOfAddedRules + '~~' : '';
+				var uid = pc.indexOf('|' + selector.replace(/^%(.*)?%/, '')) >= 0 ? '~~' + (selector.match(/^%(.*)?%/) ? API.numOfAddedRules++ : API.numOfAddedRules) + '~~' : '';
 				// overwrite already added value
 				var current = allRules[uid + selector] || {};
 				for(var propNew in props) {
@@ -1304,7 +1304,7 @@ var toCSS = function(rules, options, indent) {
 			css += rules[selector][selector] + newline;
 		// handling normal styles
 		} else {
-			var entityStyle = indent[0] + selector.replace(/~~(.+)~~/, '').replace(/^%(.*)+?%/, '') + ' {' + newline;
+			var entityStyle = indent[0] + selector.replace(/~~(.+)~~/, '').replace(/^%(.*)?%/, '') + ' {' + newline;
 			var entity = '';
 			for(var prop in rules[selector]) {
 				var value = rules[selector][prop];
