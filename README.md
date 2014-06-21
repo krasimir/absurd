@@ -78,6 +78,7 @@ CMSs
 * [Matias Lescano](https://github.com/mjlescano)
 * [Volkan Altınbaş](https://github.com/valtinbas)
 * [John-David Dalton](https://github.com/jdalton)
+* [Jazblueful](https://github.com/jazblueful)
 
 ## Resources
 

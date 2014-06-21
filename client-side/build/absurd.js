@@ -1,4 +1,4 @@
-/* version: 0.3.26, born: 21-6-2014 0:54 */
+/* version: 0.3.27, born: 21-6-2014 11:43 */
 var Absurd = (function(w) {
 var lib = { 
     api: {},
@@ -1430,7 +1430,7 @@ lib.api.add = function(API) {
 					props = toRegister[i].props,
 					allRules = API.getRules(stylesheet);
 				var pc = options && options.preventCombining ? '|' + options.preventCombining.join('|') : '';
-				var uid = pc.indexOf('|' + selector.replace(/^%(.*)?%/, '')) >= 0 ? '~~' + (selector.match(/^%(.*)?%/) ? API.numOfAddedRules++ : API.numOfAddedRules) + '~~' : '';
+				var uid = pc.indexOf('|' + selector.replace(/^%.*?%/, '')) >= 0 ? '~~' + API.numOfAddedRules + '~~' : '';
 				// overwrite already added value
 				var current = allRules[uid + selector] || {};
 				for(var propNew in props) {
@@ -2493,14 +2493,14 @@ var toCSS = function(rules, options, indent) {
 			css += rules[selector][selector] + newline;
 		// handling normal styles
 		} else {
-			var entityStyle = indent[0] + selector.replace(/~~(.+)~~/, '').replace(/^%(.*)?%/, '') + ' {' + newline;
+			var entityStyle = indent[0] + selector.replace(/~~(.+)~~/, '').replace(/^%.*?%/, '') + ' {' + newline;
 			var entity = '';
 			for(var prop in rules[selector]) {
 				var value = rules[selector][prop];
 				if(value === "") {
 					value = '""';
 				}
-				prop = prop.replace(/~~(.+)~~/, '').replace(/^%(.*)+?%/, '');
+				prop = prop.replace(/~~(.+)~~/, '').replace(/^%.*?%/, '');
 				if(options && options.keepCamelCase === true) {
 					entity += indent[1] + prop + ': ' + value + ';' + newline;
 				} else {
@@ -2557,7 +2557,7 @@ var combineSelectors = function(rules, preventCombining) {
 				selector: selector, 
 				prop: prop, 
 				value: props[prop], 
-				combine: preventCombining.indexOf('|' + prop) < 0
+				combine: preventCombining.indexOf('|' + prop) < 0 && selector.indexOf('@font-face') < 0
 			});
 		}
 	}
@@ -2567,7 +2567,7 @@ var combineSelectors = function(rules, preventCombining) {
 		if(map[i].combine === true && map[i].selector !== false) {
 			for(var j=i+1;j<map.length; j++) {
 				if(map[i].prop === map[j].prop && map[i].value === map[j].value) {
-					map[i].selector += ', ' + map[j].selector.replace(/~~(.+)~~/, '').replace(/^%(.*)+?%/, '');
+					map[i].selector += ', ' + map[j].selector.replace(/~~(.+)~~/, '').replace(/^%.*?%/, '');
 					map[j].selector = false; // marking for removal
 				}
 			}
@@ -2581,29 +2581,6 @@ var combineSelectors = function(rules, preventCombining) {
 			arr[map[i].selector][map[i].prop] = map[i].value;
 		}
 	}
-
-	// // creating the map
-	// for(var selector in rules) {
-	// 	var props = rules[selector];
-	// 	for(var prop in props) {
-	// 		if(preventCombining.indexOf(prop) < 0) {
-	// 			var value = props[prop];
-	// 			if(!map[prop]) map[prop] = {};
-	// 			if(!map[prop][value]) map[prop][value] = [];
-	// 			map[prop][value].push(selector);
-	// 		}
-	// 	}
-	// }
-	// // converting the map to usual rules object
-	// for(var prop in map) {
-	// 	var values = map[prop];
-	// 	for(var value in values) {
-	// 		var selectors = values[value];
-	// 		if(!arr[selectors.join(", ")]) arr[selectors.join(", ")] = {}
-	// 		var selector = arr[selectors.join(", ")];
-	// 		selector[prop] = value;	
-	// 	}		
-	// }
 	
 	return arr;
 }

@@ -1318,6 +1318,26 @@ describe("Should add two @font-face", function() {
 		}, { minify: true });
 	});
 
+	it("should compile properly with three font faces", function(done) {
+		api.add({ 
+				'@font-face': {
+					'font-family': '\'callunaregular\'',
+					src: 'url(\'type/calluna.eot\')',
+					'font-weight': 'normal',
+					'font-style': 'normal'
+				},
+				'%0%@font-face': { 
+					'font-family': '\'museo_sans100\'',
+					src: 'url(\'type/museosans.eot\')',
+					'font-weight': 'normal',
+					'font-style': 'normal'
+				}
+		}).compile(function(err, css) {
+			expect(css).toBe("@font-face{font-family: 'callunaregular';src: url('type/calluna.eot');font-weight: normal;font-style: normal;}@font-face{font-family: 'museo_sans100';src: url('type/museosans.eot');font-weight: normal;font-style: normal;}");
+			done();
+		}, { minify: true });
+	});
+
 });
 describe("Allow usage of keepCamelCase", function() {
 
