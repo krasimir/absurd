@@ -1,4 +1,4 @@
-/* version: 0.3.27, born: 21-6-2014 11:43 */
+/* version: 0.3.28, born: 15-7-2014 0:21 */
 var Absurd = (function(w) {
 var lib = { 
     api: {},
