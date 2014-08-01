@@ -16,7 +16,7 @@ describe("Metamorphosis (to html preprocessor)", function() {
 					}
 				},
 				body: {
-					_attrs: { class: "home-page" },
+					_attrs: { cls: "home-page" },
 					section: {
 						h1: "that's html page"
 					}
@@ -25,7 +25,7 @@ describe("Metamorphosis (to html preprocessor)", function() {
 		}).compile(function(err, html) {
 			expect(err).toBe(null);
 			expect(html).toBeDefined();
-			expect(html).toBe('<!DOCTYPE html><html><head><title>html page</title><meta http-equiv="Content-Type" content="text/html; charset=utf-8"></meta></head><body class="home-page"><section><h1>that\'s html page</h1></section></body></html>');
+			expect(html).toBe('<!DOCTYPE html><html><head><title>html page</title><meta http-equiv="Content-Type" content="text/html; charset=utf-8"></meta></head><body cls="home-page"><section><h1>that\'s html page</h1></section></body></html>');
 			done();
 		}, { minify: true });
 	});

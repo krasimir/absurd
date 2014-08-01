@@ -27,12 +27,12 @@ describe("Metamorphosis (to html preprocessor)", function() {
 	it("should compile tag with attributes", function(done) {
 		api.morph("html").add({
 			body: {
-				_attrs: { class: "black" }
+				_attrs: { cls: "black" }
 			}
 		}).compile(function(err, html) {
 			expect(err).toBe(null);
 			expect(html).toBeDefined();
-			expect(html).toBe('<body class="black"></body>');
+			expect(html).toBe('<body cls="black"></body>');
 			done();
 		}, { minify: true });
 	});
@@ -40,13 +40,13 @@ describe("Metamorphosis (to html preprocessor)", function() {
 	it("should compile tag with attributes and text inside", function(done) {
 		api.morph("html").add({
 			body: {
-				_attrs: { class: "black" },
+				_attrs: { cls: "black" },
 				_: "page text"
 			}
 		}).compile(function(err, html) {
 			expect(err).toBe(null);
 			expect(html).toBeDefined();
-			expect(html).toBe('<body class="black">page text</body>');
+			expect(html).toBe('<body cls="black">page text</body>');
 			done();
 		}, { minify: true });
 	});
@@ -54,14 +54,14 @@ describe("Metamorphosis (to html preprocessor)", function() {
 	it("should compile tag with attributes, text inside and nested tag", function(done) {
 		api.morph("html").add({
 			body: {
-				_attrs: { class: "black" },
+				_attrs: { cls: "black" },
 				_: "page text",
 				p: "paragraph text"
 			}
 		}).compile(function(err, html) {
 			expect(err).toBe(null);
 			expect(html).toBeDefined();
-			expect(html).toBe('<body class="black">page text<p>paragraph text</p></body>');
+			expect(html).toBe('<body cls="black">page text<p>paragraph text</p></body>');
 			done();
 		}, { minify: true });
 	});

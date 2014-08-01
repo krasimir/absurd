@@ -273,7 +273,7 @@ describe("Hooks", function() {
 				body: {
 					fontSize: "20px"
 				}
-			}).import("body-styles.bla").compile(function(err, css) {
+			})['import']("body-styles.bla").compile(function(err, css) {
 				expect(css).toBe("body {\n  font-size: 11.5px;\n}\n");
 				done();
 			})
@@ -289,7 +289,7 @@ describe("Hooks", function() {
 				body: {
 					fontSize: "20px"
 				}
-			}).import("body-styles.bla").compile(function(err, css) {
+			})['import']("body-styles.bla").compile(function(err, css) {
 				expect(css).toBe("AbsurdJS is awesome!");
 				done();
 			})
@@ -2032,7 +2032,7 @@ describe("Metamorphosis (to html preprocessor)", function() {
 					}
 				},
 				body: {
-					_attrs: { class: "home-page" },
+					_attrs: { cls: "home-page" },
 					section: {
 						h1: "that's html page"
 					}
@@ -2041,7 +2041,7 @@ describe("Metamorphosis (to html preprocessor)", function() {
 		}).compile(function(err, html) {
 			expect(err).toBe(null);
 			expect(html).toBeDefined();
-			expect(html).toBe('<!DOCTYPE html><html><head><title>html page</title><meta http-equiv="Content-Type" content="text/html; charset=utf-8"></meta></head><body class="home-page"><section><h1>that\'s html page</h1></section></body></html>');
+			expect(html).toBe('<!DOCTYPE html><html><head><title>html page</title><meta http-equiv="Content-Type" content="text/html; charset=utf-8"></meta></head><body cls="home-page"><section><h1>that\'s html page</h1></section></body></html>');
 			done();
 		}, { minify: true });
 	});
@@ -2425,12 +2425,12 @@ describe("Metamorphosis (to html preprocessor)", function() {
 	it("should compile tag with attributes", function(done) {
 		api.morph("html").add({
 			body: {
-				_attrs: { class: "black" }
+				_attrs: { cls: "black" }
 			}
 		}).compile(function(err, html) {
 			expect(err).toBe(null);
 			expect(html).toBeDefined();
-			expect(html).toBe('<body class="black"></body>');
+			expect(html).toBe('<body cls="black"></body>');
 			done();
 		}, { minify: true });
 	});
@@ -2438,13 +2438,13 @@ describe("Metamorphosis (to html preprocessor)", function() {
 	it("should compile tag with attributes and text inside", function(done) {
 		api.morph("html").add({
 			body: {
-				_attrs: { class: "black" },
+				_attrs: { cls: "black" },
 				_: "page text"
 			}
 		}).compile(function(err, html) {
 			expect(err).toBe(null);
 			expect(html).toBeDefined();
-			expect(html).toBe('<body class="black">page text</body>');
+			expect(html).toBe('<body cls="black">page text</body>');
 			done();
 		}, { minify: true });
 	});
@@ -2452,14 +2452,14 @@ describe("Metamorphosis (to html preprocessor)", function() {
 	it("should compile tag with attributes, text inside and nested tag", function(done) {
 		api.morph("html").add({
 			body: {
-				_attrs: { class: "black" },
+				_attrs: { cls: "black" },
 				_: "page text",
 				p: "paragraph text"
 			}
 		}).compile(function(err, html) {
 			expect(err).toBe(null);
 			expect(html).toBeDefined();
-			expect(html).toBe('<body class="black">page text<p>paragraph text</p></body>');
+			expect(html).toBe('<body cls="black">page text<p>paragraph text</p></body>');
 			done();
 		}, { minify: true });
 	});

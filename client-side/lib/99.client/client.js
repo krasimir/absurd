@@ -5,7 +5,7 @@ var client = function() {
 
 		var extend = function(destination, source) {
 			for (var key in source) {
-				if (hasOwnProperty.call(source, key)) {
+				if (Object.prototype.hasOwnProperty.call(source, key)) {
 					destination[key] = source[key];
 				}
 			}
@@ -43,7 +43,7 @@ var client = function() {
 			_api.defaultProcessor = lib.processors.css.CSS();
 			return _api;
 		}
-		_api.import = function() { 
+		_api['import'] = function() { 
 			if(_api.callHooks("import", arguments)) return _api;
 			return _api; 
 		}

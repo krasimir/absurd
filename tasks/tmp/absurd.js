@@ -1060,11 +1060,12 @@ lib.helpers.Clone = function clone(item) {
         result;
 
     // normalizing primitives if someone did new String('aaa'), or new Number('444');
-    types.forEach(function(type) {
-        if (item instanceof type) {
+    for(var i=0; i<types.length; i++) {
+        var type = types[i];
+        if(item instanceof type) {
             result = type( item );
         }
-    });
+    }
 
     if (typeof result == "undefined") {
         if (Object.prototype.toString.call( item ) === "[object Array]") {
@@ -1125,8 +1126,8 @@ lib.helpers.ColorLuminance = function (hex, lum) {
 }
 lib.helpers.Extend = function() {
 	var process = function(destination, source) {	
-	    for (var key in source) {
-			if (hasOwnProperty.call(source, key)) {
+	    for(var key in source) {
+			if(Object.prototype.hasOwnProperty.call(source, key)) {
 			    destination[key] = source[key];
 			}
 	    }

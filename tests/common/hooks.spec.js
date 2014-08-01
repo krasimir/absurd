@@ -50,7 +50,7 @@ describe("Hooks", function() {
 				body: {
 					fontSize: "20px"
 				}
-			}).import("body-styles.bla").compile(function(err, css) {
+			})['import']("body-styles.bla").compile(function(err, css) {
 				expect(css).toBe("body {\n  font-size: 11.5px;\n}\n");
 				done();
 			})
@@ -66,7 +66,7 @@ describe("Hooks", function() {
 				body: {
 					fontSize: "20px"
 				}
-			}).import("body-styles.bla").compile(function(err, css) {
+			})['import']("body-styles.bla").compile(function(err, css) {
 				expect(css).toBe("AbsurdJS is awesome!");
 				done();
 			})
