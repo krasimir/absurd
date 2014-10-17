@@ -114,8 +114,11 @@ lib.api.add = function(API) {
 
 		// if array is passed
 		if(typeof props.length !== 'undefined' && typeof props === "object") {
-			for(var i=0; i<props.length, prop=props[i]; i++) {
-				addRule(selector, prop, stylesheet, parentSelector);
+			for(var i=0; i<props.length; i++) {
+				prop=props[i];
+				if(prop) {
+					addRule(selector, prop, stylesheet, parentSelector);
+				}
 			}
 			return;
 		}
@@ -282,6 +285,7 @@ lib.api.add = function(API) {
 	}
 	return add;
 }
+
 var extend = require("../helpers/Extend");
 
 lib.api.compile = function(api) {
