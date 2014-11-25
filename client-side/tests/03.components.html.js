@@ -307,7 +307,19 @@ describe("Testing components (HTML compilation)", function() {
 		})().populate();
 	});
 
-	
+	it("should prevent html compilation from within the populate method", function(done) {
+		absurd.components.flush().register("class-CC2014--2", {
+			html: {
+				p: {
+					span: 'Hello world'
+				}
+			},
+			populated: function(data) {
+				expect(this.el).toBe(undefined);
+				done();
+			}
+		})().populate({ html: false });
+	});
 
 
 });

@@ -2,9 +2,10 @@ var isPopulateInProgress = false;
 api.populate = function(options) {
 	if(isPopulateInProgress) return;
 	isPopulateInProgress = true;
+	var empty = function(next) { next(); return this; };
 	queue([
-		api.__handleCSS,
-		api.__handleHTML,
+		options && options.css === false ? empty : api.__handleCSS,
+		options && options.html === false ? empty : api.__handleHTML,
 		api.__append, 
 		api.__handleEvents,
 		api.__handleAsyncFunctions,

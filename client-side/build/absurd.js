@@ -1,4 +1,4 @@
-/* version: 0.3.31, born: 17-10-2014 23:48 */
+/* version: 0.3.32, born: 26-11-2014 0:7 */
 var Absurd = (function(w) {
 var lib = { 
     api: {},
@@ -569,9 +569,10 @@ var isPopulateInProgress = false;
 api.populate = function(options) {
 	if(isPopulateInProgress) return;
 	isPopulateInProgress = true;
+	var empty = function(next) { next(); return this; };
 	queue([
-		api.__handleCSS,
-		api.__handleHTML,
+		options && options.css === false ? empty : api.__handleCSS,
+		options && options.html === false ? empty : api.__handleHTML,
 		api.__append, 
 		api.__handleEvents,
 		api.__handleAsyncFunctions,
