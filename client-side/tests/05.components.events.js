@@ -331,6 +331,64 @@ describe("Testing components events", function() {
 		})().set("parent", document.querySelector("body")).populate();
 	});
 
+	it("should use a shortcut for events", function(done) {
+		absurd.components.register("TestingEvents", {
+			title: '',
+			css: {
+				'#testing-events-form': {
+					display: 'none'
+				}
+			},
+			html: {
+				'form#testing-events-form': {
+					'input[type="button"]': {
+						$click: 'handler'
+					}
+				}
+			},
+			handler: function(e) {
+				expect(this.el.innerHTML).toBe('<input type="button" data-absurd-event="click:handler">');
+				done();
+			},
+			populated: function(data) {
+				var input = this.el.querySelector("input");
+				fireEvent(input, "click");
+			}
+		})().set("parent", document.querySelector("body")).populate();
+	});
+
+	it("should use a shortcut for events (multiple events)", function(done) {
+		absurd.components.register("TestingEvents", {
+			title: '',
+			evented: 0,
+			css: {
+				'#testing-events-form': {
+					display: 'none'
+				}
+			},
+			html: {
+				'form#testing-events-form': {
+					'input[type="button"]': {
+						$click: 'handler',
+						$keydown: 'handler'
+					}
+				}
+			},
+			handler: function(e) {
+				this.evented += 1;
+				if(this.evented === 2) {
+					expect(this.el.innerHTML).toBe('<input type="button" data-absurd-event="click:handler,keydown:handler">');
+					done();
+				}
+			},
+			populated: function(data) {
+				var input = this.el.querySelector("input");
+				fireEvent(input, "click");
+				fireEvent(input, "keydown");
+			}
+		})().set("parent", document.querySelector("body")).populate();
+	});
+
 });
 
 var absurd = Absurd();
