@@ -1,7 +1,7 @@
 # AbsurdJS
 
-[![Build Status](https://travis-ci.org/krasimir/absurd.png?branch=master)](https://travis-ci.org/krasimir/absurd)
-[![Dependency Status](https://david-dm.org/krasimir/absurd.png?theme=shields.io)](https://david-dm.org/krasimir/absurd)
+[![Build Status](https://travis-ci.org/krasimir/absurd.svg?branch=master)](https://travis-ci.org/krasimir/absurd)
+[![Dependency Status](https://david-dm.org/krasimir/absurd.svg?theme=shields.io)](https://david-dm.org/krasimir/absurd)
 
 ## Overview
 
