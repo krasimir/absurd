@@ -71,7 +71,7 @@ CMSs
 * [Techy](https://github.com/krasimir/techy) Super-Simple Flat CMS utilising Markdown as the geeky way of writing articles
 
 Misc
-* AbsurdJS support for JS Transformers -  [jstransformer-absurd](https://github.com/jstransformers/jstransformer-absurd)
+* AbsurdJS support for JS Transformers -  [jstransformer-absurd](https://github.com/jstransformers/jstransformer-absurd) by [Charlike Mike Reagent](https://github.com/tunnckoCore)
 
 ## Contributors
 
