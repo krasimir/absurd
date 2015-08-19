@@ -6,7 +6,11 @@ var cli = require('./lib/CLI.js'),
 	argv = require('optimist').argv,
 	hasOwnProperty = Object.prototype.hasOwnProperty,
 	api = null,
-	absurd = null,
+	absurd = null;
+
+var isRunningAsCLIProgram = function () {
+	return require.main === module;
+}
 
 module.exports = absurd = function(func) {
 	api = require("./lib/API.js")();
@@ -19,9 +23,11 @@ module.exports = absurd = function(func) {
 }
 
 // godlike
-process.on('uncaughtException', function (err) {
-    console.log("Error packing", err);
-});
+if (isRunningAsCLIProgram()) {
+	process.on('uncaughtException', function (err) {
+		console.log("Error packing", err);
+	});
+}
  
 // cli
 cli(argv, absurd); 
