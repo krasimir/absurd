@@ -1,4 +1,4 @@
-/* version: 0.3.4, born: 28-3-2015 15:40 */
+/* version: 0.3.6, born: 21-1-2016 17:38 */
 var Absurd = (function(w) {
 var lib = { 
     api: {},
@@ -3072,10 +3072,11 @@ lib.processors.html.helpers.TemplateEngine = function(html, options) {
 		cursor = match.index + match[0].length;
 	}
 	add(html.substr(cursor, html.length - cursor));
-	code = (code + 'return r.join(""); }').replace(/[\r\t\n]/g, '');
+	code = (code + 'return r.join(""); }').replace(/[\r\t\n]/g, ' ');
 	try { result = new Function('obj', code).apply(options, [options]); }
 	catch(err) { console.error("'" + err.message + "'", " in \n\nCode:\n", code, "\n"); }
 	return result;
-};
+}
+;
 return client();
 })(window);
