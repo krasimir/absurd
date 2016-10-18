@@ -2,6 +2,7 @@
 
 [![Build Status](https://travis-ci.org/krasimir/absurd.svg?branch=master)](https://travis-ci.org/krasimir/absurd)
 [![Dependency Status](https://david-dm.org/krasimir/absurd.svg?theme=shields.io)](https://david-dm.org/krasimir/absurd)
+[![CDNJS](https://img.shields.io/cdnjs/v/absurd.svg)](https://cdnjs.com/libraries/absurd)
 
 ## Overview
 
