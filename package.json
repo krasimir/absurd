@@ -14,8 +14,8 @@
   "dependencies": {
     "optimist": "0.6.1",
     "colors": "0.6.2",
-    "gaze": "0.5.1",
-    "glob": "3.2.8",
+    "gaze": "1.1.0",
+    "glob": "5.0.15",
     "js-yaml": "3.0.1",
     "js-beautify": "1.4.2"
   },
