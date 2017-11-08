@@ -16,7 +16,7 @@
     "colors": "0.6.2",
     "gaze": "1.1.0",
     "glob": "5.0.15",
-    "js-yaml": "3.0.1",
+    "js-yaml": "^3.10.0",
     "js-beautify": "1.4.2"
   },
   "devDependencies": {
